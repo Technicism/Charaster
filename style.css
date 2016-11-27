@@ -1,0 +1,159 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+  user-select: none;
+}
+
+body {
+  /*overflow:hidden;*/
+}
+
+canvas {
+  position: absolute;
+  /*left: 0;*/
+  /*top: 0;*/
+  /*top: 32px;*/
+  /*cursor: crosshair;*/
+  margin-top: -32px;
+  display: inline-block;
+  /*padding: 16px;*/
+
+}
+
+#grid {
+  z-index: 0;
+}
+
+#text {
+  z-index: 1;
+}
+
+#cursor {
+  z-index: 2;
+}
+
+header {
+  /*padding: 4px;*/
+  top: 0;
+  position: fixed;
+  background-color: white;
+  z-index: 100000;
+  width: 100%;
+  border-bottom: solid 1px #777;
+  cursor: default;
+  line-height: 16pt;
+}
+
+header input {
+  text-align: center;
+  vertical-align: middle;
+}
+
+footer {
+  /*padding: 4px;*/
+  background-color: white;
+  line-height: 16pt;
+  border-top: solid 1px #777;
+  height: 24px;
+}
+
+#char {
+  width: 16px;
+}
+
+#scrollLeft {
+  display: inline-block;
+}
+
+#foreground {
+  background-color: black;
+}
+
+#pencil {
+  /*background-image: url("icons/draw-freehand.png")*/
+}
+
+
+
+#inputType, #tools, #options, #info {
+  /*border-right: solid 1px #777;*/
+  display: inline-block;
+  padding: 4px 16px 4px 4px;
+}
+
+#info {
+  border: none;
+}
+
+#inputType {
+  /*padding-left: 4px;*/
+}
+
+/*#cursorPos {
+  display: inline-block;
+  width: 12ch;
+}
+*/
+
+.bar {
+  margin: 2px;
+  border-radius: 2px;
+  display: inline-block;
+  padding: 2px;
+  letter-spacing: -4px;
+  line-height: 0px;
+  border: solid 1px #ddd;
+  vertical-align: top;
+  min-height: 24px;
+}
+
+.bar img, .bar svg {
+  height: 20px;
+  width: 20px;
+  padding: 2px;
+}
+
+.bar img:hover, .bar svg:hover {
+  background-color: #ddd;
+  border-radius: 2px;
+}
+
+.bar div {
+  vertical-align: middle;
+  display: table-cell;
+  height: 24px;
+}
+
+iframe {
+  width: 100%;
+
+}
+
+html, body { height: 100%; }
+
+ iframe {
+  padding-top: 34px;
+  margin-bottom: 34px;
+  /*height: 95%;*/
+  border: solid 1px black;
+
+ }
+
+
+body {
+overflow: hidden;
+}
+
+#main {
+  margin-top: 34px;
+  overflow: scroll;
+  height: calc(100% - 58px);
+  width: 100%;
+  position: relative;
+}
+
+/*#bottomBar {
+  background-color: red;
+}
+*/
