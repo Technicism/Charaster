@@ -9,12 +9,16 @@
   <body id="body">
     <header id="controls">
       <div class="bar">
-        <i class="material-icons" title="Save">save</i>
-        <i class="material-icons" title="Open">folder_open</i>
-        <i class="material-icons" title="Resize canvas">photo_size_select_large</i>
-        <i class="material-icons" title="undo">undo</i>
-        <i class="material-icons" title="redo">redo</i>
-        <i class="material-icons" title="help">help</i>
+        <!-- Floppy disk icon sourced from https://www.iconfinder.com/icons/326688/floppy_save_icon -->
+        <svg height="18px" version="1.1" viewBox="0 0 18 18" width="18px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g class="icon" fill="#000000" id="Core" transform="translate(-255.000000, -381.000000)"><g id="save" transform="translate(255.000000, 381.000000)"><path d="M14,0 L2,0 C0.9,0 0,0.9 0,2 L0,16 C0,17.1 0.9,18 2,18 L16,18 C17.1,18 18,17.1 18,16 L18,4 L14,0 L14,0 Z M9,16 C7.3,16 6,14.7 6,13 C6,11.3 7.3,10 9,10 C10.7,10 12,11.3 12,13 C12,14.7 10.7,16 9,16 L9,16 Z M12,6 L2,6 L2,2 L12,2 L12,6 L12,6 Z" id="Shape"/></g></g></g></svg>
+        <!-- Folder icon sourced from https://www.iconfinder.com/icons/290140/document_documents_file_folder_icon -->
+        <svg enable-background="new 0 0 48 48" height="48px" id="Layer_1" version="1.1" viewBox="0 0 48 48" width="48px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path class="icon" clip-rule="evenodd" d="M42,43L42,43H6l0,0c-2.762,0-5-2.238-5-5V15c0-0.552,0.447-1,1-1l0,0h3V9  c0-2.209,1.791-4,4-4h10c2.209,0,4,1.791,4,4v1h23c0.553,0,1,0.448,1,1v27C47,40.762,44.762,43,42,43z M3,16v22l0,0  c0,1.657,1.344,3,3,3h32.022C37.39,40.162,37,39.131,37,38V16H3z M45,12H21V9c0-1.104-0.896-2-2-2H9C7.896,7,7,7.896,7,9v5h31l0,0  c0.278,0,0.529,0.114,0.71,0.298C38.889,14.479,39,14.726,39,15c0,0,0,0,0,0v23c0,1.657,1.343,3,3,3s3-1.343,3-3V12z" fill-rule="evenodd"/></svg>
+        <!-- Undo icon sourced from https://www.iconfinder.com/icons/211838/undo_icon -->
+        <svg height="512px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="512px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path class="icon" d="M447.9,368.2c0-16.8,3.6-83.1-48.7-135.7c-35.2-35.4-80.3-53.4-143.3-56.2V96L64,224l192,128v-79.8   c40,1.1,62.4,9.1,86.7,20c30.9,13.8,55.3,44,75.8,76.6l19.2,31.2H448C448,389.9,447.9,377.1,447.9,368.2z"/></g></svg>
+        <!-- Redo icon sourced from https://www.iconfinder.com/icons/211811/redo_icon -->
+        <svg height="512px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="512px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path class="icon" d="M64,400h10.3l19.2-31.2c20.5-32.7,44.9-62.8,75.8-76.6c24.4-10.9,46.7-18.9,86.7-20V352l192-128L256,96v80.3   c-63,2.8-108.1,20.7-143.3,56.2c-52.3,52.7-48.7,119-48.7,135.7C64.1,377.1,64,389.9,64,400z"/></g></svg>
+        <!-- Help icon sourced from https://www.iconfinder.com/icons/326654/help_icon -->
+        <svg height="20px" version="1.1" viewBox="0 0 20 20" width="20px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g class="icon" fill="#000000" id="Core" transform="translate(-422.000000, -254.000000)"><g id="help" transform="translate(422.000000, 254.000000)"><path d="M10,0 C4.5,0 0,4.5 0,10 C0,15.5 4.5,20 10,20 C15.5,20 20,15.5 20,10 C20,4.5 15.5,0 10,0 L10,0 Z M11,17 L9,17 L9,15 L11,15 L11,17 L11,17 Z M13.1,9.3 L12.2,10.2 C11.4,10.9 11,11.5 11,13 L9,13 L9,12.5 C9,11.4 9.4,10.4 10.2,9.7 L11.4,8.4 C11.8,8.1 12,7.6 12,7 C12,5.9 11.1,5 10,5 C8.9,5 8,5.9 8,7 L6,7 C6,4.8 7.8,3 10,3 C12.2,3 14,4.8 14,7 C14,7.9 13.6,8.7 13.1,9.3 L13.1,9.3 Z" id="Shape"/></g></g></g></svg>
       </div>
       <div class="bar">
         <!-- Pencil icon sourced from https://www.iconfinder.com/icons/216687/pencil_icon -->
@@ -213,21 +217,18 @@
           </select>
         </div>
       </div>
-      <span id="info">
-        <span>[80, 24]</span>
-        <span id="cursorPos">(0, 0)</span>
-      </span>
     </header>
     <div id="main">
       <canvas id="grid"></canvas>
       <canvas id="raster"></canvas>
       <canvas id="cursor"></canvas>
     </div>
+    <footer id="info">
+        <span id="gridSize">[80, 24]</span>
+        <span id="cursorPos">(0, 0)</span>
+    </footer>
     <script src="cell.js"></script>
     <script src="theme.js"></script>
     <script src="script.js"></script>
-    <footer>
-      hi
-    </footer>
   </body>
 </html>

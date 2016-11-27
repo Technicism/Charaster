@@ -13,6 +13,8 @@ class Theme {
 }
 
 var themes = new Array();
+
+// Stereokai theme sourced from https://github.com/carlcalderon/sublime-color-schemes/blob/master/Stereokai/Stereokai.tmTheme
 themes.push(new Theme(
   "Stereokai",
   "#f8f2f2",
@@ -41,6 +43,8 @@ themes.push(new Theme(
     "#f8f8f0",
   ]
 ));
+
+// Solarized theme sourced from http://ethanschoonover.com/solarized
 themes.push(new Theme(
   "Solarized",
   "#839496",

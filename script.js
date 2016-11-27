@@ -22,19 +22,16 @@ fitToContainer(cursorCanvas);
 var char = "o";
 var fontHeight = 19;
 var fontWidth = 9;
-var charWidth = 120;
-var charHeight = 40;
-var gridWidth = Math.floor(gridCanvas.width / fontWidth);
-var gridHeight = Math.floor(gridCanvas.height / fontHeight);
-var raster = createArray(charWidth, charHeight);
-// alert(raster.length + " " + raster[0].length + " " + gridWidth + " " + gridHeight);
+var gridWidth = 120;
+var gridHeight = 40;
+var raster = createRaster(gridWidth, gridHeight);
 
 
 var cursor = new Cell(0, 0);
 
-var darkMode = false;
 var body = document.getElementById("body");
 var controls = document.getElementById("controls");
+var info = document.getElementById("info");
 
 setTheme(theme.name);
 drawGrid();
@@ -102,9 +99,9 @@ function onKeyDown(e) {
 
   // Move cursor with arrow keys.
   cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
-  if (e.keyCode == 39 && cursor.x < charWidth) {
+  if (e.keyCode == 39 && cursor.x < gridWidth) {
     cursor.x++;
-  } else if (e.keyCode == 40 && cursor.y < charHeight) {
+  } else if (e.keyCode == 40 && cursor.y < gridHeight) {
     cursor.y++;
   } else if (e.keyCode == 37 && cursor.x > 0) {
     cursor.x--;
@@ -121,6 +118,7 @@ function onKeyDown(e) {
 function setTheme(name) {
   body.style.background = theme.background;
   controls.style.background = theme.bar;
+  info.style.background = theme.bar;
   icons = document.getElementsByClassName("icon");
   for (var i = 0; i < icons.length; i++) {
     icons[i].style.fill = theme.icon;
@@ -133,24 +131,10 @@ function setTheme(name) {
   for (var i = 0; i < bars.length; i++) {
     bars[i].style.borderColor = theme.barBorder;
   }
-  controls = document.getElementById("controls");
   controls.style.borderColor = theme.barBorder;
+  info.style.borderColor = theme.barBorder;
   drawGrid();
   drawCursor();
-}
-
-function toggleDarkMode() {
-  if (darkMode) {
-    darkMode = false;
-    body.style.background = "#fff";
-    controls.style.background = "#f8f8f8";
-    theme.grid = "#eee";
-  } else {
-    darkMode = true;
-    body.style.background = "#262626";
-    theme.grid = "#3e3e3e";
-  }
-  drawGrid();
 }
 
 function setChar(char, x, y) {
@@ -269,9 +253,9 @@ function fitToContainer(canvas) {
   // canvas.style.height='calc(100% - 32px)';
   // ...then set the internal size to match
   canvas.width  = canvas.offsetWidth;
-  canvas.width  = charWidth * fontWidth + 1;
+  canvas.width  = gridWidth * fontWidth + 1;
   canvas.height = canvas.offsetHeight;
-  canvas.height = charHeight * fontHeight + 1;
+  canvas.height = gridHeight * fontHeight + 1;
   var top = document.getElementById("controls").clientHeight + 1 + "px";
   canvas.style.top = top;
   // alert(top);
@@ -332,7 +316,6 @@ function drawCursor() {
   cursorContext.stroke();
   cursorContext.closePath();
   document.getElementById("cursorPos").innerHTML = "(" + cursor.x + ", " + cursor.y + ")";
-
 }
 
 
@@ -407,7 +390,7 @@ function rasterLine(x0, y0, x1, y1) {
 
 
 
-function createArray(cols, rows) {
+function createRaster(cols, rows) {
   var array = [];
   for (var i = 0; i < rows; i++) {
     array[i] = [];
@@ -415,5 +398,6 @@ function createArray(cols, rows) {
       array[i].push(null);
     }
   }
+  document.getElementById("gridSize").innerHTML = "[" + gridWidth + ", " + gridHeight + "]";
   return array;
 }
