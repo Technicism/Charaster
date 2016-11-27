@@ -32,6 +32,8 @@ var cursor = new Cell(0, 0);
 var body = document.getElementById("body");
 var controls = document.getElementById("controls");
 var info = document.getElementById("info");
+var bars = document.getElementsByClassName("bar");
+var foreground = document.getElementById("foreground");
 
 setTheme(theme.name);
 drawGrid();
@@ -116,9 +118,13 @@ function onKeyDown(e) {
 }
 
 function setTheme(name) {
+
+  // Set the colors of the page.
   body.style.background = theme.background;
   controls.style.background = theme.bar;
+  controls.style.borderColor = theme.barBorder;
   info.style.background = theme.bar;
+  info.style.borderColor = theme.barBorder;
   icons = document.getElementsByClassName("icon");
   for (var i = 0; i < icons.length; i++) {
     icons[i].style.fill = theme.icon;
@@ -127,12 +133,18 @@ function setTheme(name) {
   for (var i = 0; i < iconStrokes.length; i++) {
     iconStrokes[i].style.stroke = theme.icon;
   }
-  bars = document.getElementsByClassName("bar");
   for (var i = 0; i < bars.length; i++) {
     bars[i].style.borderColor = theme.barBorder;
   }
-  controls.style.borderColor = theme.barBorder;
-  info.style.borderColor = theme.barBorder;
+
+  // Set the colors of the tools.
+  for (var i = 0; i < theme.colors.length; i++) {
+    var color = document.createElement('option');
+    color.value = i;
+    color.innerHTML = i;
+    color.style.backgroundColor = theme.colors[i];
+    foreground.appendChild(color);
+  }
   drawGrid();
   drawCursor();
 }
@@ -159,7 +171,7 @@ function draw(e) {
   // rasterContext.strokeStyle="red";
   // rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
   rasterContext.stroke();
-  rasterContext.fillStyle = theme.foreground;
+  rasterContext.fillStyle = getColor("foreground");
   rasterContext.font = "12pt Consolas";
   // rasterContext.fillRect(posx, posy, 4, 4);
   rasterContext.fillText(char, gridx, gridy - 5);
@@ -188,6 +200,8 @@ function draw(e) {
   }
 }
 
+
+
 var drawnow = false;
 window.addEventListener('mousedown', drawing, false);
 window.addEventListener('mouseup', drawing, false);
@@ -196,6 +210,15 @@ window.addEventListener('mouseup', drawing, false);
 // window.addEventListener('resize', drawCursor, false);
 window.addEventListener('resize', topBar, false);
 
+
+function getColor(control) {
+  var value = document.getElementById(control).value;
+  if (value == "foreground") {
+    return theme.foreground;
+  } else {
+    return theme.colors[value];
+  }
+}
 
 function topBar() {
   var top = document.getElementById("controls").clientHeight + 1;
@@ -237,7 +260,7 @@ function drawing(e) {
     // rasterContext.strokeStyle="red";
     // rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
     rasterContext.stroke();
-    rasterContext.fillStyle = theme.foreground;
+    rasterContext.fillStyle = getColor("foreground");
     rasterContext.font = "12pt Consolas";
     // rasterContext.fillRect(posx, posy, 4, 4);
     rasterContext.fillText(char, gridx, gridy - 5);

@@ -5,10 +5,6 @@
   user-select: none;
 }
 
-body {
-  /*overflow:hidden;*/
-}
-
 canvas {
   position: absolute;
   /*left: 0;*/
@@ -67,8 +63,15 @@ footer {
 }
 
 #foreground {
-  background-color: black;
+  /*background-color: black;*/
 }
+
+#foreground, #background   {
+  -webkit-appearance:none;
+  width: 24px;
+  height: 24px;
+}
+
 
 #pencil {
   /*background-image: url("icons/draw-freehand.png")*/
@@ -123,24 +126,14 @@ footer {
   height: 24px;
 }
 
-iframe {
-  width: 100%;
 
-}
 
 html, body { height: 100%; }
 
- iframe {
-  padding-top: 34px;
-  margin-bottom: 34px;
-  /*height: 95%;*/
-  border: solid 1px black;
-
- }
 
 
 body {
-overflow: hidden;
+  overflow: hidden;
 }
 
 #main {
@@ -150,8 +143,3 @@ overflow: hidden;
   width: 100%;
   position: relative;
 }
-
-/*#bottomBar {
-  background-color: red;
-}
-*/
