@@ -158,23 +158,33 @@ function setChar(char, x, y) {
 
 var cells = [];
 function draw(e) {
+
+  var pos = getMousePos(rasterCanvas, e);
+  var gridx = snap(pos.x, fontWidth);
+  var gridy = snap(pos.y, fontHeight);
+
+  cursorContext.clearRect(0, 0, 1000, 1000);
+  cursorContext.beginPath();
+  cursorContext.lineWidth = 1;
+  cursorContext.strokeStyle = theme.cursor;
+  cursorContext.rect(gridx, gridy, -fontWidth, -fontHeight);
+  cursorContext.stroke();
+  cursorContext.closePath();
+
+
+
   if (!drawnow) {
     return;
   }
-  var pos = getMousePos(rasterCanvas, e);
-  posx = pos.x;
-  posy = pos.y;
+  // rasterContext.clearRect(gridx, gridy, fontWidth, -fontHeight);
 
-  gridx = snap(posx, fontWidth);
-  gridy = snap(posy, fontHeight);
-  rasterContext.clearRect(gridx, gridy, fontWidth, -fontHeight);
   // rasterContext.strokeStyle="red";
   // rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
   rasterContext.stroke();
   rasterContext.fillStyle = getColor("foreground");
   rasterContext.font = "12pt Consolas";
   // rasterContext.fillRect(posx, posy, 4, 4);
-  rasterContext.fillText(char, gridx, gridy - 5);
+  rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
   raster[Math.floor(gridy / fontHeight)][Math.floor(gridx / fontWidth)] = char;
   cells.push({x:(Math.floor(gridx / fontWidth)), y:Math.floor(gridy / fontHeight)});
   // cells.push(gridy);
@@ -190,8 +200,8 @@ function draw(e) {
     for (var i = 0; i < test.length; i++) {
       // rasterContext.strokeStyle="red";
       // rasterContext.rect(test[i].x * fontWidth, test[i].y * fontHeight, fontWidth, -(fontHeight) );
-      rasterContext.clearRect(test[i].x * fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
-      rasterContext.fillText(char, test[i].x * fontWidth, test[i].y * fontHeight - 5);
+      rasterContext.clearRect(test[i].x * fontWidth - fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
+      rasterContext.fillText(char, test[i].x * fontWidth - fontWidth, test[i].y * fontHeight - 5);
       raster[test[i].y][test[i].x] = char;
     }
 
@@ -256,14 +266,14 @@ function drawing(e) {
 
     gridx = snap(posx, fontWidth);
     gridy = snap(posy, fontHeight)
-    rasterContext.clearRect(gridx, gridy, fontWidth, -fontHeight);
+    rasterContext.clearRect(gridx, gridy, -fontWidth, -fontHeight);
     // rasterContext.strokeStyle="red";
     // rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
     rasterContext.stroke();
     rasterContext.fillStyle = getColor("foreground");
     rasterContext.font = "12pt Consolas";
     // rasterContext.fillRect(posx, posy, 4, 4);
-    rasterContext.fillText(char, gridx, gridy - 5);
+    rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
     cells = [];
   }
 }
