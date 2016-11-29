@@ -2,10 +2,17 @@ class Charaster {
   constructor() {
     this.themes = new Array();
     this.theme;
+    this.font = "12pt Consolas";
     this.fontHeight = 19;
     this.fontWidth = 9;
     this.gridWidth = 80;
     this.gridHeight = 24;
+    this.gridCanvas;
+    this.gridContext;
+    this.rasterCanvas;
+    this.rasterContext;
+    this.cursorCanvas;
+    this.cursorContext;
   }
 }
 

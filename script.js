@@ -1,31 +1,55 @@
-// Charaster.themes = themes;
-// Charaster.theme =
-
-
-
-
-
-// charaster.theme = themes[0];
 var theme = charaster.theme;
 
-var gridCanvas = document.getElementById("grid");
-var gridContext = gridCanvas.getContext("2d");
-gridContext.translate(0.5, 0.5);
-fitToContainer(gridCanvas);
+charaster.gridCanvas = document.getElementById("grid");
+charaster.gridContext = charaster.gridCanvas.getContext("2d");
+charaster.rasterCanvas = document.getElementById("raster");
+charaster.rasterContext = charaster.rasterCanvas.getContext("2d");
+charaster.cursorCanvas = document.getElementById("cursor");
+charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 
-var rasterCanvas = document.getElementById("raster");
-var rasterContext = rasterCanvas.getContext("2d");
-rasterContext.translate(0.5, 0.5);
-rasterContext.lineWidth = 1;
-rasterContext.strokeStyle = theme.foreground;
-rasterContext.font = "12pt Consolas";
-fitToContainer(rasterCanvas);
+function drawGrid(canvas, context) {
+  fitToContainer(canvas);
+  context.strokeStyle = theme.grid;
+  context.beginPath();
+  for (var row = 0; row < canvas.height; row += fontHeight) {
+    context.moveTo(0, row);
+    context.lineTo(canvas.width, row);
+    context.stroke();
+  }
+  for (var col = 0; col < canvas.width; col += fontWidth) {
+    context.moveTo(col, 0);
+    context.lineTo(col, canvas.height);
+    context.stroke();
+  }
+  context.closePath();
+}
 
-var cursorCanvas = document.getElementById("cursor");
-var cursorContext = cursorCanvas.getContext("2d");
-cursorContext.translate(0.5, 0.5);
-cursorContext.lineWidth = 1;
-fitToContainer(cursorCanvas);
+function drawRaster(canvas, context) {
+  fitToContainer(canvas);
+  context.strokeStyle = theme.foreground;
+  context.font = "12pt Consolas";
+  context.beginPath();
+  for (var col = 0; col < raster.length; col++) {
+    for (var row = 0; row < raster[0].length; row++) {
+      if (raster[col][row] != null) {
+        context.fillText(raster[col][row], row * fontWidth, col * fontHeight - 5);
+      }
+    }
+  }
+  context.closePath();
+}
+
+function drawCursor(canvas, context) {
+  fitToContainer(canvas);
+  context.beginPath();
+  context.strokeStyle = theme.cursor;
+  context.rect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, fontHeight);
+  context.stroke();
+  context.closePath();
+  document.getElementById("cursorPos").innerHTML = "(" + cursor.x + ", " + cursor.y + ")";
+}
+
+
 
 var char = "o";
 var fontHeight = 19;
@@ -44,9 +68,10 @@ var bars = document.getElementsByClassName("bar");
 var foreground = document.getElementById("foreground");
 
 setTheme(theme.name);
-drawGrid();
-drawRaster();
-drawCursor();
+drawRaster(charaster.rasterCanvas, charaster.rasterContext);
+drawCursor(charaster.cursorCanvas, charaster.cursorContext);
+drawGrid(charaster.gridCanvas, charaster.gridContext);
+
 
 window.addEventListener("keydown", function(e) {
   // Arrow keys.
@@ -99,16 +124,16 @@ function myKeyPress(e) {
 }
 
 function moveCursor(x, y) {
-  cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
+  charaster.cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
   cursor.x = x;
   cursor.y = y;
-  drawCursor();
+  drawCursor(charaster.cursorCanvas, charaster.cursorContext);
 }
 
 function onKeyDown(e) {
 
   // Move cursor with arrow keys.
-  cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
+  charaster.cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
   if (e.keyCode == 39 && cursor.x < gridWidth) {
     cursor.x++;
   } else if (e.keyCode == 40 && cursor.y < gridHeight) {
@@ -118,7 +143,7 @@ function onKeyDown(e) {
   } else if (e.keyCode == 38 && cursor.y > 0) {
     cursor.y--;
   }
-  drawCursor();
+  drawCursor(charaster.cursorCanvas, charaster.cursorContext);
   if (e.keyCode == 65) {
     // toggleDarkMode();
     setTheme("test");
@@ -153,13 +178,11 @@ function setTheme(name) {
     color.style.backgroundColor = theme.colors[i];
     foreground.appendChild(color);
   }
-  drawGrid();
-  drawCursor();
 }
 
 function setChar(char, x, y) {
-  rasterContext.clearRect(cursor.x * fontWidth, (cursor.y + 1) * fontHeight, fontWidth, -fontHeight);
-  rasterContext.fillText(char, x * fontWidth, (y + 1) * fontHeight - 5);
+  charaster.rasterContext.clearRect(cursor.x * fontWidth, (cursor.y + 1) * fontHeight, fontWidth, -fontHeight);
+  charaster.rasterContext.fillText(char, x * fontWidth, (y + 1) * fontHeight - 5);
   // raster[y][x] = char;
 }
 
@@ -167,49 +190,49 @@ function setChar(char, x, y) {
 var cells = [];
 function draw(e) {
 
-  var pos = getMousePos(rasterCanvas, e);
+  var pos = getMousePos(charaster.rasterCanvas, e);
   var gridx = snap(pos.x, fontWidth);
   var gridy = snap(pos.y, fontHeight);
 
-  cursorContext.clearRect(-1, -1, 1000, 1000);
-  cursorContext.beginPath();
-  cursorContext.lineWidth = 1;
-  cursorContext.strokeStyle = theme.cursor;
-  cursorContext.rect(gridx, gridy, -fontWidth, -fontHeight);
-  cursorContext.stroke();
-  cursorContext.closePath();
+  charaster.cursorContext.clearRect(-1, -1, 1000, 1000);
+  charaster.cursorContext.beginPath();
+  charaster.cursorContext.lineWidth = 1;
+  charaster.cursorContext.strokeStyle = theme.cursor;
+  charaster.cursorContext.rect(gridx, gridy, -fontWidth, -fontHeight);
+  charaster.cursorContext.stroke();
+  charaster.cursorContext.closePath();
 
 
 
   if (!drawnow) {
     return;
   }
-  // rasterContext.clearRect(gridx, gridy, fontWidth, -fontHeight);
+  // charaster.rasterContext.clearRect(gridx, gridy, fontWidth, -fontHeight);
 
-  // rasterContext.strokeStyle="red";
-  // rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
-  rasterContext.stroke();
-  rasterContext.fillStyle = getColor("foreground");
-  rasterContext.font = "12pt Consolas";
-  // rasterContext.fillRect(posx, posy, 4, 4);
-  rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
+  // charaster.rasterContext.strokeStyle="red";
+  // charaster.rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
+  charaster.rasterContext.stroke();
+  charaster.rasterContext.fillStyle = getColor("foreground");
+  charaster.rasterContext.font = "12pt Consolas";
+  // charaster.rasterContext.fillRect(posx, posy, 4, 4);
+  charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
   raster[Math.floor(gridy / fontHeight)][Math.floor(gridx / fontWidth)] = char;
   cells.push({x:(Math.floor(gridx / fontWidth)), y:Math.floor(gridy / fontHeight)});
   // cells.push(gridy);
 
   if (cells.length >= 2) {
-    // rasterContext.clearRect(0, 30, 1000, 20);
-    // rasterContext.fillText(cells[0], 0, 40);
-    // rasterContext.moveTo(cells[0].x + (fontWidth / 2), cells[0].y + (fontHeight / 2));
-    // rasterContext.strokeStyle = "#333";
-    // rasterContext.lineTo(cells[1].x + (fontWidth / 2), cells[1].y + (fontHeight / 2));
-    // rasterContext.stroke();
+    // charaster.rasterContext.clearRect(0, 30, 1000, 20);
+    // charaster.rasterContext.fillText(cells[0], 0, 40);
+    // charaster.rasterContext.moveTo(cells[0].x + (fontWidth / 2), cells[0].y + (fontHeight / 2));
+    // charaster.rasterContext.strokeStyle = "#333";
+    // charaster.rasterContext.lineTo(cells[1].x + (fontWidth / 2), cells[1].y + (fontHeight / 2));
+    // charaster.rasterContext.stroke();
     test = rasterLine(cells[0].x, cells[0].y, cells[1].x, cells[1].y);
     for (var i = 0; i < test.length; i++) {
-      // rasterContext.strokeStyle="red";
-      // rasterContext.rect(test[i].x * fontWidth, test[i].y * fontHeight, fontWidth, -(fontHeight) );
-      rasterContext.clearRect(test[i].x * fontWidth - fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
-      rasterContext.fillText(char, test[i].x * fontWidth - fontWidth, test[i].y * fontHeight - 5);
+      // charaster.rasterContext.strokeStyle="red";
+      // charaster.rasterContext.rect(test[i].x * fontWidth, test[i].y * fontHeight, fontWidth, -(fontHeight) );
+      charaster.rasterContext.clearRect(test[i].x * fontWidth - fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
+      charaster.rasterContext.fillText(char, test[i].x * fontWidth - fontWidth, test[i].y * fontHeight - 5);
       raster[test[i].y][test[i].x] = char;
     }
 
@@ -240,8 +263,8 @@ function getColor(control) {
 
 function topBar() {
   var top = document.getElementById("controls").clientHeight + 1;
-  gridCanvas.style.top = top + "px";
-  rasterCanvas.style.top = top + "px";
+  charaster.gridCanvas.style.top = top + "px";
+  charaster.rasterCanvas.style.top = top + "px";
   cursorCanvas.style.top = top + "px";
   // var iframe = document.getElementById("rasterFrame");
   // var bottom = 24;
@@ -268,101 +291,43 @@ function drawing(e) {
     //   ctx.stroke();
     //   cells = [];
     // }
-    var pos = getMousePos(rasterCanvas, e);
+    var pos = getMousePos(charaster.rasterCanvas, e);
     posx = pos.x;
     posy = pos.y;
 
     gridx = snap(posx, fontWidth);
     gridy = snap(posy, fontHeight)
-    rasterContext.clearRect(gridx, gridy, -fontWidth, -fontHeight);
-    // rasterContext.strokeStyle="red";
-    // rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
-    rasterContext.stroke();
-    rasterContext.fillStyle = getColor("foreground");
-    rasterContext.font = "12pt Consolas";
-    // rasterContext.fillRect(posx, posy, 4, 4);
-    rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
+    charaster.rasterContext.clearRect(gridx, gridy, -fontWidth, -fontHeight);
+    // charaster.rasterContext.strokeStyle="red";
+    // charaster.rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
+    charaster.rasterContext.stroke();
+    charaster.rasterContext.fillStyle = getColor("foreground");
+    charaster.rasterContext.font = "12pt Consolas";
+    // charaster.rasterContext.fillRect(posx, posy, 4, 4);
+    charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
     cells = [];
   }
 }
 
 
 function fitToContainer(canvas) {
-  // Make it visually fill the positioned parent
-  // canvas.style.width ='100%';
-  // canvas.style.height ='100%';
-  // canvas.style.height='calc(100% - 32px)';
-  // ...then set the internal size to match
   canvas.width  = canvas.offsetWidth;
   canvas.width  = gridWidth * fontWidth + 1;
   canvas.height = canvas.offsetHeight;
   canvas.height = gridHeight * fontHeight + 1;
-  var top = document.getElementById("controls").clientHeight + 1 + "px";
-  canvas.style.top = top;
-  // alert(top);
+  canvas.style.top = document.getElementById("controls").clientHeight + 1 + "px";
   canvas.getContext("2d").translate(0.5, 0.5);
-
 }
 
-function drawGrid() {
-  // var canvas = document.getElementById("grid");
-  // var ctx = canvas.getContext("2d");
 
-  // Canvas size.
-  fitToContainer(gridCanvas);
 
-  // Draw grid.
-  gridContext.lineWidth = 1;
-  gridContext.strokeStyle = theme.grid;
-  for (var row = 0; row < gridCanvas.height; row += fontHeight) {
-    gridContext.moveTo(0, row);
-    gridContext.lineTo(gridCanvas.width, row);
-    gridContext.stroke();
-  }
-  for (var col = 0; col < gridCanvas.width; col += fontWidth) {
-    gridContext.moveTo(col, 0);
-    gridContext.lineTo(col, gridCanvas.height);
-    gridContext.stroke();
-  }
-}
 
-function drawRaster() {
 
-  // Canvas size.
-  fitToContainer(rasterCanvas);
-
-  // For some reason this is not remembered.
-  rasterContext.lineWidth = 1;
-  rasterContext.strokeStyle = theme.foreground;
-  rasterContext.font = "12pt Consolas";
-
-  // Draw grid.
-  for (var col = 0; col < raster.length; col++) {
-    for (var row = 0; row < raster[0].length; row++) {
-      if (raster[col][row] != null) {
-        rasterContext.fillText(raster[col][row], row * fontWidth, col * fontHeight - 5);
-      }
-    }
-  }
-}
-
-function drawCursor() {
-
-  fitToContainer(cursorCanvas);
-  // rasterContext.translate(0.5, 0.5);
-  cursorContext.beginPath();
-  cursorContext.lineWidth = 1;
-  cursorContext.strokeStyle = theme.cursor;
-  cursorContext.rect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, fontHeight);
-  cursorContext.stroke();
-  cursorContext.closePath();
-  document.getElementById("cursorPos").innerHTML = "(" + cursor.x + ", " + cursor.y + ")";
-}
 
 
 
 function snap(pos, grid) {
-  for (var i = 0; i < Math.max(gridCanvas.width, gridCanvas.height); i += grid) {
+  for (var i = 0; i < Math.max(charaster.rasterCanvas.width, charaster.rasterCanvas.height); i += grid) {
     if (pos <= i) {
       return i;
     }
