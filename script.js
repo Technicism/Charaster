@@ -9,20 +9,12 @@ charaster.cursorCanvas = document.getElementById("cursor");
 charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 
 // Info.
+charaster.cursorPos = document.getElementById("cursorPos");
 
 
 
 
 
-function drawCursor(canvas, context) {
-  fitToContainer(canvas);
-  context.beginPath();
-  context.strokeStyle = theme.cursor;
-  context.rect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, fontHeight);
-  context.stroke();
-  context.closePath();
-  document.getElementById("cursorPos").innerHTML = "(" + cursor.x + ", " + cursor.y + ")";
-}
 
 
 
@@ -34,7 +26,7 @@ var gridHeight = 40;
 var raster = createRaster(gridWidth, gridHeight);
 
 
-var cursor = new Cell(0, 0);
+var cursor = new Point(0, 0);
 
 var body = document.getElementById("body");
 var controls = document.getElementById("controls");
@@ -44,7 +36,7 @@ var foreground = document.getElementById("foreground");
 
 setTheme(theme.name);
 charaster.drawRaster();
-drawCursor(charaster.cursorCanvas, charaster.cursorContext);
+charaster.drawCursor();
 
 charaster.drawGrid();
 
@@ -94,35 +86,30 @@ function myKeyPress(e) {
 
 
   char = String.fromCharCode(e.keyCode);
-  setChar(String.fromCharCode(e.keyCode), cursor.x, cursor.y);
-  moveCursor(cursor.x + 1, cursor.y);
+  // setChar(String.fromCharCode(e.keyCode), cursor.x, cursor.y);
+  charaster.placeCell(new Cell(charaster.cursor, String.fromCharCode(e.keyCode)));
+  charaster.moveCursorRelative(1, 0);
   document.getElementById("char").value = char;
 }
 
-function moveCursor(x, y) {
-  charaster.cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
-  cursor.x = x;
-  cursor.y = y;
-  drawCursor(charaster.cursorCanvas, charaster.cursorContext);
-}
+// function moveCursor(x, y) {
+//   charaster.cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
+//   cursor.x = x;
+//   cursor.y = y;
+//   charaster.drawCursor();
+// }
 
 function onKeyDown(e) {
 
   // Move cursor with arrow keys.
-  charaster.cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
-  if (e.keyCode == 39 && cursor.x < gridWidth) {
-    cursor.x++;
-  } else if (e.keyCode == 40 && cursor.y < gridHeight) {
-    cursor.y++;
-  } else if (e.keyCode == 37 && cursor.x > 0) {
-    cursor.x--;
-  } else if (e.keyCode == 38 && cursor.y > 0) {
-    cursor.y--;
-  }
-  drawCursor(charaster.cursorCanvas, charaster.cursorContext);
-  if (e.keyCode == 65) {
-    // toggleDarkMode();
-    setTheme("test");
+  if (e.keyCode == 39 && charaster.cursor.x < gridWidth) {
+    charaster.moveCursorRelative(1, 0);
+  } else if (e.keyCode == 40 && charaster.cursor.y < gridHeight) {
+    charaster.moveCursorRelative(0, 1);
+  } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
+    charaster.moveCursorRelative(-1, 0);
+  } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
+    charaster.moveCursorRelative(0, -1);
   }
 }
 
