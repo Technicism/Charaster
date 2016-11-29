@@ -1,5 +1,3 @@
-var theme = charaster.theme;
-
 // Canvases.
 charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");
@@ -10,8 +8,17 @@ charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 
 // Info.
 charaster.cursorPos = document.getElementById("cursorPos");
+charaster.gridSize = document.getElementById("gridSize");
+charaster.gridSize.innerHTML = "[" + charaster.gridWidth + ", " + charaster.gridHeight + "]";
 
-
+// Chrome.
+charaster.body = document.getElementById("body");
+charaster.controls = document.getElementById("controls");
+charaster.info = document.getElementById("info");
+charaster.bars = document.getElementsByClassName("bar");
+charaster.foreground = document.getElementById("foreground");
+charaster.icons = document.getElementsByClassName("icon");
+charaster.iconStrokes = document.getElementsByClassName("iconStroke");
 
 
 
@@ -23,18 +30,11 @@ var fontHeight = 19;
 var fontWidth = 9;
 var gridWidth = 120;
 var gridHeight = 40;
-var raster = createRaster(gridWidth, gridHeight);
 
 
-var cursor = new Point(0, 0);
 
-var body = document.getElementById("body");
-var controls = document.getElementById("controls");
-var info = document.getElementById("info");
-var bars = document.getElementsByClassName("bar");
-var foreground = document.getElementById("foreground");
 
-setTheme(theme.name);
+charaster.applyTheme(charaster.theme.name);
 charaster.drawRaster();
 charaster.drawCursor();
 
@@ -65,7 +65,7 @@ document.onkeydown = onKeyDown;
 
 
 function copy() {
-  alert(raster[cursor.y][cursor.x]);
+  alert("copy");
 }
 
 function myKeyPress(e) {
@@ -92,12 +92,6 @@ function myKeyPress(e) {
   document.getElementById("char").value = char;
 }
 
-// function moveCursor(x, y) {
-//   charaster.cursorContext.clearRect(cursor.x * fontWidth, cursor.y * fontHeight, fontWidth, -fontHeight);
-//   cursor.x = x;
-//   cursor.y = y;
-//   charaster.drawCursor();
-// }
 
 function onKeyDown(e) {
 
@@ -113,41 +107,7 @@ function onKeyDown(e) {
   }
 }
 
-function setTheme(name) {
 
-  // Set the colors of the page.
-  body.style.background = theme.background;
-  controls.style.background = theme.bar;
-  controls.style.borderColor = theme.barBorder;
-  info.style.background = theme.bar;
-  info.style.borderColor = theme.barBorder;
-  icons = document.getElementsByClassName("icon");
-  for (var i = 0; i < icons.length; i++) {
-    icons[i].style.fill = theme.icon;
-  }
-  iconStrokes = document.getElementsByClassName("iconStroke");
-  for (var i = 0; i < iconStrokes.length; i++) {
-    iconStrokes[i].style.stroke = theme.icon;
-  }
-  for (var i = 0; i < bars.length; i++) {
-    bars[i].style.borderColor = theme.barBorder;
-  }
-
-  // Set the colors of the tools.
-  for (var i = 0; i < theme.colors.length; i++) {
-    var color = document.createElement('option');
-    color.value = i;
-    color.innerHTML = i;
-    color.style.backgroundColor = theme.colors[i];
-    foreground.appendChild(color);
-  }
-}
-
-function setChar(char, x, y) {
-  charaster.rasterContext.clearRect(cursor.x * fontWidth, (cursor.y + 1) * fontHeight, fontWidth, -fontHeight);
-  charaster.rasterContext.fillText(char, x * fontWidth, (y + 1) * fontHeight - 5);
-  // raster[y][x] = char;
-}
 
 
 var cells = [];
@@ -160,7 +120,7 @@ function draw(e) {
   charaster.cursorContext.clearRect(-1, -1, 1000, 1000);
   charaster.cursorContext.beginPath();
   charaster.cursorContext.lineWidth = 1;
-  charaster.cursorContext.strokeStyle = theme.cursor;
+  charaster.cursorContext.strokeStyle = charaster.theme.cursor;
   charaster.cursorContext.rect(gridx, gridy, -fontWidth, -fontHeight);
   charaster.cursorContext.stroke();
   charaster.cursorContext.closePath();
@@ -179,7 +139,7 @@ function draw(e) {
   charaster.rasterContext.font = "12pt Consolas";
   // charaster.rasterContext.fillRect(posx, posy, 4, 4);
   charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
-  raster[Math.floor(gridy / fontHeight)][Math.floor(gridx / fontWidth)] = char;
+  charaster.raster[Math.floor(gridy / fontHeight)][Math.floor(gridx / fontWidth)] = char;
   cells.push({x:(Math.floor(gridx / fontWidth)), y:Math.floor(gridy / fontHeight)});
   // cells.push(gridy);
 
@@ -196,7 +156,7 @@ function draw(e) {
       // charaster.rasterContext.rect(test[i].x * fontWidth, test[i].y * fontHeight, fontWidth, -(fontHeight) );
       charaster.rasterContext.clearRect(test[i].x * fontWidth - fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
       charaster.rasterContext.fillText(char, test[i].x * fontWidth - fontWidth, test[i].y * fontHeight - 5);
-      raster[test[i].y][test[i].x] = char;
+      charaster.raster[test[i].y][test[i].x] = char;
     }
 
     cells.shift();
@@ -215,9 +175,9 @@ window.addEventListener('resize', topBar, false);
 function getColor(control) {
   var value = document.getElementById(control).value;
   if (value == "foreground") {
-    return theme.foreground;
+    return charaster.theme.foreground;
   } else {
-    return theme.colors[value];
+    return charaster.theme.colors[value];
   }
 }
 
@@ -356,14 +316,3 @@ function rasterLine(x0, y0, x1, y1) {
 
 
 
-function createRaster(cols, rows) {
-  var array = [];
-  for (var i = 0; i < rows; i++) {
-    array[i] = [];
-    for (var col = 0; col < cols; col++) {
-      array[i].push(null);
-    }
-  }
-  document.getElementById("gridSize").innerHTML = "[" + gridWidth + ", " + gridHeight + "]";
-  return array;
-}

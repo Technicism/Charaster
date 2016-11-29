@@ -7,6 +7,7 @@ class Charaster {
     this.fontWidth = 9;
     this.gridWidth = 80;
     this.gridHeight = 24;
+    this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
 
     // Canvases.
@@ -19,14 +20,23 @@ class Charaster {
 
     // Info.
     this.cursorPos;
+    this.gridSize;
 
+    // Chrome.
+    this.body;
+    this.controls;
+    this.info;
+    this.bars;
+    this.foreground;
+    this.icons;
+    this.iconStrokes;
   }
 
   drawGrid() {
     var canvas = this.gridCanvas;
     var context = this.gridContext;
     fitToContainer(canvas);
-    context.strokeStyle = theme.grid;
+    context.strokeStyle = this.theme.grid;
     context.beginPath();
     for (var row = 0; row < canvas.height; row += this.fontHeight) {
       context.moveTo(0, row);
@@ -45,7 +55,7 @@ class Charaster {
     var canvas = this.rasterCanvas;
     var context = this.rasterContext;
     fitToContainer(canvas);
-    context.strokeStyle = theme.foreground;
+    context.strokeStyle = this.theme.foreground;
     context.font = "12pt Consolas";
     for (var col = 0; col < raster.length; col++) {
       for (var row = 0; row < raster[0].length; row++) {
@@ -61,7 +71,7 @@ class Charaster {
     var context = this.cursorContext;
     fitToContainer(canvas);
     context.beginPath();
-    context.strokeStyle = theme.cursor;
+    context.strokeStyle = this.theme.cursor;
     context.rect(this.cursor.x * fontWidth, this.cursor.y * fontHeight, fontWidth, fontHeight);
     context.stroke();
     context.closePath();
@@ -78,6 +88,18 @@ class Charaster {
     this.drawCursor();
   }
 
+  createRaster(cols, rows) {
+    var array = [];
+    for (var i = 0; i < rows; i++) {
+      array[i] = [];
+      for (var col = 0; col < cols; col++) {
+        array[i].push(null);
+      }
+    }
+    return array;
+  }
+
+
   placeCell(cell) {
     this.rasterContext.fillStyle = this.theme.foreground;
     this.rasterContext.clearRect(
@@ -89,6 +111,35 @@ class Charaster {
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
     );
   }
+
+  applyTheme(name) {
+
+    // Set the colors of the page.
+    this.body.style.background = this.theme.background;
+    this.controls.style.background = this.theme.bar;
+    this.controls.style.borderColor = this.theme.barBorder;
+    this.info.style.background = this.theme.bar;
+    this.info.style.borderColor = this.theme.barBorder;
+    for (var i = 0; i < this.icons.length; i++) {
+      this.icons[i].style.fill = this.theme.icon;
+    }
+    for (var i = 0; i < this.iconStrokes.length; i++) {
+      this.iconStrokes[i].style.stroke = this.theme.icon;
+    }
+    for (var i = 0; i < this.bars.length; i++) {
+      this.bars[i].style.borderColor = this.theme.barBorder;
+    }
+
+    // Set the colors of the tools.
+    for (var i = 0; i < this.theme.colors.length; i++) {
+      var color = document.createElement('option');
+      color.value = i;
+      color.innerHTML = i;
+      color.style.backgroundColor = this.theme.colors[i];
+      foreground.appendChild(color);
+    }
+  }
+
 }
 
 class Point {
