@@ -1,5 +1,6 @@
 var theme = charaster.theme;
 
+// Canvases.
 charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");
 charaster.rasterCanvas = document.getElementById("raster");
@@ -7,37 +8,11 @@ charaster.rasterContext = charaster.rasterCanvas.getContext("2d");
 charaster.cursorCanvas = document.getElementById("cursor");
 charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 
-function drawGrid(canvas, context) {
-  fitToContainer(canvas);
-  context.strokeStyle = theme.grid;
-  context.beginPath();
-  for (var row = 0; row < canvas.height; row += fontHeight) {
-    context.moveTo(0, row);
-    context.lineTo(canvas.width, row);
-    context.stroke();
-  }
-  for (var col = 0; col < canvas.width; col += fontWidth) {
-    context.moveTo(col, 0);
-    context.lineTo(col, canvas.height);
-    context.stroke();
-  }
-  context.closePath();
-}
+// Info.
 
-function drawRaster(canvas, context) {
-  fitToContainer(canvas);
-  context.strokeStyle = theme.foreground;
-  context.font = "12pt Consolas";
-  context.beginPath();
-  for (var col = 0; col < raster.length; col++) {
-    for (var row = 0; row < raster[0].length; row++) {
-      if (raster[col][row] != null) {
-        context.fillText(raster[col][row], row * fontWidth, col * fontHeight - 5);
-      }
-    }
-  }
-  context.closePath();
-}
+
+
+
 
 function drawCursor(canvas, context) {
   fitToContainer(canvas);
@@ -68,9 +43,10 @@ var bars = document.getElementsByClassName("bar");
 var foreground = document.getElementById("foreground");
 
 setTheme(theme.name);
-drawRaster(charaster.rasterCanvas, charaster.rasterContext);
+charaster.drawRaster();
 drawCursor(charaster.cursorCanvas, charaster.cursorContext);
-drawGrid(charaster.gridCanvas, charaster.gridContext);
+
+charaster.drawGrid();
 
 
 window.addEventListener("keydown", function(e) {
@@ -246,9 +222,6 @@ function draw(e) {
 var drawnow = false;
 window.addEventListener('mousedown', drawing, false);
 window.addEventListener('mouseup', drawing, false);
-// window.addEventListener('resize', drawGrid, false);
-// window.addEventListener('resize', drawRaster, false);
-// window.addEventListener('resize', drawCursor, false);
 window.addEventListener('resize', topBar, false);
 
 
