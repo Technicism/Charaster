@@ -1,3 +1,10 @@
+function getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect();
+  return new Point(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+
+
 // Canvases.
 charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");
@@ -24,7 +31,6 @@ charaster.iconStrokes = document.getElementsByClassName("iconStroke");
 
 
 
-
 var char = "o";
 var fontHeight = 19;
 var fontWidth = 9;
@@ -37,65 +43,15 @@ var gridHeight = 40;
 charaster.applyTheme(charaster.theme.name);
 charaster.drawRaster();
 charaster.drawCursor();
-
 charaster.drawGrid();
 
 
 window.addEventListener("keydown", function(e) {
-  // Arrow keys.
+
+  // Move cursor with arrow keys.
   if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
     e.preventDefault();
   }
-}, false);
-
-
-
-
-function getMousePos(canvas, evt) {
-  var rect = canvas.getBoundingClientRect();
-  return {
-    x: evt.clientX - rect.left,
-    y: evt.clientY - rect.top
-  };
-}
-window.addEventListener('mousemove', draw, false);
-window.addEventListener('keypress', myKeyPress, false);
-window.addEventListener('copy', copy, false);
-document.onkeydown = onKeyDown;
-
-
-function copy() {
-  alert("copy");
-}
-
-function myKeyPress(e) {
-  // text = "<pre>";
-
-  // for (var col = 0; col < raster.length; col++) {
-  //   for (var row = 0; row < raster[0].length; row++) {
-  //     if (raster[col][row] != null) {
-  //       text += raster[col][row];
-  //     } else {
-  //       text += "_";
-  //     }
-  //     text += "\n";
-  //   }
-  // }
-  // document.body.innerHTML = text + "</pre>";
-  // return;
-
-
-  char = String.fromCharCode(e.keyCode);
-  // setChar(String.fromCharCode(e.keyCode), cursor.x, cursor.y);
-  charaster.placeCell(new Cell(charaster.cursor, String.fromCharCode(e.keyCode)));
-  charaster.moveCursorRelative(1, 0);
-  document.getElementById("char").value = char;
-}
-
-
-function onKeyDown(e) {
-
-  // Move cursor with arrow keys.
   if (e.keyCode == 39 && charaster.cursor.x < gridWidth) {
     charaster.moveCursorRelative(1, 0);
   } else if (e.keyCode == 40 && charaster.cursor.y < gridHeight) {
@@ -105,6 +61,26 @@ function onKeyDown(e) {
   } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
     charaster.moveCursorRelative(0, -1);
   }
+}, false);
+
+window.addEventListener("keypress", function(e) {
+  charaster.character = String.fromCharCode(e.keyCode);
+  charaster.placeCell(new Cell(charaster.cursor, char));
+  charaster.moveCursorRelative(1, 0);
+  document.getElementById("char").value = charaster.character;
+}, false);
+
+
+
+
+window.addEventListener('copy', copy, false);
+
+
+window.addEventListener('mousemove', draw, false);
+
+
+function copy() {
+  alert("copy");
 }
 
 
@@ -185,7 +161,7 @@ function topBar() {
   var top = document.getElementById("controls").clientHeight + 1;
   charaster.gridCanvas.style.top = top + "px";
   charaster.rasterCanvas.style.top = top + "px";
-  cursorCanvas.style.top = top + "px";
+  charaster.cursorCanvas.style.top = top + "px";
   // var iframe = document.getElementById("rasterFrame");
   // var bottom = 24;
   // iframe.style.height = window.innerHeight - top - bottom + "px";
@@ -224,20 +200,14 @@ function drawing(e) {
     charaster.rasterContext.fillStyle = getColor("foreground");
     charaster.rasterContext.font = "12pt Consolas";
     // charaster.rasterContext.fillRect(posx, posy, 4, 4);
-    charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
+    charaster.placeCell(new Cell(charaster.coordToGrid(new Point(gridx, gridy)), charaster.character));
+    // charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
     cells = [];
   }
 }
 
 
-function fitToContainer(canvas) {
-  canvas.width  = canvas.offsetWidth;
-  canvas.width  = gridWidth * fontWidth + 1;
-  canvas.height = canvas.offsetHeight;
-  canvas.height = gridHeight * fontHeight + 1;
-  canvas.style.top = document.getElementById("controls").clientHeight + 1 + "px";
-  canvas.getContext("2d").translate(0.5, 0.5);
-}
+
 
 
 
