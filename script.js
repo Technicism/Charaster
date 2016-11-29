@@ -1,4 +1,12 @@
-var theme = themes[0];
+// Charaster.themes = themes;
+// Charaster.theme =
+
+
+
+
+
+// charaster.theme = themes[0];
+var theme = charaster.theme;
 
 var gridCanvas = document.getElementById("grid");
 var gridContext = gridCanvas.getContext("2d");
@@ -163,7 +171,7 @@ function draw(e) {
   var gridx = snap(pos.x, fontWidth);
   var gridy = snap(pos.y, fontHeight);
 
-  cursorContext.clearRect(0, 0, 1000, 1000);
+  cursorContext.clearRect(-1, -1, 1000, 1000);
   cursorContext.beginPath();
   cursorContext.lineWidth = 1;
   cursorContext.strokeStyle = theme.cursor;

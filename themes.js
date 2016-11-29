@@ -1,21 +1,5 @@
-class Theme {
-  constructor(name, foreground, background, grid, cursor, bar, barBorder, icon, colors) {
-    this.name = name;
-    this.foreground = foreground;
-    this.background = background;
-    this.grid = grid;
-    this.cursor = cursor;
-    this.bar = bar;
-    this.barBorder = barBorder;
-    this.icon = icon;
-    this.colors = colors;
-  }
-}
-
-var themes = new Array();
-
 // Stereokai theme sourced from https://github.com/carlcalderon/sublime-color-schemes/blob/master/Stereokai/Stereokai.tmTheme
-themes.push(new Theme(
+charaster.themes["Stereokai"] = new Theme(
   "Stereokai",
   "#f8f2f2",
   "#262626",
@@ -42,10 +26,10 @@ themes.push(new Theme(
     "#cccc81",
     "#f8f8f0",
   ]
-));
+);
 
 // Solarized theme sourced from http://ethanschoonover.com/solarized
-themes.push(new Theme(
+charaster.themes["Solarized"] = new Theme(
   "Solarized",
   "#839496",
   "#002b36",
@@ -72,4 +56,7 @@ themes.push(new Theme(
     "#2aa198",
     "#859900"
   ]
-));
+);
+
+// Default theme.
+charaster.theme = charaster.themes["Stereokai"];
