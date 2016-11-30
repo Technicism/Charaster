@@ -1,5 +1,6 @@
 class Charaster {
   constructor() {
+    this.mode = "PENCIL";
     this.themes = new Array();
     this.theme;
     this.character = "o";
@@ -150,10 +151,21 @@ class Charaster {
   }
 
   coordToGrid(point) {
-    return new Point(
+    var grid = new Point(
       Math.floor(point.x / this.fontWidth) - 1,
       Math.floor(point.y / this.fontHeight) - 1
     );
+    grid.x = Math.min(grid.x, this.gridWidth - 1);
+    grid.x = Math.max(grid.x, 0);
+    grid.y = Math.min(grid.y, this.gridHeight - 1);
+    grid.y = Math.max(grid.y, 0);
+    if (isNaN(grid.x)) {
+      grid.x = this.gridWidth - 1;
+    }
+    if (isNaN(grid.y)) {
+      grid.y = this.gridHeight - 1;
+    }
+    return grid;
   }
 }
 

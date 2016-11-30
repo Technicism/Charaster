@@ -1,10 +1,3 @@
-function getMousePos(canvas, e) {
-  var rect = canvas.getBoundingClientRect();
-  return new Point(e.clientX - rect.left, e.clientY - rect.top);
-}
-
-
-
 // Canvases.
 charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");
@@ -27,6 +20,25 @@ charaster.foreground = document.getElementById("foreground");
 charaster.icons = document.getElementsByClassName("icon");
 charaster.iconStrokes = document.getElementsByClassName("iconStroke");
 
+function getMousePos(canvas, e) {
+  var rect = canvas.getBoundingClientRect();
+  return new Point(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function snap(pos, grid) {
+  for (var i = 0; i < Math.max(charaster.rasterCanvas.width, charaster.rasterCanvas.height); i += grid) {
+    if (pos <= i) {
+      return i;
+    }
+  }
+}
+
+function snapPos(point) {
+  var x = snap(point.x, charaster.fontWidth);
+  var y = snap(point.y, charaster.fontHeight);
+  return new Point(x, y);
+}
+
 
 
 
@@ -38,13 +50,12 @@ var gridWidth = 120;
 var gridHeight = 40;
 
 
-
-
-charaster.applyTheme(charaster.theme.name);
-charaster.drawRaster();
-charaster.drawCursor();
-charaster.drawGrid();
-
+window.addEventListener("load", function(e) {
+  charaster.applyTheme(charaster.theme.name);
+  charaster.drawRaster();
+  charaster.drawCursor();
+  charaster.drawGrid();
+} , false);
 
 window.addEventListener("keydown", function(e) {
 
@@ -71,13 +82,45 @@ window.addEventListener("keypress", function(e) {
 }, false);
 
 
+var draw = false;
+
+
+
+charaster.cursorCanvas.addEventListener('mousemove', function(e) {
+  if (charaster.mode == "PENCIL") {
+    var pos = getMousePos(charaster.rasterCanvas, e);
+    charaster.cursor = charaster.coordToGrid(snapPos(pos));
+    charaster.drawCursor();
+    if (draw) {
+      charaster.placeCell(new Cell(charaster.cursor, charaster.character));
+    }
+  }
+} , false);
+
+charaster.cursorCanvas.addEventListener('click', function(e) {
+  if (charaster.mode == "PENCIL") {
+    var pos = getMousePos(charaster.rasterCanvas, e);
+    charaster.cursor = charaster.coordToGrid(snapPos(pos));
+    charaster.placeCell(new Cell(charaster.cursor, charaster.character));
+  }
+} , false);
+
+charaster.cursorCanvas.addEventListener('mousedown', function(e) {
+  if (charaster.mode == "PENCIL") {
+    draw = true;
+  }
+} , false);
+
+charaster.cursorCanvas.addEventListener('mouseup', function(e) {
+  if (charaster.mode == "PENCIL") {
+    draw = false;
+  }
+} , false);
+
+
 
 
 window.addEventListener('copy', copy, false);
-
-
-window.addEventListener('mousemove', draw, false);
-
 
 function copy() {
   alert("copy");
@@ -106,45 +149,30 @@ function draw(e) {
   if (!drawnow) {
     return;
   }
-  // charaster.rasterContext.clearRect(gridx, gridy, fontWidth, -fontHeight);
-
-  // charaster.rasterContext.strokeStyle="red";
-  // charaster.rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
   charaster.rasterContext.stroke();
   charaster.rasterContext.fillStyle = getColor("foreground");
   charaster.rasterContext.font = "12pt Consolas";
-  // charaster.rasterContext.fillRect(posx, posy, 4, 4);
   charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
   charaster.raster[Math.floor(gridy / fontHeight)][Math.floor(gridx / fontWidth)] = char;
   cells.push({x:(Math.floor(gridx / fontWidth)), y:Math.floor(gridy / fontHeight)});
   // cells.push(gridy);
 
   if (cells.length >= 2) {
-    // charaster.rasterContext.clearRect(0, 30, 1000, 20);
-    // charaster.rasterContext.fillText(cells[0], 0, 40);
-    // charaster.rasterContext.moveTo(cells[0].x + (fontWidth / 2), cells[0].y + (fontHeight / 2));
-    // charaster.rasterContext.strokeStyle = "#333";
-    // charaster.rasterContext.lineTo(cells[1].x + (fontWidth / 2), cells[1].y + (fontHeight / 2));
-    // charaster.rasterContext.stroke();
     test = rasterLine(cells[0].x, cells[0].y, cells[1].x, cells[1].y);
     for (var i = 0; i < test.length; i++) {
-      // charaster.rasterContext.strokeStyle="red";
-      // charaster.rasterContext.rect(test[i].x * fontWidth, test[i].y * fontHeight, fontWidth, -(fontHeight) );
       charaster.rasterContext.clearRect(test[i].x * fontWidth - fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
       charaster.rasterContext.fillText(char, test[i].x * fontWidth - fontWidth, test[i].y * fontHeight - 5);
       charaster.raster[test[i].y][test[i].x] = char;
     }
-
     cells.shift();
-
   }
 }
 
 
 
 var drawnow = false;
-window.addEventListener('mousedown', drawing, false);
-window.addEventListener('mouseup', drawing, false);
+// window.addEventListener('mousedown', drawing, false);
+// window.addEventListener('mouseup', drawing, false);
 window.addEventListener('resize', topBar, false);
 
 
@@ -216,13 +244,7 @@ function drawing(e) {
 
 
 
-function snap(pos, grid) {
-  for (var i = 0; i < Math.max(charaster.rasterCanvas.width, charaster.rasterCanvas.height); i += grid) {
-    if (pos <= i) {
-      return i;
-    }
-  }
-}
+
 
 // Based on http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 function rasterLine(x0, y0, x1, y1) {
