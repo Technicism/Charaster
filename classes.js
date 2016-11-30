@@ -7,8 +7,8 @@ class Charaster {
     this.font = "12pt Consolas";
     this.fontHeight = 19;
     this.fontWidth = 9;
-    this.gridWidth = 80;
-    this.gridHeight = 24;
+    this.gridWidth = 280;
+    this.gridHeight = 224;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
 
@@ -74,7 +74,10 @@ class Charaster {
     this.fitToContainer(canvas, context);
     context.beginPath();
     context.strokeStyle = this.theme.cursor;
-    context.rect(this.cursor.x * fontWidth, this.cursor.y * fontHeight, fontWidth, fontHeight);
+    context.rect(
+      this.cursor.x * this.fontWidth, this.cursor.y * this.fontHeight,
+      this.fontWidth, this.fontHeight
+    );
     context.stroke();
     context.closePath();
     this.cursorPos.innerHTML = "(" + this.cursor.x + ", " + this.cursor.y + ")";

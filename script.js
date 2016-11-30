@@ -39,15 +39,13 @@ function snapPos(point) {
   return new Point(x, y);
 }
 
+var draw = false;
+var drawList = new Array();
 
 
 
 
-var char = "o";
-var fontHeight = 19;
-var fontWidth = 9;
-var gridWidth = 120;
-var gridHeight = 40;
+
 
 
 window.addEventListener("load", function(e) {
@@ -63,9 +61,9 @@ window.addEventListener("keydown", function(e) {
   if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
     e.preventDefault();
   }
-  if (e.keyCode == 39 && charaster.cursor.x < gridWidth) {
+  if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth) {
     charaster.moveCursorRelative(1, 0);
-  } else if (e.keyCode == 40 && charaster.cursor.y < gridHeight) {
+  } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight) {
     charaster.moveCursorRelative(0, 1);
   } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
     charaster.moveCursorRelative(-1, 0);
@@ -81,18 +79,27 @@ window.addEventListener("keypress", function(e) {
   document.getElementById("char").value = charaster.character;
 }, false);
 
-
-var draw = false;
-
-
-
 charaster.cursorCanvas.addEventListener('mousemove', function(e) {
   if (charaster.mode == "PENCIL") {
     var pos = getMousePos(charaster.rasterCanvas, e);
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
     if (draw) {
-      charaster.placeCell(new Cell(charaster.cursor, charaster.character));
+      var cell = new Cell(charaster.cursor, charaster.character);
+      charaster.placeCell(cell);
+      drawList.push(cell);
+
+      // Draw lines between cells.
+      if (drawList.length >= 2) {
+        var line = rasterLine(
+          drawList[0].point.x, drawList[0].point.y,
+          drawList[1].point.x, drawList[1].point.y
+        );
+        for (var i = 0; i < line.length; i++) {
+          charaster.placeCell(new Cell(line[i], charaster.character));
+        }
+        drawList.shift();
+      }
     }
   }
 } , false);
@@ -114,6 +121,7 @@ charaster.cursorCanvas.addEventListener('mousedown', function(e) {
 charaster.cursorCanvas.addEventListener('mouseup', function(e) {
   if (charaster.mode == "PENCIL") {
     draw = false;
+    drawList = [];
   }
 } , false);
 
@@ -128,51 +136,6 @@ function copy() {
 
 
 
-
-var cells = [];
-function draw(e) {
-
-  var pos = getMousePos(charaster.rasterCanvas, e);
-  var gridx = snap(pos.x, fontWidth);
-  var gridy = snap(pos.y, fontHeight);
-
-  charaster.cursorContext.clearRect(-1, -1, 1000, 1000);
-  charaster.cursorContext.beginPath();
-  charaster.cursorContext.lineWidth = 1;
-  charaster.cursorContext.strokeStyle = charaster.theme.cursor;
-  charaster.cursorContext.rect(gridx, gridy, -fontWidth, -fontHeight);
-  charaster.cursorContext.stroke();
-  charaster.cursorContext.closePath();
-
-
-
-  if (!drawnow) {
-    return;
-  }
-  charaster.rasterContext.stroke();
-  charaster.rasterContext.fillStyle = getColor("foreground");
-  charaster.rasterContext.font = "12pt Consolas";
-  charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
-  charaster.raster[Math.floor(gridy / fontHeight)][Math.floor(gridx / fontWidth)] = char;
-  cells.push({x:(Math.floor(gridx / fontWidth)), y:Math.floor(gridy / fontHeight)});
-  // cells.push(gridy);
-
-  if (cells.length >= 2) {
-    test = rasterLine(cells[0].x, cells[0].y, cells[1].x, cells[1].y);
-    for (var i = 0; i < test.length; i++) {
-      charaster.rasterContext.clearRect(test[i].x * fontWidth - fontWidth, test[i].y * fontHeight, fontWidth, -fontHeight );
-      charaster.rasterContext.fillText(char, test[i].x * fontWidth - fontWidth, test[i].y * fontHeight - 5);
-      charaster.raster[test[i].y][test[i].x] = char;
-    }
-    cells.shift();
-  }
-}
-
-
-
-var drawnow = false;
-// window.addEventListener('mousedown', drawing, false);
-// window.addEventListener('mouseup', drawing, false);
 window.addEventListener('resize', topBar, false);
 
 
@@ -197,42 +160,7 @@ function topBar() {
 }
 
 
-function drawing(e) {
-  drawnow = !drawnow;
-  if (!drawnow) {
-    // ctx.clearRect(0, 0, 1000, 20);
-    // ctx.fillText(cells[cells.length - 1].x, 0, 10);
-    // ctx.strokeStyle = "#f33";
-    // if (cells.length > 5) {
-    //   ctx.beginPath();
-    //   ctx.moveTo(cells[0].x, cells[0].y);
-    //   for (i = 1; i < cells.length - 2; i++) {
-    //     var xc = (cells[i].x + cells[i + 1].x) / 2;
-    //     var yc = (cells[i].y + cells[i + 1].y) / 2;
-    //     ctx.quadraticCurveTo(cells[i].x, cells[i].y, xc, yc);
-    //   }
-    //   ctx.quadraticCurveTo(cells[i].x, cells[i].y, cells[i+1].x,cells[i+1].y);
-    //   ctx.stroke();
-    //   cells = [];
-    // }
-    var pos = getMousePos(charaster.rasterCanvas, e);
-    posx = pos.x;
-    posy = pos.y;
 
-    gridx = snap(posx, fontWidth);
-    gridy = snap(posy, fontHeight)
-    charaster.rasterContext.clearRect(gridx, gridy, -fontWidth, -fontHeight);
-    // charaster.rasterContext.strokeStyle="red";
-    // charaster.rasterContext.rect(gridx, gridy, fontWidth, -fontHeight);
-    charaster.rasterContext.stroke();
-    charaster.rasterContext.fillStyle = getColor("foreground");
-    charaster.rasterContext.font = "12pt Consolas";
-    // charaster.rasterContext.fillRect(posx, posy, 4, 4);
-    charaster.placeCell(new Cell(charaster.coordToGrid(new Point(gridx, gridy)), charaster.character));
-    // charaster.rasterContext.fillText(char, gridx - fontWidth, gridy - 5);
-    cells = [];
-  }
-}
 
 
 
@@ -290,7 +218,7 @@ function rasterLine(x0, y0, x1, y1) {
   var list = [];
   var numerator = longest >> 1;
   for (var i = 0; i <= longest; i++) {
-    list.push({x:x0, y:y0});
+    list.push(new Point(x0, y0));
     numerator += shortest;
     if (numerator >= longest) {
       numerator -= longest;
