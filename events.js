@@ -95,6 +95,7 @@ function getColor(control) {
   }
 }
 
+// Snap a given value to the grid interval.
 function snap(pos, grid) {
   for (var i = 0; i < Math.max(charaster.rasterCanvas.width, charaster.rasterCanvas.height); i += grid) {
     if (pos <= i) {
@@ -103,13 +104,15 @@ function snap(pos, grid) {
   }
 }
 
+// Snap a given point to the grid.
 function snapPos(point) {
   var x = snap(point.x, charaster.fontWidth);
   var y = snap(point.y, charaster.fontHeight);
   return new Point(x, y);
 }
 
-function buttonModes(id, mode, activate) {
+// When a button is clicked change the mode and visual style of it.
+function buttonMode(id, mode, activate) {
   var button = document.getElementById(id);
   button.addEventListener('click', function(e) {
     var reset = document.getElementsByClassName("icon");
@@ -137,41 +140,52 @@ window.addEventListener("load", function(e) {
   charaster.drawRaster();
   charaster.drawCursor();
   charaster.drawGrid();
-  buttonModes("textMode", "TEXT", false);
-  buttonModes("pencilMode", "PENCIL", true);
+  buttonMode("textMode", "TEXT", false);
+  buttonMode("eraserMode", "ERASER", false);
+  buttonMode("pencilMode", "PENCIL", true);
 }, false);
 
 
 window.addEventListener("keydown", function(e) {
-
-  // Move cursor with arrow keys.
+  if([8].indexOf(e.keyCode) > -1) {
+    e.preventDefault();
+  }
+  if (e.keyCode == 46) {
+    charaster.setCell(new Cell(charaster.cursor, null)); // Delete.
+  }
   if (charaster.mode == "TEXT") {
     if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault();
     }
-    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth) {
-      charaster.moveCursorRelative(1, 0);
-    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight) {
-      charaster.moveCursorRelative(0, 1);
+    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth - 1) {
+      charaster.moveCursorRelative(1, 0);   // Right.
+    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight - 1) {
+      charaster.moveCursorRelative(0, 1);   // Down.
     } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
-      charaster.moveCursorRelative(-1, 0);
+      charaster.moveCursorRelative(-1, 0);  // Left.
     } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
-      charaster.moveCursorRelative(0, -1);
+      charaster.moveCursorRelative(0, -1);  // Up.
+    } else if (e.keyCode == 8) {
+      charaster.setCell(new Cell(charaster.cursor, null)); // Delete.
+      charaster.moveCursorRelative(-1, 0);  // Left.
     }
   }
 }, false);
 
 window.addEventListener("keypress", function(e) {
+  if([13].indexOf(e.keyCode) > -1) {
+    return;
+  }
   charaster.character = String.fromCharCode(e.keyCode);
   document.getElementById("char").value = charaster.character;
   if (charaster.mode == "TEXT") {
-    charaster.placeCell(new Cell(charaster.cursor, charaster.character));
+    charaster.setCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
   }
 }, false);
 
 charaster.cursorCanvas.addEventListener('mousemove', function(e) {
-  if (charaster.mode == "PENCIL") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     var pos = getMousePos(charaster.rasterCanvas, e);
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
@@ -187,7 +201,11 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
 
           // Draw lines between cells.
           for (var i = 0; i < line.length; i++) {
-            charaster.placeCell(new Cell(line[i], charaster.character));
+            var character = null;
+            if (charaster.mode == "PENCIL") {
+              character = charaster.character;
+            }
+            charaster.setCell(new Cell(line[i], character));
           }
           drawList.shift();
         }
@@ -204,30 +222,34 @@ charaster.cursorCanvas.addEventListener('mouseleave', function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener('click', function(e) {
-  if (charaster.mode == "PENCIL") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     var pos = getMousePos(charaster.rasterCanvas, e);
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
-    charaster.placeCell(new Cell(charaster.cursor, charaster.character));
+    var character = null;
+    if (charaster.mode == "PENCIL") {
+      character = charaster.character;
+    }
+    charaster.setCell(new Cell(charaster.cursor, character));
   }
 }, false);
 
 charaster.cursorCanvas.addEventListener('mousedown', function(e) {
-  if (charaster.mode == "PENCIL") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     draw = true;
     var cell = new Cell(charaster.cursor, charaster.character);
-    charaster.placeCell(cell);
+    charaster.setCell(cell);
   }
 }, false);
 
 charaster.cursorCanvas.addEventListener('mouseup', function(e) {
-  if (charaster.mode == "PENCIL") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     draw = false;
     drawList = [];
   }
 }, false);
 
 window.addEventListener('copy', function(e) {
-  alert("copy");
+  alert(charaster.getCell(charaster.cursor));
 }, false);
 
 

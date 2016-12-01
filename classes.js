@@ -7,8 +7,8 @@ class Charaster {
     this.font = "12pt Consolas";
     this.fontHeight = 19;
     this.fontWidth = 9;
-    this.gridWidth = 280;
-    this.gridHeight = 224;
+    this.gridWidth = 80;
+    this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
 
@@ -96,6 +96,16 @@ class Charaster {
     this.drawCursor();
   }
 
+  moveCursor(x, y) {
+    this.cursorContext.clearRect(
+      this.cursor.x * this.fontWidth, this.cursor.y * this.fontHeight,
+      this.fontWidth, -this.fontHeight
+    );
+    this.cursor.x = x;
+    this.cursor.y = y;
+    this.drawCursor();
+  }
+
   createRaster(cols, rows) {
     var array = [];
     for (var i = 0; i < rows; i++) {
@@ -116,17 +126,24 @@ class Charaster {
     context.translate(0.5, 0.5);
   }
 
-  placeCell(cell) {
+  setCell(cell) {
     var context = this.rasterContext;
     context.fillStyle = this.theme.foreground;
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
-    context.fillText(
-      cell.character,
-      cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
-    );
+    if (cell.character != null) {
+      context.fillText(
+        cell.character,
+        cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
+      );
+    }
+    this.raster[cell.point.y][cell.point.x] = cell;
+  }
+
+  getCell(point) {
+    return this.raster[this.cursor.y][this.cursor.x];
   }
 
   applyTheme(name) {
