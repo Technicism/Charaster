@@ -23,9 +23,76 @@ charaster.iconStrokes = document.getElementsByClassName("iconStroke");
 var draw = false;
 var drawList = new Array();
 
+// Based on http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
+function rasterLine(x0, y0, x1, y1) {
+  var width = x1 - x0;
+  var height = y1 - y0;
+  var slopeX0 = 0;
+  var slopeY0 = 0;
+  var slopeX1 = 0;
+  var slopeY1 = 0;
+
+  // Octant.
+  if (width < 0) {
+    slopeX0 = -1;
+  } else if (width > 0) {
+    slopeX0 = 1;
+  }
+  if (height < 0) {
+    slopeY0 = -1;
+  } else if (height > 0) {
+    slopeY0 = 1;
+  }
+  if (width < 0) {
+    slopeX1 = -1;
+  } else if (width > 0) {
+    slopeX1 = 1;
+  }
+  intWidth = Math.abs(width);
+  intHeight = Math.abs(height);
+  var longest = intWidth;
+  var shortest = intHeight;
+  if (longest <= shortest) {
+    longest = intHeight
+    shortest = intWidth
+    if (height < 0) {
+      slopeY1 = -1;
+    } else if (height > 0) {
+      slopeY1 = 1;
+    }
+    slopeX1 = 0;
+  }
+
+  // Drawing.
+  var list = [];
+  var numerator = longest >> 1;
+  for (var i = 0; i <= longest; i++) {
+    list.push(new Point(x0, y0));
+    numerator += shortest;
+    if (numerator >= longest) {
+      numerator -= longest;
+      x0 += slopeX0;
+      y0 += slopeY0;
+    } else {
+      x0 += slopeX1;
+      y0 += slopeY1;
+    }
+  }
+  return list;
+}
+
 function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect();
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
+}
+
+function getColor(control) {
+  var value = document.getElementById(control).value;
+  if (value == "foreground") {
+    return charaster.theme.foreground;
+  } else {
+    return charaster.theme.colors[value];
+  }
 }
 
 function snap(pos, grid) {
@@ -42,20 +109,38 @@ function snapPos(point) {
   return new Point(x, y);
 }
 
+function buttonModes(id, mode, activate) {
+  var button = document.getElementById(id);
+  button.addEventListener('click', function(e) {
+    var reset = document.getElementsByClassName("icon");
+    for (var i = 0; i < reset.length; i++) {
+      reset[i].style.fill = charaster.theme.icon;
+    }
+    var reset = document.getElementsByTagName("svg");
+    for (var i = 0; i < reset.length; i++) {
+      reset[i].style.background = "none";
+    }
+    button.style.background = charaster.theme.iconActive;
+    button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    button.style.borderRadius = "2px";
+    charaster.mode = mode;
+  }, false);
+  if (activate) {
+    button.style.background = charaster.theme.iconActive;
+    button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    button.style.borderRadius = "2px";
+  }
+}
+
 window.addEventListener("load", function(e) {
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
   charaster.drawCursor();
   charaster.drawGrid();
+  buttonModes("textMode", "TEXT", false);
+  buttonModes("pencilMode", "PENCIL", true);
 }, false);
 
-var textMode = document.getElementById("textMode");
-textMode.addEventListener('click', function(e) {
-  textMode.style.background = charaster.theme.iconActive;
-  textMode.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
-  textMode.style.borderRadius = "2px";
-  charaster.mode = "TEXT";
-}, false);
 
 window.addEventListener("keydown", function(e) {
 
@@ -80,7 +165,7 @@ window.addEventListener("keypress", function(e) {
   charaster.character = String.fromCharCode(e.keyCode);
   document.getElementById("char").value = charaster.character;
   if (charaster.mode == "TEXT") {
-    charaster.placeCell(new Cell(charaster.cursor, char));
+    charaster.placeCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
   }
 }, false);
@@ -141,109 +226,14 @@ charaster.cursorCanvas.addEventListener('mouseup', function(e) {
   }
 }, false);
 
-
-
-
-window.addEventListener('copy', copy, false);
-
-function copy() {
+window.addEventListener('copy', function(e) {
   alert("copy");
-}
+}, false);
 
 
-
-window.addEventListener('resize', topBar, false);
-
-
-function getColor(control) {
-  var value = document.getElementById(control).value;
-  if (value == "foreground") {
-    return charaster.theme.foreground;
-  } else {
-    return charaster.theme.colors[value];
-  }
-}
-
-function topBar() {
+window.addEventListener('resize', function(e) {
   var top = document.getElementById("controls").clientHeight + 1;
   charaster.gridCanvas.style.top = top + "px";
   charaster.rasterCanvas.style.top = top + "px";
   charaster.cursorCanvas.style.top = top + "px";
-  // var iframe = document.getElementById("rasterFrame");
-  // var bottom = 24;
-  // iframe.style.height = window.innerHeight - top - bottom + "px";
-  // alert(iframe.style.height);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Based on http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
-function rasterLine(x0, y0, x1, y1) {
-  var width = x1 - x0;
-  var height = y1 - y0;
-  var slopeX0 = 0;
-  var slopeY0 = 0;
-  var slopeX1 = 0;
-  var slopeY1 = 0;
-
-  // Octant.
-  if (width < 0) {
-    slopeX0 = -1;
-  } else if (width > 0) {
-    slopeX0 = 1;
-  }
-  if (height < 0) {
-    slopeY0 = -1;
-  } else if (height > 0) {
-    slopeY0 = 1;
-  }
-  if (width < 0) {
-    slopeX1 = -1;
-  } else if (width > 0) {
-    slopeX1 = 1;
-  }
-  intWidth = Math.abs(width);
-  intHeight = Math.abs(height);
-  var longest = intWidth;
-  var shortest = intHeight;
-  if (longest <= shortest) {
-    longest = intHeight
-    shortest = intWidth
-    if (height < 0) {
-      slopeY1 = -1;
-    } else if (height > 0) {
-      slopeY1 = 1;
-    }
-    slopeX1 = 0;
-  }
-
-  // Drawing.
-  var list = [];
-  var numerator = longest >> 1;
-  for (var i = 0; i <= longest; i++) {
-    list.push(new Point(x0, y0));
-    numerator += shortest;
-    if (numerator >= longest) {
-      numerator -= longest;
-      x0 += slopeX0;
-      y0 += slopeY0;
-    } else {
-      x0 += slopeX1;
-      y0 += slopeY1;
-    }
-  }
-  return list;
-}
+}, false);

@@ -8,8 +8,8 @@ charaster.themes["Stereokai"] = new Theme(
   "#f8f8f0",
   "#d0d0d0",
   "#2b2b2b",
-  "#75715E",
-  "#F8F8F0",
+  "#75715e",
+  "#f8f8f0",
   [
     "#262626",
     "#529bff",
