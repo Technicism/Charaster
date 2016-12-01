@@ -38,6 +38,7 @@ class Charaster {
     var canvas = this.gridCanvas;
     var context = this.gridContext;
     this.fitToContainer(canvas, context);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.strokeStyle = this.theme.grid;
     context.beginPath();
     for (var row = 0; row < canvas.height; row += this.fontHeight) {
@@ -57,6 +58,7 @@ class Charaster {
     var canvas = this.rasterCanvas;
     var context = this.rasterContext;
     this.fitToContainer(canvas, context);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.strokeStyle = this.theme.foreground;
     context.font = "12pt Consolas";
     for (var col = 0; col < raster.length; col++) {
@@ -72,6 +74,7 @@ class Charaster {
     var canvas = this.cursorCanvas;
     var context = this.cursorContext;
     this.fitToContainer(canvas, context);
+    context.clearRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
     context.strokeStyle = this.theme.cursor;
     context.rect(
@@ -114,12 +117,13 @@ class Charaster {
   }
 
   placeCell(cell) {
-    this.rasterContext.fillStyle = this.theme.foreground;
-    this.rasterContext.clearRect(
-      this.cursor.x * this.fontWidth, (this.cursor.y + 1) * this.fontHeight,
+    var context = this.rasterContext;
+    context.fillStyle = this.theme.foreground;
+    context.clearRect(
+      cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
-    this.rasterContext.fillText(
+    context.fillText(
       cell.character,
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
     );
@@ -185,6 +189,12 @@ class Cell {
     this.character = character;
     this.foreground = foreground;
     this.background;
+  }
+  equality(other) {
+    if (this.point == other.point && this.character == other.character) {
+      return true;
+    }
+    return false;
   }
 }
 

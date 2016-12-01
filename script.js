@@ -53,7 +53,7 @@ window.addEventListener("load", function(e) {
   charaster.drawRaster();
   charaster.drawCursor();
   charaster.drawGrid();
-} , false);
+}, false);
 
 window.addEventListener("keydown", function(e) {
 
@@ -86,23 +86,26 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
     charaster.drawCursor();
     if (draw) {
       var cell = new Cell(charaster.cursor, charaster.character);
-      charaster.placeCell(cell);
-      drawList.push(cell);
+      if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
+        drawList.push(cell);
+        if (drawList.length >= 2) {
+          var line = rasterLine(
+            drawList[0].point.x, drawList[0].point.y,
+            drawList[1].point.x, drawList[1].point.y
+          );
 
-      // Draw lines between cells.
-      if (drawList.length >= 2) {
-        var line = rasterLine(
-          drawList[0].point.x, drawList[0].point.y,
-          drawList[1].point.x, drawList[1].point.y
-        );
-        for (var i = 0; i < line.length; i++) {
-          charaster.placeCell(new Cell(line[i], charaster.character));
+          // Draw lines between cells.
+          for (var i = 0; i < line.length; i++) {
+            charaster.placeCell(new Cell(line[i], charaster.character));
+          }
+          drawList.shift();
         }
-        drawList.shift();
+      } else if (drawList.length == 0) {
+        drawList.push(cell);
       }
     }
   }
-} , false);
+}, false);
 
 charaster.cursorCanvas.addEventListener('click', function(e) {
   if (charaster.mode == "PENCIL") {
@@ -110,20 +113,22 @@ charaster.cursorCanvas.addEventListener('click', function(e) {
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.placeCell(new Cell(charaster.cursor, charaster.character));
   }
-} , false);
+}, false);
 
 charaster.cursorCanvas.addEventListener('mousedown', function(e) {
   if (charaster.mode == "PENCIL") {
     draw = true;
+    var cell = new Cell(charaster.cursor, charaster.character);
+    charaster.placeCell(cell);
   }
-} , false);
+}, false);
 
 charaster.cursorCanvas.addEventListener('mouseup', function(e) {
   if (charaster.mode == "PENCIL") {
     draw = false;
     drawList = [];
   }
-} , false);
+}, false);
 
 
 
@@ -231,8 +236,3 @@ function rasterLine(x0, y0, x1, y1) {
   }
   return list;
 }
-
-
-
-
-
