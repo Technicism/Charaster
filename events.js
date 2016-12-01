@@ -20,6 +20,9 @@ charaster.foreground = document.getElementById("foreground");
 charaster.icons = document.getElementsByClassName("icon");
 charaster.iconStrokes = document.getElementsByClassName("iconStroke");
 
+var draw = false;
+var drawList = new Array();
+
 function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect();
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
@@ -39,15 +42,6 @@ function snapPos(point) {
   return new Point(x, y);
 }
 
-var draw = false;
-var drawList = new Array();
-
-
-
-
-
-
-
 window.addEventListener("load", function(e) {
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
@@ -55,28 +49,40 @@ window.addEventListener("load", function(e) {
   charaster.drawGrid();
 }, false);
 
+var textMode = document.getElementById("textMode");
+textMode.addEventListener('click', function(e) {
+  textMode.style.background = charaster.theme.iconActive;
+  textMode.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+  textMode.style.borderRadius = "2px";
+  charaster.mode = "TEXT";
+}, false);
+
 window.addEventListener("keydown", function(e) {
 
   // Move cursor with arrow keys.
-  if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-    e.preventDefault();
-  }
-  if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth) {
-    charaster.moveCursorRelative(1, 0);
-  } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight) {
-    charaster.moveCursorRelative(0, 1);
-  } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
-    charaster.moveCursorRelative(-1, 0);
-  } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
-    charaster.moveCursorRelative(0, -1);
+  if (charaster.mode == "TEXT") {
+    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+    }
+    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth) {
+      charaster.moveCursorRelative(1, 0);
+    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight) {
+      charaster.moveCursorRelative(0, 1);
+    } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
+      charaster.moveCursorRelative(-1, 0);
+    } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
+      charaster.moveCursorRelative(0, -1);
+    }
   }
 }, false);
 
 window.addEventListener("keypress", function(e) {
   charaster.character = String.fromCharCode(e.keyCode);
-  charaster.placeCell(new Cell(charaster.cursor, char));
-  charaster.moveCursorRelative(1, 0);
   document.getElementById("char").value = charaster.character;
+  if (charaster.mode == "TEXT") {
+    charaster.placeCell(new Cell(charaster.cursor, char));
+    charaster.moveCursorRelative(1, 0);
+  }
 }, false);
 
 charaster.cursorCanvas.addEventListener('mousemove', function(e) {
@@ -105,6 +111,11 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
       }
     }
   }
+}, false);
+
+charaster.cursorCanvas.addEventListener('mouseleave', function(e) {
+  draw = false;
+  drawList = [];
 }, false);
 
 charaster.cursorCanvas.addEventListener('click', function(e) {

@@ -199,7 +199,7 @@ class Cell {
 }
 
 class Theme {
-  constructor(name, foreground, background, grid, cursor, bar, barBorder, icon, colors) {
+  constructor(name, foreground, background, grid, cursor, bar, barBorder, icon, iconActive, iconActiveText, colors) {
     this.name = name;
     this.foreground = foreground;
     this.background = background;
@@ -208,7 +208,8 @@ class Theme {
     this.bar = bar;
     this.barBorder = barBorder;
     this.icon = icon;
+    this.iconActive = iconActive;
+    this.iconActiveText = iconActiveText;
     this.colors = colors;
   }
 }
-
