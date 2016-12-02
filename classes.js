@@ -166,11 +166,9 @@ class Charaster {
 
     // Set the colors of the tools.
     for (var i = 0; i < this.theme.colors.length; i++) {
-      var color = document.createElement('option');
-      color.value = i;
-      color.innerHTML = i;
+      var color = document.getElementById("color" + (i + 1));
       color.style.backgroundColor = this.theme.colors[i];
-      foreground.appendChild(color);
+      color.style.borderColor = this.theme.barBorder;
     }
   }
 
