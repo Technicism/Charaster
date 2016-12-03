@@ -86,15 +86,6 @@ function getMousePos(canvas, e) {
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
 }
 
-function getColor(control) {
-  var value = document.getElementById(control).value;
-  if (value == "foreground") {
-    return charaster.theme.foreground;
-  } else {
-    return charaster.theme.colors[value];
-  }
-}
-
 // Snap a given value to the grid interval.
 function snap(pos, grid) {
   for (var i = 0; i < Math.max(charaster.rasterCanvas.width, charaster.rasterCanvas.height); i += grid) {
@@ -143,6 +134,16 @@ window.addEventListener("load", function(e) {
   buttonMode("textMode", "TEXT", false);
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
+  for (var i = 0; i < charaster.theme.colors.length; i++) {
+    var color = document.getElementById("color" + (i + 1));
+    color.style.backgroundColor = charaster.theme.colors[i];
+    color.style.borderColor = charaster.theme.barBorder;
+    color.addEventListener('click', function(e) {
+      var index = e.target.id.replace("color", "") - 1;
+      charaster.foreground = charaster.theme.colors[index];
+      console.log(index + " " + charaster.theme.colors[index] + " " + charaster.foreground);
+    }, false);
+  }
 }, false);
 
 
@@ -177,7 +178,10 @@ window.addEventListener("keypress", function(e) {
     return;
   }
   charaster.character = String.fromCharCode(e.keyCode);
-  document.getElementById("char").value = charaster.character;
+  var preview = document.getElementById("preview");
+  preview.value = charaster.character;
+  preview.style.backgroundColor = charaster.theme.background;
+  preview.style.color = charaster.theme.foreground;
   if (charaster.mode == "TEXT") {
     charaster.setCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);

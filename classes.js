@@ -5,6 +5,7 @@ class Charaster {
     this.theme;
     this.character = "o";
     this.font = "12pt Consolas";
+    this.foreground;
     this.fontHeight = 19;
     this.fontWidth = 9;
     this.gridWidth = 80;
@@ -59,7 +60,7 @@ class Charaster {
     var context = this.rasterContext;
     this.fitToContainer(canvas, context);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.strokeStyle = this.theme.foreground;
+    context.strokeStyle = this.foreground;
     context.font = "12pt Consolas";
     for (var col = 0; col < raster.length; col++) {
       for (var row = 0; row < raster[0].length; row++) {
@@ -128,7 +129,7 @@ class Charaster {
 
   setCell(cell) {
     var context = this.rasterContext;
-    context.fillStyle = this.theme.foreground;
+    context.fillStyle = this.foreground;
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
@@ -164,11 +165,9 @@ class Charaster {
       this.bars[i].style.borderColor = this.theme.barBorder;
     }
 
-    // Set the colors of the tools.
-    for (var i = 0; i < this.theme.colors.length; i++) {
-      var color = document.getElementById("color" + (i + 1));
-      color.style.backgroundColor = this.theme.colors[i];
-      color.style.borderColor = this.theme.barBorder;
+    // Set character colors.
+    if (this.foreground == null) {
+      this.foreground = this.theme.foreground;
     }
   }
 

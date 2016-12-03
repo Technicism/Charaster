@@ -202,23 +202,15 @@
       </div>
       <div class="bar">
         <div>
-          <input type="text" value="o" id="char" maxlength="1" size="1" />
+          <input type="text" value="o" id="preview" maxlength="1" size="1" />
           <select id="terminalScheme">
             <option value="default">Default</option>
             <option value="solaris">Solarized</option>
           </select>
-          <select id="foreground">
-            <option value="foreground">F</option>
-          </select>
-          <select id="background">
-            <option value="1"></option>
-            <option value="2"></option>
-          </select>
         </div>
       </div>
-      <div class="bar">
+      <div class="bar" id="colors">
         <div class="colorGroup">
-          <div id="colorNone">✖</div>
           <div id="color1"></div>
           <div id="color2"></div>
           <div id="color3"></div>
@@ -227,6 +219,10 @@
           <div id="color6"></div>
           <div id="color7"></div>
           <div id="color8"></div>
+          <div id="colorNone">✖</div>
+        </div>
+        <br />
+        <div class="colorGroup">
           <div id="color9"></div>
           <div id="color10"></div>
           <div id="color11"></div>
