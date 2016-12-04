@@ -120,6 +120,14 @@ function buttonMode(id, mode, activate) {
     button.style.background = charaster.theme.iconActive;
     button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
     button.style.borderRadius = "2px";
+    if (charaster.mode == "TEXT" && (mode == "PENCIL") || mode == "ERASER") {
+      charaster.prevCursor = charaster.cursor;
+      charaster.drawCursor();
+    }
+    if ((charaster.mode == "PENCIL" || charaster.mode == "ERASER") && mode == "TEXT") {
+      charaster.cursor = charaster.prevCursor;
+      charaster.drawCursor();
+    }
     charaster.mode = mode;
   }, false);
   if (activate) {

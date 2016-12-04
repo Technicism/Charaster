@@ -13,6 +13,7 @@ class Charaster {
     this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
+    this.prevCursor = new Point(0, 0);
 
     // Canvases.
     this.gridCanvas;
