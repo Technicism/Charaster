@@ -6,6 +6,7 @@ class Charaster {
     this.character = "o";
     this.font = "12pt Consolas";
     this.foreground;
+    this.background;
     this.fontHeight = 19;
     this.fontWidth = 9;
     this.gridWidth = 80;
@@ -24,7 +25,6 @@ class Charaster {
     // Info.
     this.cursorPos;
     this.gridSize;
-    this.preview;
 
     // Chrome.
     this.body;
@@ -34,6 +34,9 @@ class Charaster {
     this.foreground;
     this.icons;
     this.iconStrokes;
+    this.preview;
+    this.noColor;
+    this.themeSelect;
   }
 
   drawGrid() {
@@ -130,12 +133,17 @@ class Charaster {
 
   setCell(cell) {
     var context = this.rasterContext;
-    context.fillStyle = this.foreground;
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
+    context.fillStyle = this.background;
+    context.fillRect(
+      cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
+      this.fontWidth, this.fontHeight
+    );
     if (cell.character != null) {
+      context.fillStyle = this.foreground;
       context.fillText(
         cell.character,
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
@@ -156,6 +164,9 @@ class Charaster {
     this.controls.style.borderColor = this.theme.barBorder;
     this.info.style.background = this.theme.bar;
     this.info.style.borderColor = this.theme.barBorder;
+    this.preview.style.borderColor = this.theme.barBorder;
+    this.noColor.style.borderColor = this.theme.barBorder;
+    this.themeSelect.style.borderColor = this.theme.barBorder;
     for (var i = 0; i < this.icons.length; i++) {
       this.icons[i].style.fill = this.theme.icon;
     }
@@ -170,6 +181,11 @@ class Charaster {
     if (this.foreground == null) {
       this.foreground = this.theme.foreground;
     }
+    if (this.background == null) {
+      this.background = this.theme.background;
+    }
+    this.preview.style.color = this.foreground;
+    this.preview.style.backgroundColor = this.background;
   }
 
   coordToGrid(point) {

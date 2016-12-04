@@ -10,7 +10,6 @@ charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 charaster.cursorPos = document.getElementById("cursorPos");
 charaster.gridSize = document.getElementById("gridSize");
 charaster.gridSize.innerHTML = "[" + charaster.gridWidth + ", " + charaster.gridHeight + "]";
-charaster.preview = document.getElementById("preview");
 
 // Chrome.
 charaster.body = document.getElementById("body");
@@ -20,6 +19,9 @@ charaster.bars = document.getElementsByClassName("bar");
 charaster.foreground = document.getElementById("foreground");
 charaster.icons = document.getElementsByClassName("icon");
 charaster.iconStrokes = document.getElementsByClassName("iconStroke");
+charaster.preview = document.getElementById("preview");
+charaster.noColor = document.getElementById("noColor");
+charaster.themeSelect = document.getElementById("themeSelect");
 
 var draw = false;
 var drawList = new Array();
@@ -135,22 +137,41 @@ window.addEventListener("load", function(e) {
   buttonMode("textMode", "TEXT", false);
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
+
+  // Apply theme colours to buttons.
   for (var i = 0; i < charaster.theme.colors.length; i++) {
     var colorButton = document.getElementById("color" + (i + 1));
     colorButton.style.backgroundColor = charaster.theme.colors[i];
     colorButton.style.borderColor = charaster.theme.barBorder;
+
+    // Left click to apply colour to foreground.
     colorButton.addEventListener('click', function(e) {
       var index = e.target.id.replace("color", "") - 1;
       charaster.foreground = charaster.theme.colors[index];
       charaster.preview.style.color = charaster.theme.colors[index];
     }, false);
+
+    // Right click to apply colour to background.
     colorButton.addEventListener('contextmenu', function(e) {
       e.preventDefault();
       var index = e.target.id.replace("color", "") - 1;
-      charaster.foreground = charaster.theme.colors[index];
+      charaster.background = charaster.theme.colors[index];
       charaster.preview.style.backgroundColor = charaster.theme.colors[index];
     }, false);
   }
+}, false);
+
+// Left click to reset foreground.
+charaster.noColor.addEventListener('click', function(e) {
+  charaster.foreground = charaster.theme.foreground;
+  charaster.preview.style.color = charaster.theme.foreground;
+}, false);
+
+// Right click to reset background.
+charaster.noColor.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  charaster.background = charaster.theme.background;
+  charaster.preview.style.backgroundColor = charaster.theme.background;
 }, false);
 
 
@@ -269,3 +290,4 @@ window.addEventListener('resize', function(e) {
   charaster.rasterCanvas.style.top = top + "px";
   charaster.cursorCanvas.style.top = top + "px";
 }, false);
+

@@ -18,7 +18,7 @@ canvas {
 }
 
 #grid {
-  z-index: 0;
+  z-index: 2;
 }
 
 #text {
@@ -26,7 +26,7 @@ canvas {
 }
 
 #cursor {
-  z-index: 2;
+  z-index: 3;
 }
 
 header {
@@ -72,30 +72,12 @@ footer {
   height: 24px;
 }
 
-
-#pencil {
-  /*background-image: url("icons/draw-freehand.png")*/
-}
-
-
-
 #inputType, #tools, #options{
   /*border-right: solid 1px #777;*/
   display: inline-block;
   padding: 4px 16px 4px 4px;
 }
 
-
-
-#inputType {
-  /*padding-left: 4px;*/
-}
-
-/*#cursorPos {
-  display: inline-block;
-  width: 12ch;
-}
-*/
 
 .bar {
   margin: 2px;
@@ -126,11 +108,9 @@ footer {
   height: 24px;
 }
 
-
-
-html, body { height: 100%; }
-
-
+html, body {
+  height: 100%;
+}
 
 body {
   overflow: hidden;
@@ -148,7 +128,8 @@ body {
   display: block;
   /*line-height: -22px;*/
   vertical-align: middle;
-  height: 14px !important;
+  height: 13px !important;
+  letter-spacing: -6px;
 }
 
 .colorGroup div {
@@ -157,12 +138,12 @@ body {
   width: 10px;
   border-radius: 2px;
   border: solid 1px black;
+  margin-top: -5px;
 }
 
 .colorGroup svg:hover {
   background-color: white;
 }
-
 
 #preview {
   height: 20px;
