@@ -24,6 +24,7 @@ class Charaster {
     // Info.
     this.cursorPos;
     this.gridSize;
+    this.preview;
 
     // Chrome.
     this.body;

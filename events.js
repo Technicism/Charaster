@@ -10,6 +10,7 @@ charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 charaster.cursorPos = document.getElementById("cursorPos");
 charaster.gridSize = document.getElementById("gridSize");
 charaster.gridSize.innerHTML = "[" + charaster.gridWidth + ", " + charaster.gridHeight + "]";
+charaster.preview = document.getElementById("preview");
 
 // Chrome.
 charaster.body = document.getElementById("body");
@@ -135,13 +136,19 @@ window.addEventListener("load", function(e) {
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
   for (var i = 0; i < charaster.theme.colors.length; i++) {
-    var color = document.getElementById("color" + (i + 1));
-    color.style.backgroundColor = charaster.theme.colors[i];
-    color.style.borderColor = charaster.theme.barBorder;
-    color.addEventListener('click', function(e) {
+    var colorButton = document.getElementById("color" + (i + 1));
+    colorButton.style.backgroundColor = charaster.theme.colors[i];
+    colorButton.style.borderColor = charaster.theme.barBorder;
+    colorButton.addEventListener('click', function(e) {
       var index = e.target.id.replace("color", "") - 1;
       charaster.foreground = charaster.theme.colors[index];
-      console.log(index + " " + charaster.theme.colors[index] + " " + charaster.foreground);
+      charaster.preview.style.color = charaster.theme.colors[index];
+    }, false);
+    colorButton.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      var index = e.target.id.replace("color", "") - 1;
+      charaster.foreground = charaster.theme.colors[index];
+      charaster.preview.style.backgroundColor = charaster.theme.colors[index];
     }, false);
   }
 }, false);
@@ -178,10 +185,9 @@ window.addEventListener("keypress", function(e) {
     return;
   }
   charaster.character = String.fromCharCode(e.keyCode);
-  var preview = document.getElementById("preview");
-  preview.value = charaster.character;
-  preview.style.backgroundColor = charaster.theme.background;
-  preview.style.color = charaster.theme.foreground;
+  charaster.preview.value = charaster.character;
+  charaster.preview.style.backgroundColor = charaster.theme.background;
+  charaster.preview.style.color = charaster.theme.foreground;
   if (charaster.mode == "TEXT") {
     charaster.setCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
