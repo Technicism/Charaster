@@ -7,14 +7,9 @@
 
 canvas {
   position: absolute;
-  /*left: 0;*/
-  /*top: 0;*/
-  /*top: 32px;*/
   /*cursor: crosshair;*/
   margin-top: -32px;
   display: inline-block;
-  /*padding: 16px;*/
-
 }
 
 #grid {
@@ -54,6 +49,11 @@ footer {
   height: 24px;
 }
 
+footer span {
+  display: inline-block;
+  width: 10ch;
+}
+
 #char {
   width: 16px;
 }
@@ -91,13 +91,34 @@ footer {
   min-height: 24px;
 }
 
+#textOptions {
+  line-height: 20px;
+  letter-spacing: 0px;
+}
+
+#boldText {
+  font-weight: bolder;
+}
+
+#italicText {
+  font-style: italic;
+}
+
+#underlineText {
+  text-decoration: underline;
+}
+
+#strikethroughText {
+  text-decoration: line-through;
+}
+
 .bar img, .bar svg {
   max-height: 20px;
   max-width: 20px;
   padding: 2px;
 }
 
-.bar img:hover, .bar svg:hover {
+.bar img:hover, .bar svg:hover, .bar span:hover {
   background-color: #ddd;
   border-radius: 2px;
 }
@@ -106,6 +127,15 @@ footer {
   vertical-align: middle;
   display: table-cell;
   height: 24px;
+}
+
+.bar span {
+  /*background-color: red;*/
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  font-size: 16pt;
+  text-align: center;
 }
 
 html, body {
@@ -161,7 +191,6 @@ body {
   width: 10px;
   border-radius: 2px;
   border: solid 1px black;
-  background-color: white;
   padding: 0;
   display: inline-block;
 }

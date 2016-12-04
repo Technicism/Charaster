@@ -207,8 +207,8 @@ window.addEventListener("keypress", function(e) {
   }
   charaster.character = String.fromCharCode(e.keyCode);
   charaster.preview.value = charaster.character;
-  charaster.preview.style.backgroundColor = charaster.theme.background;
-  charaster.preview.style.color = charaster.theme.foreground;
+  charaster.preview.style.backgroundColor = charaster.background;
+  charaster.preview.style.color = charaster.foreground;
   if (charaster.mode == "TEXT") {
     charaster.setCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
