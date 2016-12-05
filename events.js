@@ -137,6 +137,11 @@ function buttonMode(id, mode, activate) {
   }
 }
 
+function cellStyle(cell) {
+  cell.bold = charaster.bold;
+  return cell;
+}
+
 window.addEventListener("load", function(e) {
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
@@ -218,7 +223,7 @@ window.addEventListener("keypress", function(e) {
   charaster.preview.style.backgroundColor = charaster.background;
   charaster.preview.style.color = charaster.foreground;
   if (charaster.mode == "TEXT") {
-    charaster.setCell(new Cell(charaster.cursor, charaster.character));
+    charaster.setCell(cellStyle(new Cell(charaster.cursor, charaster.character)));
     charaster.moveCursorRelative(1, 0);
   }
 }, false);
@@ -229,7 +234,7 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
     if (draw) {
-      var cell = new Cell(charaster.cursor, charaster.character);
+      var cell = cellStyle(new Cell(charaster.cursor, charaster.character));
       if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
         drawList.push(cell);
         if (drawList.length >= 2) {
@@ -244,7 +249,7 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
             if (charaster.mode == "PENCIL") {
               character = charaster.character;
             }
-            charaster.setCell(new Cell(line[i], character));
+            charaster.setCell(cellStyle(new Cell(line[i], character)));
           }
           drawList.shift();
         }
@@ -261,21 +266,22 @@ charaster.cursorCanvas.addEventListener('mouseleave', function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener('click', function(e) {
+  var pos = getMousePos(charaster.rasterCanvas, e);
+  charaster.cursor = charaster.coordToGrid(snapPos(pos));
+  charaster.drawCursor();
+  var character = null;
+  if (charaster.mode == "PENCIL") {
+    character = charaster.character;
+  }
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
-    var pos = getMousePos(charaster.rasterCanvas, e);
-    charaster.cursor = charaster.coordToGrid(snapPos(pos));
-    var character = null;
-    if (charaster.mode == "PENCIL") {
-      character = charaster.character;
-    }
-    charaster.setCell(new Cell(charaster.cursor, character));
+    charaster.setCell(cellStyle(new Cell(charaster.cursor, character)));
   }
 }, false);
 
 charaster.cursorCanvas.addEventListener('mousedown', function(e) {
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     draw = true;
-    var cell = new Cell(charaster.cursor, charaster.character);
+    var cell = cellStyle(new Cell(charaster.cursor, charaster.character));
     charaster.setCell(cell);
   }
 }, false);
@@ -285,6 +291,10 @@ charaster.cursorCanvas.addEventListener('mouseup', function(e) {
     draw = false;
     drawList = [];
   }
+}, false);
+
+document.getElementById("boldText").addEventListener('click', function(e) {
+  charaster.bold = !charaster.bold;
 }, false);
 
 window.addEventListener('copy', function(e) {

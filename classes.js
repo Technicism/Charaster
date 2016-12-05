@@ -7,6 +7,7 @@ class Charaster {
     this.font = "12pt Consolas";
     this.foreground;
     this.background;
+    this.bold = false;
     this.fontHeight = 19;
     this.fontWidth = 9;
     this.gridWidth = 80;
@@ -134,17 +135,21 @@ class Charaster {
 
   setCell(cell) {
     var context = this.rasterContext;
+    context.font = this.font;
+    if (cell.bold) {
+      context.font = "bold " + this.font;
+    }
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
-    context.fillStyle = this.background;
+    context.fillStyle = cell.background == null ? this.background : cell.background;
     context.fillRect(
       cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
       this.fontWidth, this.fontHeight
     );
     if (cell.character != null) {
-      context.fillStyle = this.foreground;
+      context.fillStyle = cell.foreground == null ? this.foreground : cell.foreground;
       context.fillText(
         cell.character,
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
@@ -216,11 +221,12 @@ class Point {
 }
 
 class Cell {
-  constructor(point, character, foreground) {
+  constructor(point, character, foreground, background) {
     this.point = point;
     this.character = character;
     this.foreground = foreground;
-    this.background;
+    this.background = background;
+    this.bold = false;
   }
   equality(other) {
     if (this.point == other.point && this.character == other.character) {
