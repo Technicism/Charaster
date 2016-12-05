@@ -108,7 +108,7 @@ function snapPos(point) {
 // When a button is clicked change the mode and visual style of it.
 function buttonMode(id, mode, activate) {
   var button = document.getElementById(id);
-  button.addEventListener('click', function(e) {
+  button.addEventListener("click", function(e) {
     var reset = document.getElementsByClassName("icon");
     for (var i = 0; i < reset.length; i++) {
       reset[i].style.fill = charaster.theme.icon;
@@ -137,11 +137,6 @@ function buttonMode(id, mode, activate) {
   }
 }
 
-function cellStyle(cell) {
-  cell.bold = charaster.bold;
-  return cell;
-}
-
 window.addEventListener("load", function(e) {
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
@@ -158,14 +153,14 @@ window.addEventListener("load", function(e) {
     colorButton.style.borderColor = charaster.theme.barBorder;
 
     // Left click to apply colour to foreground.
-    colorButton.addEventListener('click', function(e) {
+    colorButton.addEventListener("click", function(e) {
       var index = e.target.id.replace("color", "") - 1;
       charaster.foreground = charaster.theme.colors[index];
       charaster.preview.style.color = charaster.theme.colors[index];
     }, false);
 
     // Right click to apply colour to background.
-    colorButton.addEventListener('contextmenu', function(e) {
+    colorButton.addEventListener("contextmenu", function(e) {
       e.preventDefault();
       var index = e.target.id.replace("color", "") - 1;
       charaster.background = charaster.theme.colors[index];
@@ -175,13 +170,13 @@ window.addEventListener("load", function(e) {
 }, false);
 
 // Left click to reset foreground.
-charaster.noColor.addEventListener('click', function(e) {
+charaster.noColor.addEventListener("click", function(e) {
   charaster.foreground = charaster.theme.foreground;
   charaster.preview.style.color = charaster.theme.foreground;
 }, false);
 
 // Right click to reset background.
-charaster.noColor.addEventListener('contextmenu', function(e) {
+charaster.noColor.addEventListener("contextmenu", function(e) {
   e.preventDefault();
   charaster.background = charaster.theme.background;
   charaster.preview.style.backgroundColor = charaster.theme.background;
@@ -223,18 +218,18 @@ window.addEventListener("keypress", function(e) {
   charaster.preview.style.backgroundColor = charaster.background;
   charaster.preview.style.color = charaster.foreground;
   if (charaster.mode == "TEXT") {
-    charaster.setCell(cellStyle(new Cell(charaster.cursor, charaster.character)));
+    charaster.setCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
   }
 }, false);
 
-charaster.cursorCanvas.addEventListener('mousemove', function(e) {
+charaster.cursorCanvas.addEventListener("mousemove", function(e) {
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     var pos = getMousePos(charaster.rasterCanvas, e);
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
     if (draw) {
-      var cell = cellStyle(new Cell(charaster.cursor, charaster.character));
+      var cell = new Cell(charaster.cursor, charaster.character);
       if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
         drawList.push(cell);
         if (drawList.length >= 2) {
@@ -249,7 +244,7 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
             if (charaster.mode == "PENCIL") {
               character = charaster.character;
             }
-            charaster.setCell(cellStyle(new Cell(line[i], character)));
+            charaster.setCell(new Cell(line[i], character));
           }
           drawList.shift();
         }
@@ -260,12 +255,12 @@ charaster.cursorCanvas.addEventListener('mousemove', function(e) {
   }
 }, false);
 
-charaster.cursorCanvas.addEventListener('mouseleave', function(e) {
+charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
   draw = false;
   drawList = [];
 }, false);
 
-charaster.cursorCanvas.addEventListener('click', function(e) {
+charaster.cursorCanvas.addEventListener("click", function(e) {
   var pos = getMousePos(charaster.rasterCanvas, e);
   charaster.cursor = charaster.coordToGrid(snapPos(pos));
   charaster.drawCursor();
@@ -274,35 +269,38 @@ charaster.cursorCanvas.addEventListener('click', function(e) {
     character = charaster.character;
   }
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
-    charaster.setCell(cellStyle(new Cell(charaster.cursor, character)));
+    charaster.setCell(new Cell(charaster.cursor, character));
   }
 }, false);
 
-charaster.cursorCanvas.addEventListener('mousedown', function(e) {
+charaster.cursorCanvas.addEventListener("mousedown", function(e) {
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     draw = true;
-    var cell = cellStyle(new Cell(charaster.cursor, charaster.character));
+    var cell = new Cell(charaster.cursor, charaster.character);
     charaster.setCell(cell);
   }
 }, false);
 
-charaster.cursorCanvas.addEventListener('mouseup', function(e) {
+charaster.cursorCanvas.addEventListener("mouseup", function(e) {
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     draw = false;
     drawList = [];
   }
 }, false);
 
-document.getElementById("boldText").addEventListener('click', function(e) {
+document.getElementById("boldText").addEventListener("click", function(e) {
   charaster.bold = !charaster.bold;
 }, false);
 
-window.addEventListener('copy', function(e) {
+document.getElementById("italicText").addEventListener("click", function(e) {
+  charaster.italic = !charaster.italic;
+}, false);
+
+window.addEventListener("copy", function(e) {
   alert(charaster.getCell(charaster.cursor));
 }, false);
 
-
-window.addEventListener('resize', function(e) {
+window.addEventListener("resize", function(e) {
   var top = document.getElementById("controls").clientHeight + 1;
   charaster.gridCanvas.style.top = top + "px";
   charaster.rasterCanvas.style.top = top + "px";
