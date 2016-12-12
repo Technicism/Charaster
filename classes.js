@@ -1,6 +1,7 @@
 class Charaster {
   constructor() {
     this.mode = "PENCIL";
+    this.clipboard = new Array();
     this.themes = new Array();
     this.theme;
     this.character = "o";

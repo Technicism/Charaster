@@ -338,7 +338,16 @@ document.getElementById("saveCancel").addEventListener("click", function(e) {
 }, false);
 
 window.addEventListener("copy", function(e) {
-  alert(charaster.getCell(charaster.cursor));
+  charaster.clipboard = [];
+  charaster.clipboard.push(charaster.getCell(charaster.cursor));
+}, false);
+
+window.addEventListener("paste", function(e) {
+  for (var i = 0; i < charaster.clipboard.length; i++) {
+    var cell = charaster.clipboard[i];
+    cell.point = charaster.cursor;
+    charaster.setCell(cell);
+  }
 }, false);
 
 window.addEventListener("resize", function(e) {
