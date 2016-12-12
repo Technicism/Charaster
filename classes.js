@@ -5,7 +5,9 @@ class Charaster {
     this.themes = new Array();
     this.theme;
     this.character = "o";
-    this.font = "12pt Consolas";
+    this.fontName = "Consolas";
+    this.fontSize = "12";
+    this.font = this.fontSize + "pt " + this.fontName;
     this.foreground;
     this.background;
     this.bold = false;
@@ -69,11 +71,11 @@ class Charaster {
     this.fitToContainer(canvas, context);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.strokeStyle = this.foreground;
-    context.font = "12pt Consolas";
-    for (var col = 0; col < raster.length; col++) {
-      for (var row = 0; row < raster[0].length; row++) {
-        if (raster[col][row] != null) {
-          context.fillText(raster[col][row], row * this.fontWidth, col * this.fontHeight - 5);
+    context.font = this.font;
+    for (var col = 0; col < this.raster.length; col++) {
+      for (var row = 0; row < this.raster[0].length; row++) {
+        if (this.raster[col][row].character != null) {
+          context.fillText(this.raster[col][row], row * this.fontWidth, col * this.fontHeight - 5);
         }
       }
     }
@@ -215,6 +217,12 @@ class Charaster {
       grid.y = this.gridHeight - 1;
     }
     return grid;
+  }
+
+  setFontSize(size) {
+    this.fontSize = size;
+    this.font = this.fontSize + "pt " + this.fontName;
+    drawRaster();
   }
 }
 

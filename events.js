@@ -356,3 +356,7 @@ window.addEventListener("resize", function(e) {
   charaster.rasterCanvas.style.top = top + "px";
   charaster.cursorCanvas.style.top = top + "px";
 }, false);
+
+document.getElementById("zoomPercent").addEventListener("click", function(e) {
+  charaster.setFontSize(5);
+}, false);
