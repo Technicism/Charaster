@@ -177,6 +177,7 @@ body {
 
 #preview {
   height: 20px;
+  width: 10px;
   border: solid 1px black;
   border-radius: 2px;
 }
@@ -193,4 +194,17 @@ body {
   border: solid 1px black;
   padding: 0;
   display: inline-block;
+}
+
+#saveDialog {
+  position: absolute;
+  /*background-color: red;*/
+  top: 36px;
+  left: 0;
+  z-index: 1000;
+  visibility: hidden;
+}
+
+#saveCancel {
+
 }

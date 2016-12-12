@@ -290,10 +290,51 @@ charaster.cursorCanvas.addEventListener("mouseup", function(e) {
 
 document.getElementById("boldText").addEventListener("click", function(e) {
   charaster.bold = !charaster.bold;
+  if (charaster.bold) {
+    charaster.preview.style.fontWeight = "bold";
+  } else {
+    charaster.preview.style.fontWeight = "normal";
+  }
 }, false);
 
 document.getElementById("italicText").addEventListener("click", function(e) {
   charaster.italic = !charaster.italic;
+  if (charaster.italic) {
+    charaster.preview.style.fontStyle = "italic";
+  } else {
+    charaster.preview.style.fontStyle = "normal";
+  }
+}, false);
+
+document.getElementById("underlineText").addEventListener("click", function(e) {
+  charaster.italic = !charaster.italic;
+  if (charaster.italic) {
+    charaster.preview.style.fontStyle = "italic";
+  } else {
+    charaster.preview.style.fontStyle = "normal";
+  }
+}, false);
+
+document.getElementById("saveButton").addEventListener("click", function(e) {
+  var lines = "";
+  for (var col = 0; col < charaster.gridHeight; col++) {
+    var line = "";
+    for (var row = 0; row < charaster.gridWidth; row++) {
+      var cell = charaster.raster[col][row];
+      if (cell.character == null) {
+        line += " ";
+      } else {
+        line += charaster.raster[col][row].character;
+      }
+    }
+    lines += line + "\n";
+  }
+  document.getElementById("saveRaw").innerHTML = lines;
+  document.getElementById("saveDialog").style.visibility = "visible";
+}, false);
+
+document.getElementById("saveCancel").addEventListener("click", function(e) {
+  document.getElementById("saveDialog").style.visibility = "hidden";
 }, false);
 
 window.addEventListener("copy", function(e) {
@@ -306,4 +347,3 @@ window.addEventListener("resize", function(e) {
   charaster.rasterCanvas.style.top = top + "px";
   charaster.cursorCanvas.style.top = top + "px";
 }, false);
-

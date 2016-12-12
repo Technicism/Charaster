@@ -116,10 +116,10 @@ class Charaster {
 
   createRaster(cols, rows) {
     var array = [];
-    for (var i = 0; i < rows; i++) {
-      array[i] = [];
+    for (var row = 0; row < rows; row++) {
+      array[row] = [];
       for (var col = 0; col < cols; col++) {
-        array[i].push(null);
+        array[row].push(new Cell(new Point(col, row), null));
       }
     }
     return array;
