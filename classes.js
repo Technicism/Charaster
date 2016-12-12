@@ -70,12 +70,21 @@ class Charaster {
     var context = this.rasterContext;
     this.fitToContainer(canvas, context);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.strokeStyle = this.foreground;
-    context.font = this.font;
     for (var col = 0; col < this.raster.length; col++) {
       for (var row = 0; row < this.raster[0].length; row++) {
-        if (this.raster[col][row].character != null) {
-          context.fillText(this.raster[col][row], row * this.fontWidth, col * this.fontHeight - 5);
+        var cell = this.raster[col][row];
+        if (cell.character != null) {
+          context.fillStyle = cell.background;
+          context.fillRect(
+            cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
+            this.fontWidth, this.fontHeight
+          );
+          context.fillStyle = cell.foreground;
+          context.font = this.font;
+          context.fillText(
+            cell.character,
+            row * this.fontWidth, (col + 1) * this.fontHeight - 5
+          );
         }
       }
     }
@@ -150,13 +159,19 @@ class Charaster {
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
-    context.fillStyle = cell.background == null ? this.background : cell.background;
+    if (cell.background == null) {
+      cell.background = this.background;
+    }
+    context.fillStyle = cell.background;
     context.fillRect(
       cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
       this.fontWidth, this.fontHeight
     );
     if (cell.character != null) {
-      context.fillStyle = cell.foreground == null ? this.foreground : cell.foreground;
+      if (cell.foreground == null) {
+        cell.foreground = this.foreground;
+      }
+      context.fillStyle = cell.foreground;
       context.fillText(
         cell.character,
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
@@ -222,7 +237,7 @@ class Charaster {
   setFontSize(size) {
     this.fontSize = size;
     this.font = this.fontSize + "pt " + this.fontName;
-    drawRaster();
+    this.drawRaster();
   }
 }
 

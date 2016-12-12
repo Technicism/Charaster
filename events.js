@@ -358,5 +358,9 @@ window.addEventListener("resize", function(e) {
 }, false);
 
 document.getElementById("zoomPercent").addEventListener("click", function(e) {
-  charaster.setFontSize(5);
+  charaster.fontWidth = 30;
+  charaster.fontHeight = 40;
+  charaster.drawGrid();
+  charaster.drawCursor();
+  charaster.setFontSize(20);
 }, false);
