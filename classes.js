@@ -25,6 +25,8 @@ class Charaster {
     this.gridContext;
     this.rasterCanvas;
     this.rasterContext;
+    this.rasterTempCanvas;
+    this.rasterTempContext;
     this.cursorCanvas;
     this.cursorContext;
 
@@ -65,9 +67,13 @@ class Charaster {
     context.closePath();
   }
 
-  drawRaster() {
+  drawRaster(temp) {
     var canvas = this.rasterCanvas;
     var context = this.rasterContext;
+    if (temp != null) {
+      canvas = this.rasterTempCanvas;
+      context = this.rasterTempContext;
+    }
     this.fitToContainer(canvas, context);
     context.clearRect(0, 0, canvas.width, canvas.height);
     for (var col = 0; col < this.raster.length; col++) {
@@ -146,8 +152,10 @@ class Charaster {
     context.translate(0.5, 0.5);
   }
 
-  setCell(cell) {
-    var context = this.rasterContext;
+  setCell(cell, context) {
+    if (context == null) {
+      context = this.rasterContext;
+    }
     context.font = this.font;
     if ((cell.bold == null && this.bold) || (cell.bold)) {
       context.font = "bold " + context.font

@@ -3,6 +3,8 @@ charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");
 charaster.rasterCanvas = document.getElementById("raster");
 charaster.rasterContext = charaster.rasterCanvas.getContext("2d");
+charaster.rasterTempCanvas = document.getElementById("rasterTemp");
+charaster.rasterTempContext = charaster.rasterTempCanvas.getContext("2d");
 charaster.cursorCanvas = document.getElementById("cursor");
 charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
 
@@ -27,7 +29,11 @@ var draw = false;
 var drawList = new Array();
 
 // Based on http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
-function rasterLine(x0, y0, x1, y1) {
+function rasterLine(a, b) {
+  var x0 = a.x;
+  var y0 = a.y;
+  var x1 = b.x;
+  var y1 = b.y;
   var width = x1 - x0;
   var height = y1 - y0;
   var slopeX0 = 0;
@@ -118,7 +124,12 @@ function buttonMode(id, mode, activate) {
       reset[i].style.background = "none";
     }
     button.style.background = charaster.theme.iconActive;
-    button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    if (button.getElementsByClassName("icon")[0] != null) {
+      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    }
+    if (button.getElementsByClassName("iconStroke")[0] != null) {
+      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.iconActiveText;
+    }
     button.style.borderRadius = "2px";
     if (charaster.mode == "TEXT" && (mode == "PENCIL") || mode == "ERASER") {
       charaster.prevCursor = charaster.cursor;
@@ -140,11 +151,14 @@ function buttonMode(id, mode, activate) {
 window.addEventListener("load", function(e) {
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
+  charaster.drawRaster("temp");
   charaster.drawCursor();
   charaster.drawGrid();
+
   buttonMode("textMode", "TEXT", false);
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
+  buttonMode("lineMode", "LINE", false);
 
   // Apply theme colours to buttons.
   for (var i = 0; i < charaster.theme.colors.length; i++) {
@@ -233,10 +247,7 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
       if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
         drawList.push(cell);
         if (drawList.length >= 2) {
-          var line = rasterLine(
-            drawList[0].point.x, drawList[0].point.y,
-            drawList[1].point.x, drawList[1].point.y
-          );
+          var line = rasterLine(drawList[0].point, drawList[1].point);
 
           // Draw lines between cells.
           for (var i = 0; i < line.length; i++) {
@@ -270,6 +281,16 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
   }
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     charaster.setCell(new Cell(charaster.cursor, character));
+  }
+  if (charaster.mode == "LINE") {
+    // charaster.rasterTempContext context.clearRect(
+    //   cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
+    //   this.fontWidth, -this.fontHeight
+    // );
+    var points = rasterLine(new Point(0, 0), charaster.cursor);
+    for (var i = 0; i < points.length; i++) {
+      charaster.setCell(new Cell(points[i], "x"), charaster.rasterTempContext);
+    }
   }
 }, false);
 
@@ -354,6 +375,7 @@ window.addEventListener("resize", function(e) {
   var top = document.getElementById("controls").clientHeight + 1;
   charaster.gridCanvas.style.top = top + "px";
   charaster.rasterCanvas.style.top = top + "px";
+  charaster.rasterTempCanvas.style.top = top + "px";
   charaster.cursorCanvas.style.top = top + "px";
 }, false);
 

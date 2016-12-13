@@ -13,15 +13,19 @@ canvas {
 }
 
 #grid {
-  z-index: 2;
+  z-index: 3;
 }
 
-#text {
+#raster {
   z-index: 1;
 }
 
+#rasterTemp {
+  z-index: 2;
+}
+
 #cursor {
-  z-index: 3;
+  z-index: 4;
 }
 
 header {
