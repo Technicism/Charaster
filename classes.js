@@ -76,6 +76,9 @@ class Charaster {
     }
     this.fitToContainer(canvas, context);
     context.clearRect(0, 0, canvas.width, canvas.height);
+    if (canvas != this.rasterCanvas) {
+      return;
+    }
     for (var col = 0; col < this.raster.length; col++) {
       for (var row = 0; row < this.raster[0].length; row++) {
         var cell = this.raster[col][row];
@@ -185,7 +188,9 @@ class Charaster {
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
       );
     }
-    this.raster[cell.point.y][cell.point.x] = cell;
+    if (context == this.rasterContext) {
+      this.raster[cell.point.y][cell.point.x] = cell;
+    }
   }
 
   getCell(point) {
@@ -246,6 +251,7 @@ class Charaster {
     this.fontSize = size;
     this.font = this.fontSize + "pt " + this.fontName;
     this.drawRaster();
+    this.drawRaster("temp");
   }
 }
 

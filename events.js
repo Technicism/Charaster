@@ -27,6 +27,7 @@ charaster.themeSelect = document.getElementById("themeSelect");
 
 var draw = false;
 var drawList = new Array();
+var lineStart;
 
 // Based on http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 function rasterLine(a, b) {
@@ -238,13 +239,19 @@ window.addEventListener("keypress", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
     var pos = getMousePos(charaster.rasterCanvas, e);
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
     if (draw) {
       var cell = new Cell(charaster.cursor, charaster.character);
-      if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
+      if (charaster.mode == "LINE") {
+        charaster.drawRaster("temp");
+        var points = rasterLine(lineStart, charaster.cursor);
+        for (var i = 0; i < points.length; i++) {
+          charaster.setCell(new Cell(points[i], charaster.character), charaster.rasterTempContext);
+        }
+      } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
         drawList.push(cell);
         if (drawList.length >= 2) {
           var line = rasterLine(drawList[0].point, drawList[1].point);
@@ -262,7 +269,9 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
       } else if (drawList.length == 0) {
         drawList.push(cell);
       }
+
     }
+
   }
 }, false);
 
@@ -283,27 +292,27 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     charaster.setCell(new Cell(charaster.cursor, character));
   }
   if (charaster.mode == "LINE") {
-    // charaster.rasterTempContext context.clearRect(
-    //   cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
-    //   this.fontWidth, -this.fontHeight
-    // );
-    var points = rasterLine(new Point(0, 0), charaster.cursor);
+    charaster.drawRaster("temp");
+    var points = rasterLine(lineStart, charaster.cursor);
     for (var i = 0; i < points.length; i++) {
-      charaster.setCell(new Cell(points[i], "x"), charaster.rasterTempContext);
+      charaster.setCell(new Cell(points[i], charaster.character));
     }
   }
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousedown", function(e) {
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
     draw = true;
     var cell = new Cell(charaster.cursor, charaster.character);
     charaster.setCell(cell);
   }
+  if (charaster.mode == "LINE") {
+    lineStart = charaster.cursor;
+  }
 }, false);
 
 charaster.cursorCanvas.addEventListener("mouseup", function(e) {
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
     draw = false;
     drawList = [];
   }
