@@ -442,3 +442,11 @@ document.getElementById("zoomOut").addEventListener("click", function(e) {
   var size = parseInt(charaster.fontSize) - 1;
   zoom(size);
 }, false);
+
+document.getElementById("gridToggle").addEventListener("click", function(e) {
+  if (document.getElementById("grid").style.visibility == "hidden") {
+    document.getElementById("grid").style.visibility = "visible";
+  } else {
+    document.getElementById("grid").style.visibility = "hidden";
+  }
+}, false);

@@ -12,9 +12,9 @@ class Charaster {
     this.background;
     this.bold = false;
     this.italic = false;
-    this.fontHeight = 19;
-    this.fontWidth = 9;
-    this.fontOffset = 5;
+    this.fontHeight;
+    this.fontWidth;
+    this.fontOffset;
     this.gridWidth = 80;
     this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
@@ -148,9 +148,7 @@ class Charaster {
   }
 
   fitToContainer(canvas, context) {
-    canvas.width  = canvas.offsetWidth;
     canvas.width  = this.gridWidth * this.fontWidth + 1;
-    canvas.height = canvas.offsetHeight;
     canvas.height = this.gridHeight * this.fontHeight + 1;
     canvas.style.top = controls.clientHeight + 1 + "px";
     context.translate(0.5, 0.5);
@@ -202,6 +200,7 @@ class Charaster {
 
     // Set the colors of the page.
     this.body.style.background = this.theme.background;
+    this.cursorCanvas.style.borderColor = this.theme.grid;
     this.controls.style.background = this.theme.bar;
     this.controls.style.borderColor = this.theme.barBorder;
     this.info.style.background = this.theme.bar;
