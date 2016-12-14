@@ -4,7 +4,7 @@ class Charaster {
     this.clipboard = new Array();
     this.themes = new Array();
     this.theme;
-    this.character = "o";
+    this.character = "█";
     this.fontName = "Consolas";
     this.fontSize = "12";
     this.font = this.fontSize + "pt " + this.fontName;
@@ -14,6 +14,7 @@ class Charaster {
     this.italic = false;
     this.fontHeight = 19;
     this.fontWidth = 9;
+    this.fontOffset = 5;
     this.gridWidth = 80;
     this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
@@ -92,7 +93,7 @@ class Charaster {
           context.font = this.font;
           context.fillText(
             cell.character,
-            row * this.fontWidth, (col + 1) * this.fontHeight - 5
+            row * this.fontWidth, (col + 1) * this.fontHeight - this.fontOffset
           );
         }
       }
@@ -185,7 +186,7 @@ class Charaster {
       context.fillStyle = cell.foreground;
       context.fillText(
         cell.character,
-        cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - 5
+        cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - this.fontOffset
       );
     }
     if (context == this.rasterContext) {
@@ -250,9 +251,9 @@ class Charaster {
   setFontSize(size) {
     this.fontSize = size;
     this.font = this.fontSize + "pt " + this.fontName;
-    this.drawRaster();
-    this.drawRaster("temp");
   }
+
+
 }
 
 class Point {

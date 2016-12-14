@@ -149,7 +149,36 @@ function buttonMode(id, mode, activate) {
   }
 }
 
+function measureCharacter(font) {
+
+  // Find the width and height from the automatically sized bounding box.
+  var span = document.createElement("span");
+  span.innerHTML = "█"
+  span.style.font = font;
+  document.body.appendChild(span);
+  var box = span.getBoundingClientRect();
+  charaster.fontWidth = Math.ceil(box.width);
+  charaster.fontHeight = Math.ceil(box.height);
+  document.body.removeChild(span);
+  delete span;
+
+  // Find the offset by looking for a pixel that is not transparent.
+  var canvas = document.createElement("canvas");
+  var context = canvas.getContext("2d");
+  var fontOffset = 0;
+  context.fillStyle = "black";
+  context.font = font;
+  while (context.getImageData(0, 0, 1, 1).data[3] == 0) {
+    context.fillText("█", 0, charaster.fontHeight - fontOffset);
+    fontOffset++;
+  }
+  charaster.fontOffset = fontOffset;
+  delete canvas;
+}
+
 window.addEventListener("load", function(e) {
+  measureCharacter(charaster.font);
+
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
   charaster.drawRaster("temp");
@@ -389,9 +418,16 @@ window.addEventListener("resize", function(e) {
 }, false);
 
 document.getElementById("zoomPercent").addEventListener("click", function(e) {
-  charaster.fontWidth = 30;
-  charaster.fontHeight = 40;
+  // charaster.fontWidth = 30;
+  var size = parseInt(charaster.fontSize) + 1;
+  console.log(size);
+  charaster.setFontSize(size);
+  charaster.rasterContext.font = charaster.font;
+  // charaster.fontHeight = charaster.measureTextHeight(charaster.font);
+  charaster.fontHeight = charaster.rasterContext.measureText("MM").width;
+  charaster.fontWidth = charaster.rasterContext.measureText("█").width;
   charaster.drawGrid();
   charaster.drawCursor();
-  charaster.setFontSize(20);
+  charaster.drawRaster();
+  charaster.drawRaster("temp");
 }, false);
