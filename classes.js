@@ -5,7 +5,7 @@ class Charaster {
     this.themes = new Array();
     this.theme;
     this.character = "█";
-    this.fontName = "Consolas";
+    this.fontName = "monospace";
     this.fontSize = "12";
     this.font = this.fontSize + "pt " + this.fontName;
     this.foreground;

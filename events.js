@@ -176,7 +176,11 @@ function measureCharacter(font) {
   delete canvas;
 }
 
+// Zoom in or out by changing the font size.
 function zoom(size) {
+  if (size < 4 || size > 512) {
+    return; // Out of scale.
+  }
   charaster.setFontSize(size);
   charaster.rasterContext.font = charaster.font;
   measureCharacter(charaster.font);
@@ -310,9 +314,7 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
       } else if (drawList.length == 0) {
         drawList.push(cell);
       }
-
     }
-
   }
 }, false);
 
@@ -328,11 +330,10 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
   var character = null;
   if (charaster.mode == "PENCIL") {
     character = charaster.character;
-  }
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER") {
     charaster.setCell(new Cell(charaster.cursor, character));
-  }
-  if (charaster.mode == "LINE") {
+  } else if (charaster.mode == "ERASER") {
+    charaster.setCell(new Cell(charaster.cursor, null));
+  } else if (charaster.mode == "LINE") {
     charaster.drawRaster("temp");
     var points = rasterLine(lineStart, charaster.cursor);
     for (var i = 0; i < points.length; i++) {
@@ -345,6 +346,9 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
     draw = true;
     var cell = new Cell(charaster.cursor, charaster.character);
+    if (charaster.mode == "ERASER") {
+      cell.character = null;
+    }
     charaster.setCell(cell);
   }
   if (charaster.mode == "LINE") {

@@ -49,6 +49,7 @@ footer {
   /*padding: 4px;*/
   background-color: white;
   line-height: 16pt;
+  display: block;
   border-top: solid 1px #777;
   height: 24px;
 }
@@ -123,8 +124,9 @@ footer span {
 }
 
 footer svg {
-  max-height: 12px;
-  max-width: 12px;
+  max-height: 16px;
+  max-width: 16px;
+  vertical-align: middle;
 }
 
 .bar img:hover, .bar svg:hover, .bar span:hover {
