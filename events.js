@@ -176,6 +176,18 @@ function measureCharacter(font) {
   delete canvas;
 }
 
+function zoom(size) {
+  charaster.setFontSize(size);
+  charaster.rasterContext.font = charaster.font;
+  measureCharacter(charaster.font);
+  charaster.drawGrid();
+  charaster.drawCursor();
+  charaster.drawRaster();
+  charaster.drawRaster("temp");
+  var display = Math.round((size / 12) * 100) + "%";
+  document.getElementById("zoomPercent").innerHTML = display;
+}
+
 window.addEventListener("load", function(e) {
   measureCharacter(charaster.font);
 
@@ -417,17 +429,12 @@ window.addEventListener("resize", function(e) {
   charaster.cursorCanvas.style.top = top + "px";
 }, false);
 
-document.getElementById("zoomPercent").addEventListener("click", function(e) {
-  // charaster.fontWidth = 30;
+document.getElementById("zoomIn").addEventListener("click", function(e) {
   var size = parseInt(charaster.fontSize) + 1;
-  console.log(size);
-  charaster.setFontSize(size);
-  charaster.rasterContext.font = charaster.font;
-  // charaster.fontHeight = charaster.measureTextHeight(charaster.font);
-  charaster.fontHeight = charaster.rasterContext.measureText("MM").width;
-  charaster.fontWidth = charaster.rasterContext.measureText("█").width;
-  charaster.drawGrid();
-  charaster.drawCursor();
-  charaster.drawRaster();
-  charaster.drawRaster("temp");
+  zoom(size);
+}, false);
+
+document.getElementById("zoomOut").addEventListener("click", function(e) {
+  var size = parseInt(charaster.fontSize) - 1;
+  zoom(size);
 }, false);
