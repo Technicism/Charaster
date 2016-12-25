@@ -3,6 +3,7 @@
   padding: 0;
   font-family: monospace;
   user-select: none;
+  -moz-user-select: -moz-none;
 }
 
 canvas {
@@ -104,7 +105,7 @@ footer span span {
   min-height: 24px;
 }
 
-#textOptions {
+#textOptions, #cellOptions {
   line-height: 20px;
   letter-spacing: 0px;
 }

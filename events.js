@@ -446,7 +446,9 @@ document.getElementById("zoomOut").addEventListener("click", function(e) {
 document.getElementById("gridToggle").addEventListener("click", function(e) {
   if (document.getElementById("grid").style.visibility == "hidden") {
     document.getElementById("grid").style.visibility = "visible";
+    document.getElementById("gridToggleStatus").innerHTML = "ON";
   } else {
     document.getElementById("grid").style.visibility = "hidden";
+    document.getElementById("gridToggleStatus").innerHTML = "OFF";
   }
 }, false);
