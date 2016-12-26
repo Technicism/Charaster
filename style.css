@@ -225,6 +225,13 @@ body {
   visibility: hidden;
 }
 
+
+#textMode {
+  line-height: 24px;
+  vertical-align: top;
+}
+
 #saveCancel {
 
 }
+
