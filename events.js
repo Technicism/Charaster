@@ -91,6 +91,32 @@ function rasterLine(a, b) {
   return list;
 }
 
+// Create a rectangle out of four lines.
+function rasterRectangle(p, q) {
+  var points = [];
+  var sideLeft = rasterLine(
+    p,
+    new Point(p.x, q.y)
+  );
+  var sideRight = rasterLine(
+    new Point(q.x, p.y),
+    q
+  );
+  var sideTop = rasterLine(
+    p,
+    new Point(q.x, p.y)
+  );
+  var sideBottom = rasterLine(
+    new Point(p.x, q.y),
+    charaster.cursor
+  );
+  points = points.concat(sideLeft);
+  points = points.concat(sideRight);
+  points = points.concat(sideTop);
+  points = points.concat(sideBottom);
+  return points;
+}
+
 function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect();
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
@@ -205,6 +231,7 @@ window.addEventListener("load", function(e) {
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
   buttonMode("lineMode", "LINE", false);
+  buttonMode("rectangleMode", "RECTANGLE", false);
 
   // Apply theme colours to buttons.
   for (var i = 0; i < charaster.theme.colors.length; i++) {
@@ -284,15 +311,20 @@ window.addEventListener("keypress", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     var pos = getMousePos(charaster.rasterCanvas, e);
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
     if (draw) {
       var cell = new Cell(charaster.cursor, charaster.character);
-      if (charaster.mode == "LINE") {
+      if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
         charaster.drawRaster("temp");
-        var points = rasterLine(lineStart, charaster.cursor);
+        var points = [];
+        if (charaster.mode == "LINE") {
+          points = rasterLine(lineStart, charaster.cursor);
+        } else if (charaster.mode == "RECTANGLE") {
+          points = rasterRectangle(lineStart, charaster.cursor);
+        }
         for (var i = 0; i < points.length; i++) {
           charaster.setCell(new Cell(points[i], charaster.character), charaster.rasterTempContext);
         }
@@ -333,9 +365,14 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     charaster.setCell(new Cell(charaster.cursor, character));
   } else if (charaster.mode == "ERASER") {
     charaster.setCell(new Cell(charaster.cursor, null));
-  } else if (charaster.mode == "LINE") {
+  } else if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     charaster.drawRaster("temp");
-    var points = rasterLine(lineStart, charaster.cursor);
+    var points = [];
+    if (charaster.mode == "LINE") {
+      points = rasterLine(lineStart, charaster.cursor);
+    } else if (charaster.mode == "RECTANGLE") {
+      points = rasterRectangle(lineStart, charaster.cursor);
+    }
     for (var i = 0; i < points.length; i++) {
       charaster.setCell(new Cell(points[i], charaster.character));
     }
@@ -343,7 +380,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousedown", function(e) {
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     draw = true;
     var cell = new Cell(charaster.cursor, charaster.character);
     if (charaster.mode == "ERASER") {
@@ -351,13 +388,13 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
     }
     charaster.setCell(cell);
   }
-  if (charaster.mode == "LINE") {
+  if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     lineStart = charaster.cursor;
   }
 }, false);
 
 charaster.cursorCanvas.addEventListener("mouseup", function(e) {
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     draw = false;
     drawList = [];
   }
