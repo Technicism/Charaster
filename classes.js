@@ -193,7 +193,10 @@ class Charaster {
   }
 
   getCell(point) {
-    return this.raster[this.cursor.y][this.cursor.x];
+    if (point.x < 0 || point.x >= this.gridWidth || point.y < 0 || point.y >= this.gridHeight) {
+      return null;
+    }
+    return this.raster[point.y][point.x];
   }
 
   applyTheme(name) {

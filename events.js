@@ -117,6 +117,47 @@ function rasterRectangle(p, q) {
   return points;
 }
 
+function allowFlood(cell, flood) {
+  if (cell == null) {
+    return false;
+  }
+  if (cell.character == null) {
+    return true;
+  } else if (cell.character == flood.character) {
+
+  }
+  return false;
+}
+
+// Non-recursive flood fill algorithm.
+function rasterFlood(p, fillCell) {
+  var queue = [];
+  queue.push(p);
+  while (queue.length != 0) {
+    flood = queue.pop();
+    var cell = charaster.getCell(flood);
+    cell.character = fillCell.character;
+    cell.point = flood;
+    charaster.setCell(cell);
+    var up = charaster.getCell(new Point(flood.x, flood.y - 1));
+    if (allowFlood(up, fillCell)) {
+      queue.push(up.point);
+    }
+    var right = charaster.getCell(new Point(flood.x + 1, flood.y));
+    if (allowFlood(right, fillCell)) {
+      queue.push(right.point);
+    }
+    var down = charaster.getCell(new Point(flood.x, flood.y + 1));
+    if (allowFlood(down, fillCell)) {
+      queue.push(down.point);
+    }
+    var left = charaster.getCell(new Point(flood.x - 1, flood.y));
+    if (allowFlood(left, fillCell)) {
+      queue.push(left.point);
+    }
+  }
+}
+
 function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect();
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
@@ -142,15 +183,20 @@ function snapPos(point) {
 function buttonMode(id, mode, activate) {
   var button = document.getElementById(id);
   button.addEventListener("click", function(e) {
-    var reset = document.getElementsByClassName("icon");
+    var reset = document.getElementsByClassName("tools");
     for (var i = 0; i < reset.length; i++) {
       reset[i].style.fill = charaster.theme.icon;
-    }
-    var reset = document.getElementsByTagName("svg");
-    for (var i = 0; i < reset.length; i++) {
       reset[i].style.background = "none";
+      reset[i].style.color = charaster.theme.icon;
+      if (reset[i].getElementsByClassName("icon")[0] != null) {
+        reset[i].getElementsByClassName("icon")[0].style.fill = charaster.theme.icon;
+      }
+      if (reset[i].getElementsByClassName("iconStroke")[0] != null) {
+        reset[i].getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.icon;
+      }
     }
     button.style.background = charaster.theme.iconActive;
+    button.style.color = charaster.theme.iconActiveText;
     if (button.getElementsByClassName("icon")[0] != null) {
       button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
     }
@@ -232,6 +278,7 @@ window.addEventListener("load", function(e) {
   buttonMode("pencilMode", "PENCIL", true);
   buttonMode("lineMode", "LINE", false);
   buttonMode("rectangleMode", "RECTANGLE", false);
+  buttonMode("floodMode", "FLOOD", false);
 
   // Apply theme colours to buttons.
   for (var i = 0; i < charaster.theme.colors.length; i++) {
@@ -271,9 +318,6 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
 
 
 window.addEventListener("keydown", function(e) {
-  if([8].indexOf(e.keyCode) > -1) {
-    e.preventDefault();
-  }
   if (e.keyCode == 46) {
     charaster.setCell(new Cell(charaster.cursor, null)); // Delete.
   }
@@ -300,10 +344,13 @@ window.addEventListener("keypress", function(e) {
   if([13].indexOf(e.keyCode) > -1) {
     return;
   }
-  charaster.character = String.fromCharCode(e.keyCode);
+  charaster.character = String.fromCharCode(e.charCode);
+
+  // Automatically update current cell character.
   charaster.preview.value = charaster.character;
   charaster.preview.style.backgroundColor = charaster.background;
   charaster.preview.style.color = charaster.foreground;
+
   if (charaster.mode == "TEXT") {
     charaster.setCell(new Cell(charaster.cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
@@ -376,6 +423,9 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     for (var i = 0; i < points.length; i++) {
       charaster.setCell(new Cell(points[i], charaster.character));
     }
+  } else if (charaster.mode == "FLOOD") {
+    character = charaster.character;
+    rasterFlood(charaster.cursor, new Cell(charaster.cursor, character));
   }
 }, false);
 

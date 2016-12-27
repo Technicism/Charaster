@@ -229,6 +229,8 @@ body {
 #textMode {
   line-height: 24px;
   vertical-align: top;
+  letter-spacing: 0px;
+
 }
 
 #saveCancel {
