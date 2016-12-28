@@ -29,7 +29,7 @@ var draw = false;
 var drawList = new Array();
 var lineStart;
 
-// Based on http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
+// Draw a line using Bresenham's line algorithm http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 function rasterLine(a, b) {
   var x0 = a.x;
   var y0 = a.y;
@@ -117,26 +117,27 @@ function rasterRectangle(p, q) {
   return points;
 }
 
+// Flood fill algorithm https://en.wikipedia.org/wiki/Flood_fill
 function rasterFlood(cell, target, replacement) {
-  if (cell == null) {
-    return;
+  console.log(cell);
+  console.log(target);
+  queue = [];
+  queue.push(cell);
+  while (queue.length != 0) {
+    floodCell = queue.pop();
+    if (floodCell == null || target == replacement.character || floodCell.character != target) {
+      continue;
+    } else if (floodCell.character == target) {
+      floodCell.character = replacement.character;
+      floodCell.foreground = replacement.foreground;
+      floodCell.background = replacement.background;
+      charaster.setCell(floodCell);
+      queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y - 1)));
+      queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y + 1)));
+      queue.push(charaster.getCell(new Point(floodCell.point.x - 1, floodCell.point.y)));
+      queue.push(charaster.getCell(new Point(floodCell.point.x + 1, floodCell.point.y)));
+    }
   }
-  if (target == replacement) {
-    return;
-  }
-  if (cell.character != target) {
-    return;
-  }
-  cell.character = replacement;
-  charaster.setCell(cell);
-  var up = charaster.getCell(new Point(cell.point.x, cell.point.y - 1));
-  rasterFlood(up, target, replacement);
-  var down = charaster.getCell(new Point(cell.point.x, cell.point.y + 1));
-  rasterFlood(down, target, replacement);
-  var left = charaster.getCell(new Point(cell.point.x - 1, cell.point.y));
-  rasterFlood(left, target, replacement);
-  var right = charaster.getCell(new Point(cell.point.x + 1, cell.point.y));
-  rasterFlood(right, target, replacement);
 }
 
 function getMousePos(canvas, e) {
@@ -409,7 +410,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     }
   } else if (charaster.mode == "FLOOD") {
     var cell = charaster.getCell(charaster.cursor);
-    rasterFlood(cell, cell.character, charaster.character);
+    rasterFlood(cell, cell.character, new Cell(charaster.cursor, charaster.character));
   }
 }, false);
 

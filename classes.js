@@ -15,8 +15,8 @@ class Charaster {
     this.fontHeight;
     this.fontWidth;
     this.fontOffset;
-    this.gridWidth = 280;
-    this.gridHeight = 224;
+    this.gridWidth = 80;
+    this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
     this.prevCursor = new Point(0, 0);
