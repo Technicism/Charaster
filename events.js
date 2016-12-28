@@ -117,45 +117,26 @@ function rasterRectangle(p, q) {
   return points;
 }
 
-function allowFlood(cell, flood) {
+function rasterFlood(cell, target, replacement) {
   if (cell == null) {
-    return false;
+    return;
   }
-  if (cell.character == null) {
-    return true;
-  } else if (cell.character == flood.character) {
-
+  if (target == replacement) {
+    return;
   }
-  return false;
-}
-
-// Non-recursive flood fill algorithm.
-function rasterFlood(p, fillCell) {
-  var queue = [];
-  queue.push(p);
-  while (queue.length != 0) {
-    flood = queue.pop();
-    var cell = charaster.getCell(flood);
-    cell.character = fillCell.character;
-    cell.point = flood;
-    charaster.setCell(cell);
-    var up = charaster.getCell(new Point(flood.x, flood.y - 1));
-    if (allowFlood(up, fillCell)) {
-      queue.push(up.point);
-    }
-    var right = charaster.getCell(new Point(flood.x + 1, flood.y));
-    if (allowFlood(right, fillCell)) {
-      queue.push(right.point);
-    }
-    var down = charaster.getCell(new Point(flood.x, flood.y + 1));
-    if (allowFlood(down, fillCell)) {
-      queue.push(down.point);
-    }
-    var left = charaster.getCell(new Point(flood.x - 1, flood.y));
-    if (allowFlood(left, fillCell)) {
-      queue.push(left.point);
-    }
+  if (cell.character != target) {
+    return;
   }
+  cell.character = replacement;
+  charaster.setCell(cell);
+  var up = charaster.getCell(new Point(cell.point.x, cell.point.y - 1));
+  rasterFlood(up, target, replacement);
+  var down = charaster.getCell(new Point(cell.point.x, cell.point.y + 1));
+  rasterFlood(down, target, replacement);
+  var left = charaster.getCell(new Point(cell.point.x - 1, cell.point.y));
+  rasterFlood(left, target, replacement);
+  var right = charaster.getCell(new Point(cell.point.x + 1, cell.point.y));
+  rasterFlood(right, target, replacement);
 }
 
 function getMousePos(canvas, e) {
@@ -321,21 +302,26 @@ window.addEventListener("keydown", function(e) {
   if (e.keyCode == 46) {
     charaster.setCell(new Cell(charaster.cursor, null)); // Delete.
   }
+  if (e.keyCode == 32) {
+    e.preventDefault(); // Space scrolling.
+  }
   if (charaster.mode == "TEXT") {
     if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
       e.preventDefault();
     }
-    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth - 1) {
-      charaster.moveCursorRelative(1, 0);   // Right.
-    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight - 1) {
-      charaster.moveCursorRelative(0, 1);   // Down.
-    } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
-      charaster.moveCursorRelative(-1, 0);  // Left.
-    } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
-      charaster.moveCursorRelative(0, -1);  // Up.
-    } else if (e.keyCode == 8) {
-      charaster.setCell(new Cell(charaster.cursor, null)); // Delete.
-      charaster.moveCursorRelative(-1, 0);  // Left.
+    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth - 1) {  // Move right.
+      charaster.moveCursorRelative(1, 0);
+    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight - 1) {  // Move down.
+      charaster.moveCursorRelative(0, 1);
+    } else if (e.keyCode == 37 && charaster.cursor.x > 0) { // Move left.
+      charaster.moveCursorRelative(-1, 0);
+    } else if (e.keyCode == 38 && charaster.cursor.y > 0) { // Move up.
+      charaster.moveCursorRelative(0, -1);
+    } else if (e.keyCode == 8) {  // Backspace.
+      charaster.moveCursorRelative(-1, 0);
+      charaster.setCell(new Cell(charaster.cursor, null));
+    } else if (e.keyCode == 32) { // Spacebar.
+      charaster.moveCursorRelative(1, 0);
     }
   }
 }, false);
@@ -406,10 +392,8 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
   var pos = getMousePos(charaster.rasterCanvas, e);
   charaster.cursor = charaster.coordToGrid(snapPos(pos));
   charaster.drawCursor();
-  var character = null;
   if (charaster.mode == "PENCIL") {
-    character = charaster.character;
-    charaster.setCell(new Cell(charaster.cursor, character));
+    charaster.setCell(new Cell(charaster.cursor, charaster.character));
   } else if (charaster.mode == "ERASER") {
     charaster.setCell(new Cell(charaster.cursor, null));
   } else if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
@@ -424,8 +408,8 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
       charaster.setCell(new Cell(points[i], charaster.character));
     }
   } else if (charaster.mode == "FLOOD") {
-    character = charaster.character;
-    rasterFlood(charaster.cursor, new Cell(charaster.cursor, character));
+    var cell = charaster.getCell(charaster.cursor);
+    rasterFlood(cell, cell.character, charaster.character);
   }
 }, false);
 
