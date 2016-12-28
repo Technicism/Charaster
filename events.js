@@ -119,15 +119,13 @@ function rasterRectangle(p, q) {
 
 // Flood fill algorithm https://en.wikipedia.org/wiki/Flood_fill
 function rasterFlood(cell, target, replacement) {
-  console.log(cell);
-  console.log(target);
   queue = [];
   queue.push(cell);
   while (queue.length != 0) {
     floodCell = queue.pop();
-    if (floodCell == null || target == replacement.character || floodCell.character != target) {
+    if (floodCell == null || equalForFill(target, replacement) || !equalForFill(floodCell, target)) {
       continue;
-    } else if (floodCell.character == target) {
+    } else if (floodCell.character == target.character) {
       floodCell.character = replacement.character;
       floodCell.foreground = replacement.foreground;
       floodCell.background = replacement.background;
@@ -138,6 +136,16 @@ function rasterFlood(cell, target, replacement) {
       queue.push(charaster.getCell(new Point(floodCell.point.x + 1, floodCell.point.y)));
     }
   }
+}
+
+function equalForFill(a, b) {
+  if (a == null || b == null) {
+    return false;
+  }
+  if (a.character == b.character && a.foreground == b.foreground && a.background == b.background) {
+    return true;
+  }
+  return false;
 }
 
 function getMousePos(canvas, e) {
@@ -410,7 +418,8 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     }
   } else if (charaster.mode == "FLOOD") {
     var cell = charaster.getCell(charaster.cursor);
-    rasterFlood(cell, cell.character, new Cell(charaster.cursor, charaster.character));
+    var targetCell = Object.assign({}, cell);
+    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character));
   }
 }, false);
 
