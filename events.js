@@ -25,16 +25,17 @@ charaster.preview = document.getElementById("preview");
 charaster.noColor = document.getElementById("noColor");
 charaster.themeSelect = document.getElementById("themeSelect");
 
+var mouseDown = false;
 var draw = false;
 var drawList = new Array();
 var lineStart;
 
 // Draw a line using Bresenham's line algorithm http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
-function rasterLine(a, b) {
-  var x0 = a.x;
-  var y0 = a.y;
-  var x1 = b.x;
-  var y1 = b.y;
+function rasterLine(p, q) {
+  var x0 = p.x;
+  var y0 = p.y;
+  var x1 = q.x;
+  var y1 = q.y;
   var width = x1 - x0;
   var height = y1 - y0;
   var slopeX0 = 0;
@@ -256,6 +257,7 @@ function zoom(size) {
 
 window.addEventListener("load", function(e) {
   measureCharacter(charaster.font);
+  charaster.preview.value = charaster.character;
 
   charaster.applyTheme(charaster.theme.name);
   charaster.drawRaster();
@@ -393,8 +395,13 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
+
+  // Reset drawing to avoid unwanted lines from enter and exit points.
   draw = false;
   drawList = [];
+  if (mouseDown) {
+    draw = true;
+  }
 }, false);
 
 charaster.cursorCanvas.addEventListener("click", function(e) {
@@ -405,17 +412,6 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     charaster.setCell(new Cell(charaster.cursor, charaster.character));
   } else if (charaster.mode == "ERASER") {
     charaster.setCell(new Cell(charaster.cursor, null));
-  } else if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-    charaster.drawRaster("temp");
-    var points = [];
-    if (charaster.mode == "LINE") {
-      points = rasterLine(lineStart, charaster.cursor);
-    } else if (charaster.mode == "RECTANGLE") {
-      points = rasterRectangle(lineStart, charaster.cursor);
-    }
-    for (var i = 0; i < points.length; i++) {
-      charaster.setCell(new Cell(points[i], charaster.character));
-    }
   } else if (charaster.mode == "FLOOD") {
     var cell = charaster.getCell(charaster.cursor);
     var targetCell = Object.assign({}, cell);
@@ -424,6 +420,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousedown", function(e) {
+  mouseDown = true;
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     draw = true;
     var cell = new Cell(charaster.cursor, charaster.character);
@@ -437,7 +434,23 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
   }
 }, false);
 
-charaster.cursorCanvas.addEventListener("mouseup", function(e) {
+window.addEventListener("mouseup", function(e) {
+  mouseDown = false;
+
+  if (draw) {
+    var points = [];
+    if (charaster.mode == "LINE") {
+      points = rasterLine(lineStart, charaster.cursor);
+    } else if (charaster.mode == "RECTANGLE") {
+      points = rasterRectangle(lineStart, charaster.cursor);
+    }
+    for (var i = 0; i < points.length; i++) {
+      charaster.setCell(new Cell(points[i], charaster.character));
+    }
+  }
+
+
+  // Stop drawing.
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     draw = false;
     drawList = [];

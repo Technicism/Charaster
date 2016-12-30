@@ -4,7 +4,7 @@ class Charaster {
     this.clipboard = new Array();
     this.themes = new Array();
     this.theme;
-    this.character = "█";
+    this.character = "*";
     this.fontName = "monospace";
     this.fontSize = "12";
     this.font = this.fontSize + "pt " + this.fontName;
