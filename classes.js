@@ -199,6 +199,14 @@ class Charaster {
     return this.raster[point.y][point.x];
   }
 
+  clearCell(point) {
+    this.raster[point.y][point.x] = new Cell(point, null);
+    this.rasterContext.clearRect(
+      point.x * this.fontWidth, (point.y + 1) * this.fontHeight,
+      this.fontWidth, -this.fontHeight
+    );
+  }
+
   applyTheme(name) {
 
     // Set the colors of the page.
@@ -254,8 +262,6 @@ class Charaster {
     this.fontSize = size;
     this.font = this.fontSize + "pt " + this.fontName;
   }
-
-
 }
 
 class Point {

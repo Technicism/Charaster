@@ -30,34 +30,34 @@ var draw = false;
 var drawList = new Array();
 var lineStart;
 
-// Draw a line using Bresenham's line algorithm http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
+// Draw a line using Bresenham's line algorithm, see reference http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 function rasterLine(p, q) {
-  var x0 = p.x;
-  var y0 = p.y;
-  var x1 = q.x;
-  var y1 = q.y;
-  var width = x1 - x0;
-  var height = y1 - y0;
-  var slopeX0 = 0;
-  var slopeY0 = 0;
-  var slopeX1 = 0;
-  var slopeY1 = 0;
+  var pX = p.x;
+  var pY = p.y;
+  var qX = q.x;
+  var qY = q.y;
+  var width = qX - pX;
+  var height = qY - pY;
+  var slopePX = 0;
+  var slopePY = 0;
+  var slopeQX = 0;
+  var slopeQY = 0;
 
   // Octant.
   if (width < 0) {
-    slopeX0 = -1;
+    slopePX = -1;
   } else if (width > 0) {
-    slopeX0 = 1;
+    slopePX = 1;
   }
   if (height < 0) {
-    slopeY0 = -1;
+    slopePY = -1;
   } else if (height > 0) {
-    slopeY0 = 1;
+    slopePY = 1;
   }
   if (width < 0) {
-    slopeX1 = -1;
+    slopeQX = -1;
   } else if (width > 0) {
-    slopeX1 = 1;
+    slopeQX = 1;
   }
   intWidth = Math.abs(width);
   intHeight = Math.abs(height);
@@ -67,26 +67,26 @@ function rasterLine(p, q) {
     longest = intHeight
     shortest = intWidth
     if (height < 0) {
-      slopeY1 = -1;
+      slopeQY = -1;
     } else if (height > 0) {
-      slopeY1 = 1;
+      slopeQY = 1;
     }
-    slopeX1 = 0;
+    slopeQX = 0;
   }
 
   // Drawing.
   var list = [];
   var numerator = longest >> 1;
   for (var i = 0; i <= longest; i++) {
-    list.push(new Point(x0, y0));
+    list.push(new Point(pX, pY));
     numerator += shortest;
     if (numerator >= longest) {
       numerator -= longest;
-      x0 += slopeX0;
-      y0 += slopeY0;
+      pX += slopePX;
+      pY += slopePY;
     } else {
-      x0 += slopeX1;
-      y0 += slopeY1;
+      pX += slopeQX;
+      pY += slopeQY;
     }
   }
   return list;
@@ -118,7 +118,7 @@ function rasterRectangle(p, q) {
   return points;
 }
 
-// Flood fill algorithm https://en.wikipedia.org/wiki/Flood_fill
+// Flood fill algorithm, see reference https://en.wikipedia.org/wiki/Flood_fill
 function rasterFlood(cell, target, replacement) {
   queue = [];
   queue.push(cell);
@@ -310,8 +310,8 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
 
 
 window.addEventListener("keydown", function(e) {
-  if (e.keyCode == 46) {
-    charaster.setCell(new Cell(charaster.cursor, null)); // Delete.
+  if (e.keyCode == 46) {  // Delete.
+    charaster.clearCell(charaster.cursor);
   }
   if (e.keyCode == 32) {
     e.preventDefault(); // Space scrolling.
@@ -330,7 +330,7 @@ window.addEventListener("keydown", function(e) {
       charaster.moveCursorRelative(0, -1);
     } else if (e.keyCode == 8) {  // Backspace.
       charaster.moveCursorRelative(-1, 0);
-      charaster.setCell(new Cell(charaster.cursor, null));
+      charaster.clearCell(charaster.cursor);
     } else if (e.keyCode == 32) { // Spacebar.
       charaster.moveCursorRelative(1, 0);
     }
@@ -382,8 +382,10 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
             var character = null;
             if (charaster.mode == "PENCIL") {
               character = charaster.character;
+              charaster.setCell(new Cell(line[i], character));
+            } else if (charaster.mode == "ERASER") {
+              charaster.clearCell(line[i]);
             }
-            charaster.setCell(new Cell(line[i], character));
           }
           drawList.shift();
         }
@@ -411,7 +413,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
   if (charaster.mode == "PENCIL") {
     charaster.setCell(new Cell(charaster.cursor, charaster.character));
   } else if (charaster.mode == "ERASER") {
-    charaster.setCell(new Cell(charaster.cursor, null));
+    charaster.clearCell(charaster.cursor);
   } else if (charaster.mode == "FLOOD") {
     var cell = charaster.getCell(charaster.cursor);
     var targetCell = Object.assign({}, cell);
@@ -423,11 +425,12 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
   mouseDown = true;
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     draw = true;
-    var cell = new Cell(charaster.cursor, charaster.character);
     if (charaster.mode == "ERASER") {
-      cell.character = null;
+      charaster.clearCell(charaster.cursor);
+    } else {
+      var cell = new Cell(charaster.cursor, charaster.character);
+      charaster.setCell(cell);
     }
-    charaster.setCell(cell);
   }
   if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     lineStart = charaster.cursor;
@@ -437,6 +440,7 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
 window.addEventListener("mouseup", function(e) {
   mouseDown = false;
 
+  // Finish off drawing.
   if (draw) {
     var points = [];
     if (charaster.mode == "LINE") {
@@ -448,13 +452,8 @@ window.addEventListener("mouseup", function(e) {
       charaster.setCell(new Cell(points[i], charaster.character));
     }
   }
-
-
-  // Stop drawing.
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-    draw = false;
-    drawList = [];
-  }
+  draw = false;
+  drawList = [];
 }, false);
 
 document.getElementById("boldText").addEventListener("click", function(e) {
