@@ -506,15 +506,23 @@ document.getElementById("saveCancel").addEventListener("click", function(e) {
 }, false);
 
 window.addEventListener("copy", function(e) {
-  charaster.clipboard = [];
-  charaster.clipboard.push(charaster.getCell(charaster.cursor));
+  var clipboard = document.getElementById("clipboard");
+  clipboard.innerHTML = "this is a test";
+  clipboard.focus();
+  clipboard.select();
 }, false);
 
 window.addEventListener("paste", function(e) {
-  for (var i = 0; i < charaster.clipboard.length; i++) {
-    var cell = charaster.clipboard[i];
-    cell.point = charaster.cursor;
-    charaster.setCell(cell);
+  e.preventDefault();
+
+  // Get text from clipboard.
+  e.stopPropagation();
+  var clipboardData = e.clipboardData || window.clipboardData;
+  var text = clipboardData.getData('Text');
+
+  // Place it into raster.
+  for (var i = 0; i < text.length; i++) {
+    charaster.setCell(new Cell(new Point(charaster.cursor.x + i, charaster.cursor.y), text[i]));
   }
 }, false);
 

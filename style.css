@@ -225,15 +225,19 @@ body {
   visibility: hidden;
 }
 
-
 #textMode {
   line-height: 24px;
   vertical-align: top;
   letter-spacing: 0px;
-
 }
 
 #saveCancel {
 
 }
 
+#clipboard {
+  top: 0;
+  position: absolute;
+  float: left;
+  opacity: 0;
+}
