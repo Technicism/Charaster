@@ -7,6 +7,8 @@ charaster.rasterTempCanvas = document.getElementById("rasterTemp");
 charaster.rasterTempContext = charaster.rasterTempCanvas.getContext("2d");
 charaster.cursorCanvas = document.getElementById("cursor");
 charaster.cursorContext = charaster.cursorCanvas.getContext("2d");
+charaster.selectCanvas = document.getElementById("select");
+charaster.selectContext = charaster.selectCanvas.getContext("2d");
 
 // Info.
 charaster.cursorPos = document.getElementById("cursorPos");
@@ -264,6 +266,7 @@ window.addEventListener("load", function(e) {
   charaster.drawRaster("temp");
   charaster.drawCursor();
   charaster.drawGrid();
+  charaster.drawSelect();
 
   buttonMode("textMode", "TEXT", false);
   buttonMode("eraserMode", "ERASER", false);
@@ -271,6 +274,7 @@ window.addEventListener("load", function(e) {
   buttonMode("lineMode", "LINE", false);
   buttonMode("rectangleMode", "RECTANGLE", false);
   buttonMode("floodMode", "FLOOD", false);
+  buttonMode("selectMode", "SELECT", false);
 
   // Apply theme colours to buttons.
   for (var i = 0; i < charaster.theme.colors.length; i++) {
@@ -355,10 +359,10 @@ window.addEventListener("keypress", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
+  var pos = getMousePos(charaster.rasterCanvas, e);
+  charaster.cursor = charaster.coordToGrid(snapPos(pos));
+  charaster.drawCursor();
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-    var pos = getMousePos(charaster.rasterCanvas, e);
-    charaster.cursor = charaster.coordToGrid(snapPos(pos));
-    charaster.drawCursor();
     if (draw) {
       var cell = new Cell(charaster.cursor, charaster.character);
       if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
@@ -393,6 +397,20 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
         drawList.push(cell);
       }
     }
+  } else if (charaster.mode == "SELECT" && draw) {
+
+    // Move to class function
+    charaster.drawSelect();
+    charaster.selectContext.strokeStyle = charaster.theme.cursor;
+    charaster.selectContext.beginPath();
+    charaster.selectContext.rect(
+      lineStart.x * charaster.fontWidth,
+      lineStart.y * charaster.fontHeight,
+      (charaster.cursor.x - lineStart.x) * charaster.fontWidth,
+      (charaster.cursor.y - lineStart.y) * charaster.fontHeight
+    );
+    charaster.selectContext.stroke();
+    charaster.selectContext.closePath();
   }
 }, false);
 
@@ -418,6 +436,19 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     var cell = charaster.getCell(charaster.cursor);
     var targetCell = Object.assign({}, cell);
     rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character));
+  } else if (charaster.mode == "SELECT") {
+
+    // Move to class function
+    charaster.selectContext.beginPath();
+    charaster.selectContext.strokeStyle = charaster.theme.cursor;
+    charaster.selectContext.rect(
+      lineStart.x * charaster.fontWidth,
+      lineStart.y * charaster.fontHeight,
+      (charaster.cursor.x - lineStart.x) * charaster.fontWidth,
+      (charaster.cursor.y - lineStart.y) * charaster.fontHeight
+    );
+    charaster.selectContext.stroke();
+    charaster.selectContext.closePath();
   }
 }, false);
 
@@ -426,16 +457,16 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
     return;
   }
   mouseDown = true;
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
+  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE" || charaster.mode == "SELECT") {
     draw = true;
     if (charaster.mode == "ERASER") {
       charaster.clearCell(charaster.cursor);
-    } else {
+    } else if (charaster.mode != "SELECT") {
       var cell = new Cell(charaster.cursor, charaster.character);
       charaster.setCell(cell);
     }
   }
-  if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
+  if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE" || charaster.mode == "SELECT") {
     lineStart = charaster.cursor;
   }
 }, false);
@@ -450,7 +481,7 @@ window.addEventListener("mouseup", function(e) {
       points = rasterLine(lineStart, charaster.cursor);
     } else if (charaster.mode == "RECTANGLE") {
       points = rasterRectangle(lineStart, charaster.cursor);
-    }
+    } else
     for (var i = 0; i < points.length; i++) {
       charaster.setCell(new Cell(points[i], charaster.character));
     }

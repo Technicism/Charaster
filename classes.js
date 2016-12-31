@@ -29,6 +29,8 @@ class Charaster {
     this.rasterTempContext;
     this.cursorCanvas;
     this.cursorContext;
+    this.selectCanvas;
+    this.selectContext;
 
     // Info.
     this.cursorPos;
@@ -113,6 +115,12 @@ class Charaster {
     context.stroke();
     context.closePath();
     this.cursorPos.innerHTML = "(" + this.cursor.x + ", " + this.cursor.y + ")";
+  }
+
+  drawSelect() {
+    var canvas = this.selectCanvas;
+    var context = this.selectContext;
+    this.fitToContainer(canvas, context);
   }
 
   moveCursorRelative(x, y) {

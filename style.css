@@ -33,6 +33,10 @@ canvas {
   border: solid 1px black;
 }
 
+#select {
+  z-index: 3;
+}
+
 header {
   /*padding: 4px;*/
   top: 0;
