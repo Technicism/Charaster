@@ -422,6 +422,9 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousedown", function(e) {
+  if (e.which != 1) { // Only draw with left mouse button.
+    return;
+  }
   mouseDown = true;
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     draw = true;
@@ -454,6 +457,11 @@ window.addEventListener("mouseup", function(e) {
   }
   draw = false;
   drawList = [];
+}, false);
+
+
+charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
 }, false);
 
 document.getElementById("boldText").addEventListener("click", function(e) {
@@ -520,9 +528,22 @@ window.addEventListener("paste", function(e) {
   var clipboardData = e.clipboardData || window.clipboardData;
   var text = clipboardData.getData('Text');
 
-  // Place it into raster.
+  // Place it into raster one cell at a time from cursor location.
+  var x = 0;
+  var y = 0;
   for (var i = 0; i < text.length; i++) {
-    charaster.setCell(new Cell(new Point(charaster.cursor.x + i, charaster.cursor.y), text[i]));
+    if (text[i] == "\n") {
+      y++;
+      x = 0;
+    } else if (text[i] != "\r") {
+      var point = new Point(charaster.cursor.x + x, charaster.cursor.y + y);
+      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
+        continue; // Out of range of raster.
+      }
+      var cell = new Cell(point, text[i]);
+      charaster.setCell(cell);
+      x++;
+    }
   }
 }, false);
 
