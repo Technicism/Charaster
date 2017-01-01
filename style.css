@@ -65,7 +65,8 @@ footer {
 
 footer span {
   display: inline-block;
-  width: 10ch;
+  min-width: 10ch;
+  vertical-align: middle;
 }
 
 footer span span {
@@ -95,7 +96,6 @@ footer span span {
   display: inline-block;
   padding: 4px 16px 4px 4px;
 }
-
 
 .bar {
   margin: 2px;
@@ -225,7 +225,7 @@ body {
   /*background-color: red;*/
   top: 36px;
   left: 0;
-  z-index: 1000;
+  z-index: 5;
   visibility: hidden;
 }
 
