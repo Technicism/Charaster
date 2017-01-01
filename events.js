@@ -464,7 +464,7 @@ window.addEventListener("mouseup", function(e) {
       points = rasterLine(lineStart, charaster.cursor);
     } else if (charaster.mode == "RECTANGLE") {
       points = rasterRectangle(lineStart, charaster.cursor);
-    } else
+    }
     for (var i = 0; i < points.length; i++) {
       charaster.setCell(new Cell(points[i], charaster.character));
     }

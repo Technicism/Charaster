@@ -234,6 +234,7 @@ class Charaster {
 
     // Set the colors of the page.
     this.body.style.background = this.theme.background;
+    this.body.style.color = this.theme.icon;
     this.cursorCanvas.style.borderColor = this.theme.grid;
     this.controls.style.background = this.theme.bar;
     this.controls.style.borderColor = this.theme.barBorder;

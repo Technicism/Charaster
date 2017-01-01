@@ -39,7 +39,7 @@ charaster.themes["Solarized"] = new Theme(
   "#586e75",
   "#fdf6e3",
   "#eee8d5",
-  "#ff2b36",
+  "#002b36",
   "#586e75",
   "#839496",
   [
@@ -62,5 +62,37 @@ charaster.themes["Solarized"] = new Theme(
   ]
 );
 
+// Ubuntu theme sourced from http://superuser.com/a/497242 and https://design.ubuntu.com/brand/colour-palette
+charaster.themes["Ubuntu"] = new Theme(
+  "Ubuntu",
+  "#d3d7cf",
+  "#300a24",
+  "#1e0617",
+  "#4e9a06",
+  "#AEA79F",
+  "#333333",
+  "#333333",
+  "#4e9a06",
+  "#cc0000",
+  [
+    "#2e3436",
+    "#3465a4",
+    "#4e9a06",
+    "#06989a",
+    "#cc0000",
+    "#75507b",
+    "#c4a000",
+    "#d3d7cf",
+    "#555753",
+    "#729fcf",
+    "#8ae234",
+    "#34e2e2",
+    "#ef2929",
+    "#ad7fa8",
+    "#fce94f",
+    "#eeeeec"
+  ]
+);
+
 // Default theme.
-charaster.theme = charaster.themes["Stereokai"];
+charaster.theme = charaster.themes["Ubuntu"];
