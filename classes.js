@@ -19,6 +19,8 @@ class Charaster {
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
     this.prevCursor = new Point(0, 0);
+    this.selectBegin = new Point(0, 0);
+    this.selectClose = new Point(0, 0);
 
     // Canvases.
     this.gridCanvas;
@@ -121,6 +123,20 @@ class Charaster {
     var canvas = this.selectCanvas;
     var context = this.selectContext;
     this.fitToContainer(canvas, context);
+    if (this.mode != "SELECT") {
+      return;
+    }
+    this.selectContext.strokeStyle = this.theme.cursor;
+    this.selectContext.setLineDash([6, 4]);
+    this.selectContext.beginPath();
+    this.selectContext.rect(
+      this.selectBegin.x * this.fontWidth,
+      this.selectBegin.y * this.fontHeight,
+      (this.selectClose.x - this.selectBegin.x) * this.fontWidth,
+      (this.selectClose.y - this.selectBegin.y) * this.fontHeight
+    );
+    this.selectContext.stroke();
+    this.selectContext.closePath();
   }
 
   moveCursorRelative(x, y) {

@@ -398,19 +398,9 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
       }
     }
   } else if (charaster.mode == "SELECT" && draw) {
-
-    // Move to class function
+    charaster.selectBegin = lineStart;
+    charaster.selectClose = charaster.cursor;
     charaster.drawSelect();
-    charaster.selectContext.strokeStyle = charaster.theme.cursor;
-    charaster.selectContext.beginPath();
-    charaster.selectContext.rect(
-      lineStart.x * charaster.fontWidth,
-      lineStart.y * charaster.fontHeight,
-      (charaster.cursor.x - lineStart.x) * charaster.fontWidth,
-      (charaster.cursor.y - lineStart.y) * charaster.fontHeight
-    );
-    charaster.selectContext.stroke();
-    charaster.selectContext.closePath();
   }
 }, false);
 
@@ -437,18 +427,9 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     var targetCell = Object.assign({}, cell);
     rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character));
   } else if (charaster.mode == "SELECT") {
-
-    // Move to class function
-    charaster.selectContext.beginPath();
-    charaster.selectContext.strokeStyle = charaster.theme.cursor;
-    charaster.selectContext.rect(
-      lineStart.x * charaster.fontWidth,
-      lineStart.y * charaster.fontHeight,
-      (charaster.cursor.x - lineStart.x) * charaster.fontWidth,
-      (charaster.cursor.y - lineStart.y) * charaster.fontHeight
-    );
-    charaster.selectContext.stroke();
-    charaster.selectContext.closePath();
+    charaster.selectBegin = lineStart;
+    charaster.selectClose = charaster.cursor;
+    charaster.drawSelect();
   }
 }, false);
 
@@ -546,7 +527,21 @@ document.getElementById("saveCancel").addEventListener("click", function(e) {
 
 window.addEventListener("copy", function(e) {
   var clipboard = document.getElementById("clipboard");
-  clipboard.innerHTML = "this is a test";
+  clipboard.innerHTML = "";
+  if (charaster.mode == "SELECT") {
+    for (var x = charaster.selectBegin.x; x < charaster.selectClose.x; x++) {
+      for (var y = charaster.selectBegin.y; y < charaster.selectClose.y; y++) {
+        var cell = charaster.getCell(new Point(x, y));
+        if (cell.character == null) {
+          clipboard.innerHTML += " ";
+        } else {
+          clipboard.innerHTML += cell.character;
+        }
+      }
+    }
+  }
+
+  // clipboard.innerHTML = "this is a test";
   clipboard.focus();
   clipboard.select();
 }, false);
