@@ -359,9 +359,11 @@ window.addEventListener("keypress", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
-  var pos = getMousePos(charaster.rasterCanvas, e);
-  charaster.cursor = charaster.coordToGrid(snapPos(pos));
-  charaster.drawCursor();
+  if (charaster.mode != "TEXT") {
+    var pos = getMousePos(charaster.rasterCanvas, e);
+    charaster.cursor = charaster.coordToGrid(snapPos(pos));
+    charaster.drawCursor();
+  }
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     if (draw) {
       var cell = new Cell(charaster.cursor, charaster.character);
@@ -529,8 +531,8 @@ window.addEventListener("copy", function(e) {
   var clipboard = document.getElementById("clipboard");
   clipboard.innerHTML = "";
   if (charaster.mode == "SELECT") {
-    for (var x = charaster.selectBegin.x; x < charaster.selectClose.x; x++) {
-      for (var y = charaster.selectBegin.y; y < charaster.selectClose.y; y++) {
+    for (var y = charaster.selectBegin.y; y < charaster.selectClose.y; y++) {
+      for (var x = charaster.selectBegin.x; x < charaster.selectClose.x; x++) {
         var cell = charaster.getCell(new Point(x, y));
         if (cell.character == null) {
           clipboard.innerHTML += " ";
@@ -538,10 +540,9 @@ window.addEventListener("copy", function(e) {
           clipboard.innerHTML += cell.character;
         }
       }
+      clipboard.innerHTML += "\n";
     }
   }
-
-  // clipboard.innerHTML = "this is a test";
   clipboard.focus();
   clipboard.select();
 }, false);
