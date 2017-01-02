@@ -36,7 +36,7 @@ class Charaster {
 
     // Info.
     this.cursorPos;
-    this.gridSize;
+    this.gridSizeText;
 
     // Chrome.
     this.body;
@@ -137,6 +137,14 @@ class Charaster {
     );
     this.selectContext.stroke();
     this.selectContext.closePath();
+  }
+
+  drawAll() {
+    this.drawGrid();
+    this.drawRaster();
+    this.drawRaster("temp");
+    this.drawCursor();
+    // this.drawSelect();
   }
 
   moveCursorRelative(x, y) {

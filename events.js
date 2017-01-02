@@ -12,8 +12,8 @@ charaster.selectContext = charaster.selectCanvas.getContext("2d");
 
 // Info.
 charaster.cursorPos = document.getElementById("cursorPos");
-charaster.gridSize = document.getElementById("gridSize");
-charaster.gridSize.innerHTML = "[" + charaster.gridWidth + ", " + charaster.gridHeight + "]";
+charaster.gridSizeText = document.getElementById("gridSizeText");
+charaster.gridSizeText.innerHTML = "[" + charaster.gridWidth + ", " + charaster.gridHeight + "]";
 
 // Chrome.
 charaster.body = document.getElementById("body");
@@ -600,4 +600,9 @@ document.getElementById("gridToggle").addEventListener("click", function(e) {
     document.getElementById("grid").style.visibility = "hidden";
     document.getElementById("gridToggleStatus").innerHTML = "OFF";
   }
+}, false);
+
+document.getElementById("gridSize").addEventListener("click", function(e) {
+  charaster.gridHeight++;
+  charaster.drawAll();
 }, false);

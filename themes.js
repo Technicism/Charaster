@@ -95,4 +95,4 @@ charaster.themes["Ubuntu"] = new Theme(
 );
 
 // Default theme.
-charaster.theme = charaster.themes["Ubuntu"];
+charaster.theme = charaster.themes["Stereokai"];

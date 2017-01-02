@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Charaster</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -91,7 +90,12 @@
       <canvas id="select"></canvas>
     </div>
     <footer id="info">
-      <span id="gridSize">[80, 24]</span>
+
+      <!-- Size icon sourced from https://www.iconfinder.com/icons/763371/crop_edit_editor_resize_icon -->
+      <span id="gridSize">
+        <svg height="24px" version="1.1" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g  stroke-width="1"><g transform="translate(-251.000000, -443.000000)"><g transform="translate(215.000000, 119.000000)"/><path class="icon" d="M252,448 L256,448 L256,444 L252,444 L252,448 Z M257,448 L269,448 L269,446 L257,446 L257,448 Z M257,464 L269,464 L269,462 L257,462 L257,464 Z M270,444 L270,448 L274,448 L274,444 L270,444 Z M252,462 L252,466 L256,466 L256,462 L252,462 Z M270,462 L270,466 L274,466 L274,462 L270,462 Z M254,461 L256,461 L256,449 L254,449 L254,461 Z M270,461 L272,461 L272,449 L270,449 L270,461 Z" fill="#000000" id="editor-crop-glyph"/></g></g></svg>
+        <span id="gridSizeText">[80, 24]</span>
+      </span>
 
       <!-- Crosshair icon sourced from https://www.iconfinder.com/icons/1608656/crosshairs_icon -->
       <svg height="1792" viewBox="0 0 1792 1792" width="1792" xmlns="http://www.w3.org/2000/svg"><path class="icon" d="M1325 1024h-109q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h109q-32-108-112.5-188.5t-188.5-112.5v109q0 26-19 45t-45 19h-128q-26 0-45-19t-19-45v-109q-108 32-188.5 112.5t-112.5 188.5h109q26 0 45 19t19 45v128q0 26-19 45t-45 19h-109q32 108 112.5 188.5t188.5 112.5v-109q0-26 19-45t45-19h128q26 0 45 19t19 45v109q108-32 188.5-112.5t112.5-188.5zm339-192v128q0 26-19 45t-45 19h-143q-37 161-154.5 278.5t-278.5 154.5v143q0 26-19 45t-45 19h-128q-26 0-45-19t-19-45v-143q-161-37-278.5-154.5t-154.5-278.5h-143q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h143q37-161 154.5-278.5t278.5-154.5v-143q0-26 19-45t45-19h128q26 0 45 19t19 45v143q161 37 278.5 154.5t154.5 278.5h143q26 0 45 19t19 45z"/></svg>
@@ -106,7 +110,7 @@
 
       <!-- Grid icon sourced from https://www.iconfinder.com/icons/763358/block_editor_grid_layout_view_icon -->
       <span id="gridToggle">
-        <svg id="gridToggleIcon" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="miu" stroke="none" stroke-width="1"><g id="Artboard-1" transform="translate(-467.000000, -479.000000)"><g id="slice" transform="translate(215.000000, 119.000000)"/><path class="icon" d="M468,480 L468,486 L474,486 L474,480 L468,480 Z M476,480 L476,486 L482,486 L482,480 L476,480 Z M484,480 L484,486 L490,486 L490,480 L484,480 Z M468,488 L468,494 L474,494 L474,488 L468,488 Z M476,488 L476,494 L482,494 L482,488 L476,488 Z M484,488 L484,494 L490,494 L490,488 L484,488 Z M468,496 L468,502 L474,502 L474,496 L468,496 Z M476,496 L476,502 L482,502 L482,496 L476,496 Z M484,496 L484,502 L490,502 L490,496 L484,496 Z" fill="#000000" id="editor-grid-view-block-glyph"/></g></g></svg>
+        <svg id="gridToggleIcon" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" stroke="none" stroke-width="1"><g transform="translate(-467.000000, -479.000000)"><g transform="translate(215.000000, 119.000000)"/><path class="icon" d="M468,480 L468,486 L474,486 L474,480 L468,480 Z M476,480 L476,486 L482,486 L482,480 L476,480 Z M484,480 L484,486 L490,486 L490,480 L484,480 Z M468,488 L468,494 L474,494 L474,488 L468,488 Z M476,488 L476,494 L482,494 L482,488 L476,488 Z M484,488 L484,494 L490,494 L490,488 L484,488 Z M468,496 L468,502 L474,502 L474,496 L468,496 Z M476,496 L476,502 L482,502 L482,496 L476,496 Z M484,496 L484,502 L490,502 L490,496 L484,496 Z" fill="#000000" id="editor-grid-view-block-glyph"/></g></g></svg>
         <span id="gridToggleStatus">ON</span>
       </span>
 
