@@ -286,6 +286,7 @@ window.addEventListener("load", function(e) {
     colorButton.addEventListener("click", function(e) {
       var index = e.target.id.replace("color", "") - 1;
       charaster.foreground = charaster.theme.colors[index];
+      charaster.foregroundId = index + 1;
       charaster.preview.style.color = charaster.theme.colors[index];
     }, false);
 
@@ -294,6 +295,7 @@ window.addEventListener("load", function(e) {
       e.preventDefault();
       var index = e.target.id.replace("color", "") - 1;
       charaster.background = charaster.theme.colors[index];
+      charaster.backgroundId = index + 1;
       charaster.preview.style.backgroundColor = charaster.theme.colors[index];
     }, false);
   }
@@ -605,4 +607,9 @@ document.getElementById("gridToggle").addEventListener("click", function(e) {
 document.getElementById("gridSize").addEventListener("click", function(e) {
   charaster.gridHeight++;
   charaster.drawAll();
+}, false);
+
+charaster.themeSelect.addEventListener("click", function(e) {
+  charaster.theme = charaster.themes["Solarized"];
+  charaster.applyTheme();
 }, false);

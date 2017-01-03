@@ -9,6 +9,8 @@ class Charaster {
     this.font = this.fontSize + "pt " + this.fontName;
     this.foreground;
     this.background;
+    this.foregroundId;
+    this.backgroundId;
     this.bold = false;
     this.italic = false;
     this.fontHeight;
@@ -218,6 +220,12 @@ class Charaster {
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - this.fontOffset
       );
     }
+    if (cell.foregroundId == -1) {
+      cell.foregroundId = this.foregroundId;
+    }
+    if (cell.backgroundId == -1) {
+      cell.backgroundId = this.backgroundId;
+    }
     if (context == this.rasterContext) {
       this.raster[cell.point.y][cell.point.x] = cell;
     }
@@ -311,6 +319,8 @@ class Cell {
     this.background = background;
     this.bold = bold;
     this.italic = italic;
+    this.foregroundId = -1;
+    this.backgroundId = -1;
   }
   equality(other) {
     if (this.point == other.point && this.character == other.character) {
