@@ -211,10 +211,10 @@ class Charaster {
       cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
       this.fontWidth, this.fontHeight
     );
+    if (cell.foreground == null) {
+      cell.foreground = this.foreground;
+    }
     if (cell.character != null) {
-      if (cell.foreground == null) {
-        cell.foreground = this.foreground;
-      }
       context.fillStyle = cell.foreground;
       context.fillText(
         cell.character,
@@ -307,6 +307,9 @@ class Charaster {
         }
       }
     }
+
+    // Reset selected buttons.
+    buttonMode(this.mode.toLowerCase() + "Mode", this.mode, true);
 
     // Show new theme.
     this.drawAll();

@@ -35,12 +35,15 @@ function buttonMode(id, mode, activate) {
   }, false);
   if (activate) {
     button.style.background = charaster.theme.iconActive;
-    button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    if (button.getElementsByClassName("iconStroke")[0] != null) {
+      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.iconActiveText;
+    }
+    if (button.getElementsByClassName("icon")[0] != null) {
+      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    }
     button.style.borderRadius = "2px";
   }
 }
-
-
 
 window.addEventListener("load", function(e) {
 
@@ -132,14 +135,10 @@ window.addEventListener("keypress", function(e) {
     return;
   }
   charaster.character = String.fromCharCode(e.charCode);
-
-  // Automatically update current cell character.
   charaster.preview.value = charaster.character;
-  charaster.preview.style.backgroundColor = charaster.background;
-  charaster.preview.style.color = charaster.foreground;
-
   if (charaster.mode == "TEXT") {
-    charaster.setCell(new Cell(charaster.cursor, charaster.character));
+    var cursor = Object.assign({}, charaster.cursor);
+    charaster.setCell(new Cell(cursor, charaster.character));
     charaster.moveCursorRelative(1, 0);
   }
 }, false);
