@@ -75,6 +75,11 @@ footer span span {
   display: inline;
 }
 
+footer a {
+  text-decoration: none;
+  color: inherit;
+}
+
 #char {
   width: 16px;
 }

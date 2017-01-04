@@ -29,7 +29,7 @@ charaster.themeSelect = document.getElementById("themeSelect");
 
 var mouseDown = false;
 var draw = false;
-var drawList = new Array();
+var drawList = [];
 var lineStart;
 
 // Draw a line using Bresenham's line algorithm, see reference http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
@@ -258,16 +258,16 @@ function zoom(size) {
 }
 
 window.addEventListener("load", function(e) {
+
+  // Setup raster.
   measureCharacter(charaster.font);
   charaster.preview.value = charaster.character;
-
+  for (var i = 0; i < charaster.theme.colors.length; i++) {
+    charaster.colors.push(document.getElementById("color" + (i + 1)));
+  }
   charaster.applyTheme(charaster.theme.name);
-  charaster.drawRaster();
-  charaster.drawRaster("temp");
-  charaster.drawCursor();
-  charaster.drawGrid();
-  charaster.drawSelect();
 
+  // Setup buttons.
   buttonMode("textMode", "TEXT", false);
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
@@ -276,14 +276,11 @@ window.addEventListener("load", function(e) {
   buttonMode("floodMode", "FLOOD", false);
   buttonMode("selectMode", "SELECT", false);
 
-  // Apply theme colours to buttons.
-  for (var i = 0; i < charaster.theme.colors.length; i++) {
-    var colorButton = document.getElementById("color" + (i + 1));
-    colorButton.style.backgroundColor = charaster.theme.colors[i];
-    colorButton.style.borderColor = charaster.theme.barBorder;
+  // Apply events to color buttons.
+  for (var i = 0; i < charaster.colors.length; i++) {
 
     // Left click to apply colour to foreground.
-    colorButton.addEventListener("click", function(e) {
+    charaster.colors[i].addEventListener("click", function(e) {
       var index = e.target.id.replace("color", "") - 1;
       charaster.foreground = charaster.theme.colors[index];
       charaster.foregroundId = index + 1;
@@ -291,7 +288,7 @@ window.addEventListener("load", function(e) {
     }, false);
 
     // Right click to apply colour to background.
-    colorButton.addEventListener("contextmenu", function(e) {
+    charaster.colors[i].addEventListener("contextmenu", function(e) {
       e.preventDefault();
       var index = e.target.id.replace("color", "") - 1;
       charaster.background = charaster.theme.colors[index];

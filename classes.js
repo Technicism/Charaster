@@ -1,8 +1,9 @@
 class Charaster {
   constructor() {
     this.mode = "PENCIL";
-    this.themes = new Array();
+    this.themes = [];
     this.theme;
+    this.colors = [];
     this.character = "*";
     this.fontName = "monospace";
     this.fontSize = "12";
@@ -269,6 +270,12 @@ class Charaster {
       this.bars[i].style.borderColor = this.theme.barBorder;
     }
 
+    // Set theme colors.
+    for (var i = 0; i < this.colors.length; i++) {
+      this.colors[i].style.backgroundColor = this.theme.colors[i];
+      this.colors[i].style.borderColor = this.theme.barBorder;
+    }
+
     // Set character colors.
     if (this.foreground == null) {
       this.foreground = this.theme.foreground;
@@ -278,6 +285,9 @@ class Charaster {
     }
     this.preview.style.color = this.foreground;
     this.preview.style.backgroundColor = this.background;
+
+    // Show new theme.
+    this.drawAll();
   }
 
   coordToGrid(point) {
