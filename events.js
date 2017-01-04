@@ -301,6 +301,7 @@ window.addEventListener("load", function(e) {
 // Left click to reset foreground.
 charaster.noColor.addEventListener("click", function(e) {
   charaster.foreground = charaster.theme.foreground;
+  charaster.foregroundId = "foreground";
   charaster.preview.style.color = charaster.theme.foreground;
 }, false);
 
@@ -308,6 +309,7 @@ charaster.noColor.addEventListener("click", function(e) {
 charaster.noColor.addEventListener("contextmenu", function(e) {
   e.preventDefault();
   charaster.background = charaster.theme.background;
+  charaster.backgroundId = "background";
   charaster.preview.style.backgroundColor = charaster.theme.background;
 }, false);
 
@@ -607,6 +609,12 @@ document.getElementById("gridSize").addEventListener("click", function(e) {
 }, false);
 
 charaster.themeSelect.addEventListener("click", function(e) {
-  charaster.theme = charaster.themes["Solarized"];
+
+  // Simple example, replace with a drop down box to choose the name.
+  if (charaster.theme.name == "Solarized") {
+    charaster.theme = charaster.themes["Ubuntu"];
+  } else {
+    charaster.theme = charaster.themes["Solarized"];
+  }
   charaster.applyTheme();
 }, false);

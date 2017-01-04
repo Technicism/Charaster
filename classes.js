@@ -10,8 +10,8 @@ class Charaster {
     this.font = this.fontSize + "pt " + this.fontName;
     this.foreground;
     this.background;
-    this.foregroundId;
-    this.backgroundId;
+    this.foregroundId = "foreground";
+    this.backgroundId = "background";
     this.bold = false;
     this.italic = false;
     this.fontHeight;
@@ -147,7 +147,7 @@ class Charaster {
     this.drawRaster();
     this.drawRaster("temp");
     this.drawCursor();
-    // this.drawSelect();
+    this.drawSelect();
   }
 
   moveCursorRelative(x, y) {
@@ -221,10 +221,10 @@ class Charaster {
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - this.fontOffset
       );
     }
-    if (cell.foregroundId == -1) {
+    if (cell.foregroundId == null) {
       cell.foregroundId = this.foregroundId;
     }
-    if (cell.backgroundId == -1) {
+    if (cell.backgroundId == null) {
       cell.backgroundId = this.backgroundId;
     }
     if (context == this.rasterContext) {
@@ -277,14 +277,36 @@ class Charaster {
     }
 
     // Set character colors.
-    if (this.foreground == null) {
+    if (this.foregroundId == "foreground") {
       this.foreground = this.theme.foreground;
+    } else {
+      this.foreground = this.theme.colors[this.foregroundId - 1];
     }
-    if (this.background == null) {
+    if (this.backgroundId == "background") {
       this.background = this.theme.background;
+    } else {
+      this.background = this.theme.colors[this.backgroundId - 1];
     }
     this.preview.style.color = this.foreground;
     this.preview.style.backgroundColor = this.background;
+
+    // Reset all character colors in the raster.
+    for (var col = 0; col < this.raster.length; col++) {
+      for (var row = 0; row < this.raster[0].length; row++) {
+        var foregroundId = this.raster[col][row].foregroundId;
+        if (foregroundId == "foreground") {
+          this.raster[col][row].foreground = this.theme.foreground;
+        } else {
+          this.raster[col][row].foreground = this.theme.colors[foregroundId - 1];
+        }
+        var backgroundId = this.raster[col][row].backgroundId;
+        if (backgroundId == "background") {
+          this.raster[col][row].background = this.theme.background;
+        } else {
+          this.raster[col][row].background = this.theme.colors[backgroundId - 1];
+        }
+      }
+    }
 
     // Show new theme.
     this.drawAll();
@@ -329,8 +351,8 @@ class Cell {
     this.background = background;
     this.bold = bold;
     this.italic = italic;
-    this.foregroundId = -1;
-    this.backgroundId = -1;
+    this.foregroundId = null;
+    this.backgroundId = null;
   }
   equality(other) {
     if (this.point == other.point && this.character == other.character) {
