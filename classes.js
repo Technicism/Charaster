@@ -129,17 +129,35 @@ class Charaster {
     if (this.mode != "SELECT") {
       return;
     }
+
+    // Wrap around selected cell(s).
+    var selectBegin = Object.assign({}, this.selectBegin);
+    var selectClose = Object.assign({}, this.selectClose);
+    if (this.selectClose.x <= this.selectBegin.x) {
+      selectBegin.x++;
+    } else if (this.selectClose.x > this.selectBegin.x) {
+      selectClose.x++;
+    }
+    if (this.selectClose.y <= this.selectBegin.y) {
+      selectBegin.y++;
+    } else if (this.selectClose.y > this.selectBegin.y) {
+      selectClose.y++;
+    }
+
+    // Draw dashed rectangle.
     this.selectContext.strokeStyle = this.theme.cursor;
     this.selectContext.setLineDash([6, 4]);
     this.selectContext.beginPath();
     this.selectContext.rect(
-      this.selectBegin.x * this.fontWidth,
-      this.selectBegin.y * this.fontHeight,
-      (this.selectClose.x - this.selectBegin.x) * this.fontWidth,
-      (this.selectClose.y - this.selectBegin.y) * this.fontHeight
+      selectBegin.x * this.fontWidth,
+      selectBegin.y * this.fontHeight,
+      (selectClose.x - selectBegin.x) * this.fontWidth,
+      (selectClose.y - selectBegin.y) * this.fontHeight
     );
     this.selectContext.stroke();
     this.selectContext.closePath();
+    this.selectBegin = selectBegin;
+    this.selectClose = selectClose;
   }
 
   drawAll() {

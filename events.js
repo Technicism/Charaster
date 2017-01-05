@@ -104,7 +104,12 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
 
 window.addEventListener("keydown", function(e) {
   if (e.keyCode == 46) {  // Delete.
-    charaster.clearCell(charaster.cursor);
+    if (charaster.mode == "SELECT") {
+      console.log(charaster.selectBegin);
+      console.log(charaster.selectClose);
+    } else {
+      charaster.clearCell(charaster.cursor);
+    }
   }
   if (e.keyCode == 32) {
     e.preventDefault(); // Space scrolling.
