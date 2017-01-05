@@ -180,3 +180,14 @@ function zoom(size) {
   var display = Math.round((size / 12) * 100) + "%";
   document.getElementById("zoomPercent").innerHTML = display;
 }
+
+function getStartStop(p, q) {
+  var startX = Math.min(p.x, q.x);
+  var startY = Math.min(p.y, q.y);
+  var stopX = Math.max(p.x, q.x);
+  var stopY = Math.max(p.y, q.y);
+  var ordered = [];
+  ordered.push(new Point(startX, startY));
+  ordered.push(new Point(stopX, stopY));
+  return ordered;
+}

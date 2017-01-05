@@ -105,8 +105,12 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
 window.addEventListener("keydown", function(e) {
   if (e.keyCode == 46) {  // Delete.
     if (charaster.mode == "SELECT") {
-      console.log(charaster.selectBegin);
-      console.log(charaster.selectClose);
+      var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
+      for (var y = startStop[0].y; y < startStop[1].y; y++) {
+        for (var x = startStop[0].x; x < startStop[1].x; x++) {
+          charaster.clearCell(new Point(x, y));
+        }
+      }
     } else {
       charaster.clearCell(charaster.cursor);
     }
@@ -321,8 +325,9 @@ window.addEventListener("copy", function(e) {
   var clipboard = document.getElementById("clipboard");
   clipboard.innerHTML = "";
   if (charaster.mode == "SELECT") {
-    for (var y = charaster.selectBegin.y; y < charaster.selectClose.y; y++) {
-      for (var x = charaster.selectBegin.x; x < charaster.selectClose.x; x++) {
+    var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
+    for (var y = startStop[0].y; y < startStop[1].y; y++) {
+      for (var x = startStop[0].x; x < startStop[1].x; x++) {
         var cell = charaster.getCell(new Point(x, y));
         if (cell.character == null) {
           clipboard.innerHTML += " ";
