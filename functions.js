@@ -191,3 +191,29 @@ function getStartStop(p, q) {
   ordered.push(new Point(stopX, stopY));
   return ordered;
 }
+
+function buttonStyle(id, active) {
+  var button = document.getElementById(id);
+  if (active) {
+    button.style.background = charaster.theme.iconActive;
+    button.style.color = charaster.theme.iconActiveText;
+  } else {
+    button.style.fill = charaster.theme.icon;
+    button.style.background = "none";
+    button.style.color = charaster.theme.icon;
+  }
+  if (button.getElementsByClassName("icon")[0] != null) {
+    if (active) {
+      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+    } else {
+      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.icon;
+    }
+  }
+  if (button.getElementsByClassName("iconStroke")[0] != null) {
+    if (active) {
+      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.iconActiveText;
+    } else {
+      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.icon;
+    }
+  }
+}

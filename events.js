@@ -2,27 +2,17 @@
 function buttonMode(id, mode, activate) {
   var button = document.getElementById(id);
   button.addEventListener("click", function(e) {
+
+    // Reset other button styles.
     var reset = document.getElementsByClassName("tools");
     for (var i = 0; i < reset.length; i++) {
-      reset[i].style.fill = charaster.theme.icon;
-      reset[i].style.background = "none";
-      reset[i].style.color = charaster.theme.icon;
-      if (reset[i].getElementsByClassName("icon")[0] != null) {
-        reset[i].getElementsByClassName("icon")[0].style.fill = charaster.theme.icon;
-      }
-      if (reset[i].getElementsByClassName("iconStroke")[0] != null) {
-        reset[i].getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.icon;
-      }
+      buttonStyle(reset[i].id, false);
     }
-    button.style.background = charaster.theme.iconActive;
-    button.style.color = charaster.theme.iconActiveText;
-    if (button.getElementsByClassName("icon")[0] != null) {
-      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
-    }
-    if (button.getElementsByClassName("iconStroke")[0] != null) {
-      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.iconActiveText;
-    }
-    button.style.borderRadius = "2px";
+
+    // Apply style to current button to indicate it is selected.
+    buttonStyle(button.id, true);
+
+    // Apply new mode.
     if (charaster.mode == "TEXT" && (mode == "PENCIL") || mode == "ERASER") {
       charaster.prevCursor = charaster.cursor;
       charaster.drawCursor();
@@ -33,15 +23,10 @@ function buttonMode(id, mode, activate) {
     }
     charaster.mode = mode;
   }, false);
+
+  // Buttons may start off activated.
   if (activate) {
-    button.style.background = charaster.theme.iconActive;
-    if (button.getElementsByClassName("iconStroke")[0] != null) {
-      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.iconActiveText;
-    }
-    if (button.getElementsByClassName("icon")[0] != null) {
-      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
-    }
-    button.style.borderRadius = "2px";
+    buttonStyle(button.id, true);
   }
 }
 
@@ -158,42 +143,43 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
     charaster.cursor = charaster.coordToGrid(snapPos(pos));
     charaster.drawCursor();
   }
+  if (!draw) {
+    return;
+  }
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-    if (draw) {
-      var cell = new Cell(charaster.cursor, charaster.character);
-      if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-        charaster.drawRaster("temp");
-        var points = [];
-        if (charaster.mode == "LINE") {
-          points = rasterLine(lineStart, charaster.cursor);
-        } else if (charaster.mode == "RECTANGLE") {
-          points = rasterRectangle(lineStart, charaster.cursor);
-        }
-        for (var i = 0; i < points.length; i++) {
-          charaster.setCell(new Cell(points[i], charaster.character), charaster.rasterTempContext);
-        }
-      } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
-        drawList.push(cell);
-        if (drawList.length >= 2) {
-          var line = rasterLine(drawList[0].point, drawList[1].point);
-
-          // Draw lines between cells.
-          for (var i = 0; i < line.length; i++) {
-            var character = null;
-            if (charaster.mode == "PENCIL") {
-              character = charaster.character;
-              charaster.setCell(new Cell(line[i], character));
-            } else if (charaster.mode == "ERASER") {
-              charaster.clearCell(line[i]);
-            }
-          }
-          drawList.shift();
-        }
-      } else if (drawList.length == 0) {
-        drawList.push(cell);
+    var cell = new Cell(charaster.cursor, charaster.character);
+    if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
+      charaster.drawRaster("temp");
+      var points = [];
+      if (charaster.mode == "LINE") {
+        points = rasterLine(lineStart, charaster.cursor);
+      } else if (charaster.mode == "RECTANGLE") {
+        points = rasterRectangle(lineStart, charaster.cursor);
       }
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i], charaster.character), charaster.rasterTempContext);
+      }
+    } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
+      drawList.push(cell);
+      if (drawList.length >= 2) {
+        var line = rasterLine(drawList[0].point, drawList[1].point);
+
+        // Draw lines between cells.
+        for (var i = 0; i < line.length; i++) {
+          var character = null;
+          if (charaster.mode == "PENCIL") {
+            character = charaster.character;
+            charaster.setCell(new Cell(line[i], character));
+          } else if (charaster.mode == "ERASER") {
+            charaster.clearCell(line[i]);
+          }
+        }
+        drawList.shift();
+      }
+    } else if (drawList.length == 0) {
+      drawList.push(cell);
     }
-  } else if (charaster.mode == "SELECT" && draw) {
+  } else if (charaster.mode == "SELECT") {
     charaster.selectBegin = lineStart;
     charaster.selectClose = charaster.cursor;
     charaster.drawSelect();
@@ -259,8 +245,11 @@ window.addEventListener("mouseup", function(e) {
     } else if (charaster.mode == "RECTANGLE") {
       points = rasterRectangle(lineStart, charaster.cursor);
     }
-    for (var i = 0; i < points.length; i++) {
-      charaster.setCell(new Cell(points[i], charaster.character));
+    if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
+      charaster.drawRaster("temp");
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i], charaster.character));
+      }
     }
   }
   draw = false;

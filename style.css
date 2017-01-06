@@ -98,10 +98,14 @@ footer a {
   height: 24px;
 }
 
-#inputType, #tools, #options{
+#inputType, #options{
   /*border-right: solid 1px #777;*/
   display: inline-block;
   padding: 4px 16px 4px 4px;
+}
+
+.tools {
+  border-radius: 2px;
 }
 
 .bar {
@@ -150,8 +154,7 @@ footer svg {
 }
 
 .bar img:hover, .bar svg:hover, .bar span:hover {
-  background-color: #ddd;
-  border-radius: 2px;
+  background-color: #ddd !important;
 }
 
 .bar div {

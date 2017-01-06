@@ -16,7 +16,7 @@ charaster.gridSizeText = document.getElementById("gridSizeText");
 charaster.gridSizeText.innerHTML = "[" + charaster.gridWidth + ", " + charaster.gridHeight + "]";
 
 // Chrome.
-charaster.body = document.getElementById("body");
+charaster.body = document.body;
 charaster.controls = document.getElementById("controls");
 charaster.info = document.getElementById("info");
 charaster.bars = document.getElementsByClassName("bar");
