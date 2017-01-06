@@ -69,6 +69,19 @@ window.addEventListener("load", function(e) {
       charaster.preview.style.backgroundColor = charaster.theme.colors[index];
     }, false);
   }
+
+  // Theme list.
+  var list = document.getElementById("themeList");
+  for (var key in charaster.themes) {
+    var theme = document.createElement("li");
+    theme.appendChild(document.createTextNode(charaster.themes[key].name));
+    list.appendChild(theme);
+    theme.addEventListener("click", function(e) {
+      charaster.theme = charaster.themes[e.target.innerHTML];
+      charaster.applyTheme();
+      document.getElementById("themeList").style.visibility = "hidden";
+    }, false);
+  }
 }, false);
 
 // Left click to reset foreground.
@@ -392,12 +405,14 @@ document.getElementById("gridSize").addEventListener("click", function(e) {
 }, false);
 
 charaster.themeSelect.addEventListener("click", function(e) {
-
-  // Simple example, replace with a drop down box to choose the name.
-  if (charaster.theme.name == "Solarized") {
-    charaster.theme = charaster.themes["Ubuntu"];
+  var list = document.getElementById("themeList");
+  if (list.style.visibility != "visible") {
+    var rect = charaster.themeSelect.getBoundingClientRect();
+    list.style.visibility = "visible";
+    list.style.left = rect.left + "px";
+    list.style.top = rect.top + 24 + "px";
+    list.style.visibility = "visible";
   } else {
-    charaster.theme = charaster.themes["Solarized"];
+    list.style.visibility = "hidden";
   }
-  charaster.applyTheme();
 }, false);
