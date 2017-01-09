@@ -26,6 +26,7 @@ charaster.iconStrokes = document.getElementsByClassName("iconStroke");
 charaster.preview = document.getElementById("preview");
 charaster.noColor = document.getElementById("noColor");
 charaster.themeSelect = document.getElementById("themeSelect");
+charaster.themeList = document.getElementById("themeList");
 
 var mouseDown = false;
 var draw = false;

@@ -38,7 +38,6 @@ window.addEventListener("load", function(e) {
   for (var i = 0; i < charaster.theme.colors.length; i++) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
-  charaster.applyTheme(charaster.theme.name);
 
   // Setup buttons.
   buttonMode("textMode", "TEXT", false);
@@ -77,11 +76,14 @@ window.addEventListener("load", function(e) {
     theme.appendChild(document.createTextNode(charaster.themes[key].name));
     list.appendChild(theme);
     theme.addEventListener("click", function(e) {
+      // e.target.style.backgroundColor = "purple";
       charaster.theme = charaster.themes[e.target.innerHTML];
       charaster.applyTheme();
       document.getElementById("themeList").style.visibility = "hidden";
     }, false);
   }
+
+  charaster.applyTheme();
 }, false);
 
 // Left click to reset foreground.

@@ -52,6 +52,10 @@ class Charaster {
     this.preview;
     this.noColor;
     this.themeSelect;
+    this.themeList;
+
+    // Dynamic CSS workaround for before and after styles.
+    this.beforeAfter = document.head.appendChild(document.createElement("style"));
   }
 
   drawGrid() {
@@ -265,7 +269,7 @@ class Charaster {
     );
   }
 
-  applyTheme(name) {
+  applyTheme() {
 
     // Set the colors of the page.
     this.body.style.background = this.theme.background;
@@ -277,7 +281,24 @@ class Charaster {
     this.info.style.borderColor = this.theme.barBorder;
     this.preview.style.borderColor = this.theme.barBorder;
     this.noColor.style.borderColor = this.theme.barBorder;
+
+    // Theme selection.
     this.themeSelect.style.borderColor = this.theme.barBorder;
+    this.themeList.style.borderColor = this.theme.barBorder;
+    this.themeList.style.background = this.theme.bar;
+    if (this.beforeAfter != null) {
+      document.head.removeChild(this.beforeAfter);  // Prevent memory leak.
+      this.beforeAfter = document.head.appendChild(document.createElement("style"));
+    }
+    this.beforeAfter.innerHTML = "#themeList:after {border-color: transparent; border-bottom-color: " + this.theme.bar + "; border-width: 4px; margin-left: -4px;} #themeList:before {border-color: transparent; border-bottom-color: " + this.theme.barBorder + "; border-width: 5px; margin-left: -5px;}";
+    for (var i = 0; i < this.themeList.children.length; i++) {
+      if (this.themeList.children[i].innerHTML == this.theme.name) {
+        this.themeList.children[i].style.background = this.theme.iconActive;
+      } else {
+        this.themeList.children[i].style.background = "none";
+      }
+    }
+
     for (var i = 0; i < this.icons.length; i++) {
       this.icons[i].style.fill = this.theme.icon;
     }
