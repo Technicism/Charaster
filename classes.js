@@ -24,6 +24,7 @@ class Charaster {
     this.prevCursor = new Point(0, 0);
     this.selectBegin = new Point(0, 0);
     this.selectClose = new Point(0, 0);
+    this.clipboard = [];
 
     // Canvases.
     this.gridCanvas;

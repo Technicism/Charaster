@@ -271,7 +271,11 @@ body {
   padding: 2px;
   border-radius: 2px;
   cursor: default;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
+}
+
+#themeList li:last-child {
+  margin-bottom: 0;
 }
 
 #themeList:after, #themeList:before {

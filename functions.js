@@ -88,6 +88,7 @@ function rasterRectangle(p, q) {
 
 // Flood fill algorithm, see reference https://en.wikipedia.org/wiki/Flood_fill
 function rasterFlood(cell, target, replacement) {
+  // Has a bug with infinite loop when filing itself.
   queue = [];
   queue.push(cell);
   while (queue.length != 0) {
@@ -108,7 +109,9 @@ function rasterFlood(cell, target, replacement) {
 }
 
 function equalForFill(a, b) {
-  if (a == null || b == null) {
+  if (a == null && b == null) {
+    return true;
+  } else if (a == null || b == null) {
     return false;
   }
   if (a.character == b.character && a.foreground == b.foreground && a.background == b.background) {

@@ -328,11 +328,13 @@ document.getElementById("saveCancel").addEventListener("click", function(e) {
 window.addEventListener("copy", function(e) {
   var clipboard = document.getElementById("clipboard");
   clipboard.innerHTML = "";
+  charaster.clipboard = [];
   if (charaster.mode == "SELECT") {
     var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
     for (var y = startStop[0].y; y < startStop[1].y; y++) {
       for (var x = startStop[0].x; x < startStop[1].x; x++) {
         var cell = charaster.getCell(new Point(x, y));
+        charaster.clipboard.push(cell);
         if (cell.character == null) {
           clipboard.innerHTML += " ";
         } else {
@@ -349,28 +351,69 @@ window.addEventListener("copy", function(e) {
 window.addEventListener("paste", function(e) {
   e.preventDefault();
 
-  // Get text from clipboard.
+  // Get raw text from clipboard.
   e.stopPropagation();
   var clipboardData = e.clipboardData || window.clipboardData;
   var text = clipboardData.getData('Text');
 
-  // Place it into raster one cell at a time from cursor location.
-  var x = 0;
-  var y = 0;
-  for (var i = 0; i < text.length; i++) {
-    if (text[i] == "\n") {
-      y++;
-      x = 0;
-    } else if (text[i] != "\r") {
-      var point = new Point(charaster.cursor.x + x, charaster.cursor.y + y);
-      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
-        continue; // Out of range of raster.
+  // Get cells from clipboard
+  var clipboardText = "";
+  if (charaster.clipboard.length > 0) {
+    var row = charaster.clipboard[0].point.y;
+    for (var i = 0; i < charaster.clipboard.length; i++) {
+      if (charaster.clipboard[i].point.y > row) {
+        clipboardText += "\n";
+        row = charaster.clipboard[i].point.y;
       }
-      var cell = new Cell(point, text[i]);
-      charaster.setCell(cell);
-      x++;
+      if (charaster.clipboard[i].character == null) {
+        clipboardText += " ";
+      } else {
+        clipboardText += charaster.clipboard[i].character;
+      }
     }
   }
+  var textRaw = "";
+  for (var i = 0; i < text.length; i++) {
+    if (text[i] != "\r") {
+      textRaw += text[i];
+    }
+  }
+
+  // Guess whether to paste raw text (e.g. from outside program) or cells.
+  if (clipboardText.trim() != textRaw.trim()) {
+  // if (true == false) {
+
+    // Place it into raster one cell at a time from cursor location.
+    var x = 0;
+    var y = 0;
+    for (var i = 0; i < text.length; i++) {
+      if (text[i] == "\n") {
+        y++;
+        x = 0;
+      } else if (text[i] != "\r") {
+        var point = new Point(charaster.cursor.x + x, charaster.cursor.y + y);
+        if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
+          continue; // Out of range of raster.
+        }
+        var cell = new Cell(point, text[i]);
+        charaster.setCell(cell);
+        x++;
+      }
+    }
+  } else {
+    for (var i = 0; i < charaster.clipboard.length; i++) {
+      var cell = charaster.clipboard[i];
+      if (cell != null) {
+        // cell.point = new Point(
+        //   charaster.cursor.x + Math.abs(charaster.cursor.x - cell.point.x),
+        //   charaster.cursor.y + Math.abs(charaster.cursor.y - cell.point.y)
+        // );
+        charaster.setCell(cell);
+      }
+    }
+  }
+
+
 }, false);
 
 window.addEventListener("resize", function(e) {
