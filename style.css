@@ -125,15 +125,19 @@ footer a {
   letter-spacing: 0px;
 }
 
-#boldText {
+#cellOptions span {
+  border-radius: 2px;
+}
+
+#boldCell {
   font-weight: bolder;
 }
 
-#italicText {
+#italicCell {
   font-style: italic;
 }
 
-#underlineText {
+#underlineCell {
   text-decoration: underline;
 }
 

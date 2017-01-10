@@ -295,7 +295,9 @@ class Charaster {
     for (var i = 0; i < this.themeList.children.length; i++) {
       if (this.themeList.children[i].innerHTML == this.theme.name) {
         this.themeList.children[i].style.background = this.theme.iconActive;
+        this.themeList.children[i].style.color = this.theme.iconActiveText;
       } else {
+        this.themeList.children[i].style.color = this.theme.icon;
         this.themeList.children[i].style.background = "none";
       }
     }

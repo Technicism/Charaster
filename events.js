@@ -24,7 +24,27 @@ function buttonMode(id, mode, activate) {
     charaster.mode = mode;
   }, false);
 
-  // Buttons may start off activated.
+  // Buttons may start off styled activated.
+  if (activate) {
+    buttonStyle(button.id, true);
+  }
+}
+
+function buttonCell(id, activate) {
+  var button = document.getElementById(id);
+  button.addEventListener("click", function(e) {
+
+    // Apply new property and style to current button to indicate it is selected or not.
+    if (id.includes("bold")) {
+      charaster.bold != charaster.bold;
+      buttonStyle(button.id, charaster.bold);
+    } else if (id.includes("italic")) {
+      charaster.italic != charaster.italic;
+      buttonStyle(button.id, charaster.italic);
+    }
+  }, false);
+
+  // Buttons may start off styled activated.
   if (activate) {
     buttonStyle(button.id, true);
   }
@@ -47,6 +67,8 @@ window.addEventListener("load", function(e) {
   buttonMode("rectangleMode", "RECTANGLE", false);
   buttonMode("floodMode", "FLOOD", false);
   buttonMode("selectMode", "SELECT", false);
+  buttonCell("boldCell", false);
+  buttonCell("italicCell", false);
 
   // Apply events to color buttons.
   for (var i = 0; i < charaster.colors.length; i++) {
@@ -274,7 +296,7 @@ charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
   e.preventDefault();
 }, false);
 
-document.getElementById("boldText").addEventListener("click", function(e) {
+document.getElementById("boldCell").addEventListener("click", function(e) {
   charaster.bold = !charaster.bold;
   if (charaster.bold) {
     charaster.preview.style.fontWeight = "bold";
@@ -283,7 +305,7 @@ document.getElementById("boldText").addEventListener("click", function(e) {
   }
 }, false);
 
-document.getElementById("italicText").addEventListener("click", function(e) {
+document.getElementById("italicCell").addEventListener("click", function(e) {
   charaster.italic = !charaster.italic;
   if (charaster.italic) {
     charaster.preview.style.fontStyle = "italic";
@@ -292,7 +314,7 @@ document.getElementById("italicText").addEventListener("click", function(e) {
   }
 }, false);
 
-document.getElementById("underlineText").addEventListener("click", function(e) {
+document.getElementById("underlineCell").addEventListener("click", function(e) {
   charaster.italic = !charaster.italic;
   if (charaster.italic) {
     charaster.preview.style.fontStyle = "italic";
