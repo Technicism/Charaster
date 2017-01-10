@@ -76,20 +76,12 @@ window.addEventListener("load", function(e) {
     theme.appendChild(document.createTextNode(charaster.themes[key].name));
     list.appendChild(theme);
     theme.addEventListener("click", function(e) {
-      // e.target.style.backgroundColor = "purple";
       charaster.theme = charaster.themes[e.target.innerHTML];
       charaster.applyTheme();
       document.getElementById("themeList").style.visibility = "hidden";
     }, false);
   }
   charaster.applyTheme();
-
-  // Debug
-  charaster.setCell(new Cell(new Point(5, 5), "1"));
-  charaster.setCell(new Cell(new Point(6, 5), "2"));
-  charaster.setCell(new Cell(new Point(6, 6), "3"));
-  charaster.setCell(new Cell(new Point(7, 6), "4"));
-
 }, false);
 
 // Left click to reset foreground.
@@ -228,7 +220,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
   } else if (charaster.mode == "FLOOD") {
     var cell = charaster.getCell(charaster.cursor);
     var targetCell = Object.assign({}, cell);
-    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character));
+    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foreground, charaster.background));
   } else if (charaster.mode == "SELECT") {
     charaster.selectBegin = lineStart;
     charaster.selectClose = charaster.cursor;
