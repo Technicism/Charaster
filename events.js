@@ -69,6 +69,8 @@ window.addEventListener("load", function(e) {
   buttonMode("selectMode", "SELECT", false);
   buttonCell("boldCell", false);
   buttonCell("italicCell", false);
+  buttonCell("foregroundCell", true);
+  buttonCell("backgroundCell", true);
 
   // Apply events to color buttons.
   for (var i = 0; i < charaster.colors.length; i++) {
