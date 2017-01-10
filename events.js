@@ -82,8 +82,14 @@ window.addEventListener("load", function(e) {
       document.getElementById("themeList").style.visibility = "hidden";
     }, false);
   }
-
   charaster.applyTheme();
+
+  // Debug
+  charaster.setCell(new Cell(new Point(5, 5), "1"));
+  charaster.setCell(new Cell(new Point(6, 5), "2"));
+  charaster.setCell(new Cell(new Point(6, 6), "3"));
+  charaster.setCell(new Cell(new Point(7, 6), "4"));
+
 }, false);
 
 // Left click to reset foreground.
@@ -334,7 +340,8 @@ window.addEventListener("copy", function(e) {
     for (var y = startStop[0].y; y < startStop[1].y; y++) {
       for (var x = startStop[0].x; x < startStop[1].x; x++) {
         var cell = charaster.getCell(new Point(x, y));
-        charaster.clipboard.push(cell);
+        var copyCell = Object.assign({}, cell);
+        charaster.clipboard.push(copyCell);
         if (cell.character == null) {
           clipboard.innerHTML += " ";
         } else {
@@ -350,6 +357,8 @@ window.addEventListener("copy", function(e) {
 
 window.addEventListener("paste", function(e) {
   e.preventDefault();
+  window.focus();
+
 
   // Get raw text from clipboard.
   e.stopPropagation();
@@ -372,16 +381,9 @@ window.addEventListener("paste", function(e) {
       }
     }
   }
-  var textRaw = "";
-  for (var i = 0; i < text.length; i++) {
-    if (text[i] != "\r") {
-      textRaw += text[i];
-    }
-  }
 
   // Guess whether to paste raw text (e.g. from outside program) or cells.
-  if (clipboardText.trim() != textRaw.trim()) {
-  // if (true == false) {
+  if (clipboardText.replace(/\s/g, "") != text.replace(/\s/g, "")) {
 
     // Place it into raster one cell at a time from cursor location.
     var x = 0;
@@ -395,25 +397,31 @@ window.addEventListener("paste", function(e) {
         if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
           continue; // Out of range of raster.
         }
-        var cell = new Cell(point, text[i]);
+        var character = text[i];
+        if (character == " ") {
+          character = null;
+        }
+        var cell = new Cell(point, character);
         charaster.setCell(cell);
         x++;
       }
     }
-  } else {
+  } else if (charaster.clipboard.length > 0)  {
+    var offset = charaster.clipboard[0].point;
     for (var i = 0; i < charaster.clipboard.length; i++) {
-      var cell = charaster.clipboard[i];
-      if (cell != null) {
-        // cell.point = new Point(
-        //   charaster.cursor.x + Math.abs(charaster.cursor.x - cell.point.x),
-        //   charaster.cursor.y + Math.abs(charaster.cursor.y - cell.point.y)
-        // );
+      var cell = Object.assign({}, charaster.clipboard[i]);
+      var point = new Point(
+        charaster.cursor.x + Math.abs(offset.x - cell.point.x),
+        charaster.cursor.y + Math.abs(offset.y - cell.point.y)
+      );
+      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
+        continue; // Out of range of raster.
+      } else {
+        cell.point = point;
         charaster.setCell(cell);
       }
     }
   }
-
-
 }, false);
 
 window.addEventListener("resize", function(e) {
