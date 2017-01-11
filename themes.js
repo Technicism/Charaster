@@ -1,3 +1,5 @@
+"use strict";
+
 // Stereokai theme sourced from https://github.com/carlcalderon/sublime-color-schemes/blob/master/Stereokai/Stereokai.tmTheme
 charaster.themes["Stereokai"] = new Theme(
   "Stereokai",

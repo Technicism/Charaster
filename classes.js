@@ -1,3 +1,5 @@
+"use strict";
+
 class Charaster {
   constructor() {
     this.mode = "PENCIL";

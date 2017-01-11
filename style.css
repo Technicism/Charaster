@@ -117,7 +117,7 @@ footer a {
   line-height: 0px;
   border: solid 1px #ddd;
   vertical-align: top;
-  min-height: 24px;
+  height: 24px;
 }
 
 #textOptions, #cellOptions {
@@ -125,7 +125,7 @@ footer a {
   letter-spacing: 0px;
 }
 
-#cellOptions span {
+#cellOptions span, #cellOptions svg {
   border-radius: 2px;
 }
 
@@ -223,6 +223,7 @@ body {
 #colors {
   /*line-height: -10px;*/
   padding: 1px;
+  height: 26px;
 }
 
 .colorGroup svg {
@@ -232,6 +233,10 @@ body {
   border: solid 1px black;
   padding: 0;
   display: inline-block;
+}
+
+.colorGroup:last-child {
+  padding-top: 1px;
 }
 
 #saveDialog {

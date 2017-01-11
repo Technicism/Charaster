@@ -1,3 +1,5 @@
+"use strict";
+
 // Draw a line using Bresenham's line algorithm, see reference http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
 function rasterLine(p, q) {
   var pX = p.x;
@@ -27,8 +29,8 @@ function rasterLine(p, q) {
   } else if (width > 0) {
     slopeQX = 1;
   }
-  intWidth = Math.abs(width);
-  intHeight = Math.abs(height);
+  var intWidth = Math.abs(width);
+  var intHeight = Math.abs(height);
   var longest = intWidth;
   var shortest = intHeight;
   if (longest <= shortest) {
@@ -151,7 +153,6 @@ function measureCharacter(font) {
   charaster.fontWidth = Math.ceil(box.width);
   charaster.fontHeight = Math.ceil(box.height);
   document.body.removeChild(span);
-  delete span;
 
   // Find the offset by looking for a pixel that is not transparent.
   var canvas = document.createElement("canvas");
@@ -164,7 +165,6 @@ function measureCharacter(font) {
     fontOffset++;
   }
   charaster.fontOffset = fontOffset;
-  delete canvas;
 }
 
 // Zoom in or out by changing the font size.

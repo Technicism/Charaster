@@ -1,3 +1,5 @@
+"use strict";
+
 // Canvases.
 charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");

@@ -1,3 +1,5 @@
+"use strict";
+
 // When a button is clicked change the mode and visual style of it.
 function buttonMode(id, mode, activate) {
   var button = document.getElementById(id);
@@ -35,10 +37,10 @@ function buttonCell(id, activate) {
   button.addEventListener("click", function(e) {
 
     // Apply new property and style to current button to indicate it is selected or not.
-    if (id.includes("bold")) {
+    if (id == "boldCell") {
       charaster.bold != charaster.bold;
       buttonStyle(button.id, charaster.bold);
-    } else if (id.includes("italic")) {
+    } else if (id == "italicCell") {
       charaster.italic != charaster.italic;
       buttonStyle(button.id, charaster.italic);
     }
@@ -46,6 +48,7 @@ function buttonCell(id, activate) {
 
   // Buttons may start off styled activated.
   if (activate) {
+    console.log("activate " + id);
     buttonStyle(button.id, true);
   }
 }
