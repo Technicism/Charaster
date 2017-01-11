@@ -12,7 +12,7 @@ function buttonMode(id, mode, activate) {
     }
 
     // Apply style to current button to indicate it is selected.
-    buttonStyle(button.id, true);
+    buttonStyle(id, true);
 
     // Apply new mode.
     if (charaster.mode == "TEXT" && (mode == "PENCIL") || mode == "ERASER") {
@@ -28,7 +28,7 @@ function buttonMode(id, mode, activate) {
 
   // Buttons may start off styled activated.
   if (activate) {
-    buttonStyle(button.id, true);
+    buttonStyle(id, true);
   }
 }
 
@@ -38,18 +38,23 @@ function buttonCell(id, activate) {
 
     // Apply new property and style to current button to indicate it is selected or not.
     if (id == "boldCell") {
-      charaster.bold != charaster.bold;
-      buttonStyle(button.id, charaster.bold);
+      charaster.bold = !charaster.bold;
+      buttonStyle(id, charaster.bold);
     } else if (id == "italicCell") {
-      charaster.italic != charaster.italic;
-      buttonStyle(button.id, charaster.italic);
+      charaster.italic = !charaster.italic;
+      buttonStyle(id, charaster.italic);
+    } else if (id == "foregroundCell") {
+      charaster.foregroundEnabled = !charaster.foregroundEnabled;
+      buttonStyle(id, charaster.foregroundEnabled);
+    } else if (id == "backgroundCell") {
+      charaster.backgroundEnabled = !charaster.backgroundEnabled;
+      buttonStyle(id, charaster.backgroundEnabled);
     }
   }, false);
 
   // Buttons may start off styled activated.
   if (activate) {
-    console.log("activate " + id);
-    buttonStyle(button.id, true);
+    buttonStyle(id, true);
   }
 }
 
@@ -62,7 +67,7 @@ window.addEventListener("load", function(e) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
 
-  // Setup buttons.
+  // Setup mode buttons (one mode at a time).
   buttonMode("textMode", "TEXT", false);
   buttonMode("eraserMode", "ERASER", false);
   buttonMode("pencilMode", "PENCIL", true);
@@ -70,10 +75,12 @@ window.addEventListener("load", function(e) {
   buttonMode("rectangleMode", "RECTANGLE", false);
   buttonMode("floodMode", "FLOOD", false);
   buttonMode("selectMode", "SELECT", false);
-  buttonCell("boldCell", false);
-  buttonCell("italicCell", false);
-  buttonCell("foregroundCell", true);
-  buttonCell("backgroundCell", true);
+
+  // Setup property buttons (multiple properties allowed at a time).
+  buttonCell("boldCell", charaster.bold);
+  buttonCell("italicCell", charaster.italic);
+  buttonCell("foregroundCell", charaster.foregroundEnabled);
+  buttonCell("backgroundCell", charaster.backgroundEnabled);
 
   // Apply events to color buttons.
   for (var i = 0; i < charaster.colors.length; i++) {
@@ -302,7 +309,6 @@ charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
 }, false);
 
 document.getElementById("boldCell").addEventListener("click", function(e) {
-  charaster.bold = !charaster.bold;
   if (charaster.bold) {
     charaster.preview.style.fontWeight = "bold";
   } else {
@@ -311,7 +317,6 @@ document.getElementById("boldCell").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("italicCell").addEventListener("click", function(e) {
-  charaster.italic = !charaster.italic;
   if (charaster.italic) {
     charaster.preview.style.fontStyle = "italic";
   } else {
@@ -320,7 +325,6 @@ document.getElementById("italicCell").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("underlineCell").addEventListener("click", function(e) {
-  charaster.italic = !charaster.italic;
   if (charaster.italic) {
     charaster.preview.style.fontStyle = "italic";
   } else {

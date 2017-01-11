@@ -200,22 +200,23 @@ function buttonStyle(id, active) {
     button.style.background = charaster.theme.iconActive;
     button.style.color = charaster.theme.iconActiveText;
   } else {
-    button.style.fill = charaster.theme.icon;
     button.style.background = "none";
     button.style.color = charaster.theme.icon;
   }
-  if (button.getElementsByClassName("icon")[0] != null) {
+  var icons = button.getElementsByClassName("icon");
+  for (var i = 0; i < icons.length; i++) {
     if (active) {
-      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.iconActiveText;
+      icons[i].style.fill = charaster.theme.iconActiveText;
     } else {
-      button.getElementsByClassName("icon")[0].style.fill = charaster.theme.icon;
+      icons[i].style.fill = charaster.theme.icon;
     }
   }
-  if (button.getElementsByClassName("iconStroke")[0] != null) {
+  var iconStrokes = button.getElementsByClassName("iconStroke");
+  for (var i = 0; i < iconStrokes.length; i++) {
     if (active) {
-      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.iconActiveText;
+      iconStrokes[i].style.stroke = charaster.theme.iconActiveText;
     } else {
-      button.getElementsByClassName("iconStroke")[0].style.stroke = charaster.theme.icon;
+      iconStrokes[i].style.stroke = charaster.theme.icon;
     }
   }
 }
