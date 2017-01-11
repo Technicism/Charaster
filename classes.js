@@ -99,12 +99,18 @@ class Charaster {
       for (var row = 0; row < this.raster[0].length; row++) {
         var cell = this.raster[col][row];
         if (cell.character != null) {
-          context.fillStyle = cell.background;
-          context.fillRect(
-            cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
-            this.fontWidth, this.fontHeight
-          );
+
+          // Background.
+          if (cell.background != null) {
+            context.fillStyle = cell.background;
+            context.fillRect(
+              cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
+              this.fontWidth, this.fontHeight
+            );
+          }
           context.fillStyle = cell.foreground;
+
+          // TODO font style.
           context.font = this.font;
           context.fillText(
             cell.character,
@@ -230,14 +236,21 @@ class Charaster {
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
-    if (cell.background == null) {
+
+    // Background.
+    if (cell.background == null && this.backgroundEnabled) {
       cell.background = this.background;
+    } else {
+      cell.background  = this.getCell(cell.point).background;
     }
-    context.fillStyle = cell.background;
-    context.fillRect(
-      cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
-      this.fontWidth, this.fontHeight
-    );
+    if (cell.background != null) {
+      context.fillStyle = cell.background;
+      context.fillRect(
+        cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
+        this.fontWidth, this.fontHeight
+      );
+    }
+
     if (cell.foreground == null) {
       cell.foreground = this.foreground;
     }
@@ -267,6 +280,8 @@ class Charaster {
   }
 
   clearCell(point) {
+
+    // TODO take into account properties instead.
     this.raster[point.y][point.x] = new Cell(point, null);
     this.rasterContext.clearRect(
       point.x * this.fontWidth, (point.y + 1) * this.fontHeight,
@@ -306,15 +321,16 @@ class Charaster {
       }
     }
 
-    // for (var i = 0; i < this.icons.length; i++) {
-    //   this.icons[i].style.fill = this.theme.icon;
-    // }
-    // for (var i = 0; i < this.iconStrokes.length; i++) {
-    //   this.iconStrokes[i].style.stroke = this.theme.icon;
-    // }
-    // for (var i = 0; i < this.bars.length; i++) {
-    //   this.bars[i].style.borderColor = this.theme.barBorder;
-    // }
+    // Apply colors to icons.
+    for (var i = 0; i < this.icons.length; i++) {
+      this.icons[i].style.fill = this.theme.icon;
+    }
+    for (var i = 0; i < this.iconStrokes.length; i++) {
+      this.iconStrokes[i].style.stroke = this.theme.icon;
+    }
+    for (var i = 0; i < this.bars.length; i++) {
+      this.bars[i].style.borderColor = this.theme.barBorder;
+    }
 
     // Set theme colors.
     for (var i = 0; i < this.colors.length; i++) {
@@ -356,8 +372,9 @@ class Charaster {
 
     // Reset selected buttons.
     buttonMode(this.mode.toLowerCase() + "Mode", this.mode, true);
+    // TODO properties.
 
-    // Show new theme.
+    // Show new theme on raster.
     this.drawAll();
   }
 

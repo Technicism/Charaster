@@ -67,20 +67,7 @@ window.addEventListener("load", function(e) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
 
-  // Setup mode buttons (one mode at a time).
-  buttonMode("textMode", "TEXT", false);
-  buttonMode("eraserMode", "ERASER", false);
-  buttonMode("pencilMode", "PENCIL", true);
-  buttonMode("lineMode", "LINE", false);
-  buttonMode("rectangleMode", "RECTANGLE", false);
-  buttonMode("floodMode", "FLOOD", false);
-  buttonMode("selectMode", "SELECT", false);
 
-  // Setup property buttons (multiple properties allowed at a time).
-  buttonCell("boldCell", charaster.bold);
-  buttonCell("italicCell", charaster.italic);
-  buttonCell("foregroundCell", charaster.foregroundEnabled);
-  buttonCell("backgroundCell", charaster.backgroundEnabled);
 
   // Apply events to color buttons.
   for (var i = 0; i < charaster.colors.length; i++) {
@@ -116,6 +103,21 @@ window.addEventListener("load", function(e) {
     }, false);
   }
   charaster.applyTheme();
+
+  // Setup mode buttons (one mode at a time).
+  buttonMode("textMode", "TEXT", false);
+  buttonMode("eraserMode", "ERASER", false);
+  buttonMode("pencilMode", "PENCIL", true);
+  buttonMode("lineMode", "LINE", false);
+  buttonMode("rectangleMode", "RECTANGLE", false);
+  buttonMode("floodMode", "FLOOD", false);
+  buttonMode("selectMode", "SELECT", false);
+
+  // Setup property buttons (multiple properties allowed at a time).
+  buttonCell("boldCell", charaster.bold);
+  buttonCell("italicCell", charaster.italic);
+  buttonCell("foregroundCell", charaster.foregroundEnabled);
+  buttonCell("backgroundCell", charaster.backgroundEnabled);
 }, false);
 
 // Left click to reset foreground.
