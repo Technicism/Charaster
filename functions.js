@@ -90,10 +90,10 @@ function rasterRectangle(p, q) {
 
 // Flood fill algorithm, see reference https://en.wikipedia.org/wiki/Flood_fill
 function rasterFlood(cell, target, replacement) {
-  queue = [];
+  var queue = [];
   queue.push(cell);
   while (queue.length != 0) {
-    floodCell = queue.pop();
+    var floodCell = queue.pop();
     if (floodCell == null || equalForFill(target, replacement) || !equalForFill(floodCell, target)) {
       continue;
     } else if (floodCell.character == target.character) {
@@ -110,11 +110,6 @@ function rasterFlood(cell, target, replacement) {
 }
 
 function equalForFill(a, b) {
-  if (a == null && b == null) {
-    return true;
-  } else if (a == null || b == null) {
-    return false;
-  }
   if (a.character == b.character && a.foreground == b.foreground && a.background == b.background) {
     return true;
   }

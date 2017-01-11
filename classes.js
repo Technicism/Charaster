@@ -306,15 +306,15 @@ class Charaster {
       }
     }
 
-    for (var i = 0; i < this.icons.length; i++) {
-      this.icons[i].style.fill = this.theme.icon;
-    }
-    for (var i = 0; i < this.iconStrokes.length; i++) {
-      this.iconStrokes[i].style.stroke = this.theme.icon;
-    }
-    for (var i = 0; i < this.bars.length; i++) {
-      this.bars[i].style.borderColor = this.theme.barBorder;
-    }
+    // for (var i = 0; i < this.icons.length; i++) {
+    //   this.icons[i].style.fill = this.theme.icon;
+    // }
+    // for (var i = 0; i < this.iconStrokes.length; i++) {
+    //   this.iconStrokes[i].style.stroke = this.theme.icon;
+    // }
+    // for (var i = 0; i < this.bars.length; i++) {
+    //   this.bars[i].style.borderColor = this.theme.barBorder;
+    // }
 
     // Set theme colors.
     for (var i = 0; i < this.colors.length; i++) {

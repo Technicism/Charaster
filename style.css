@@ -122,7 +122,7 @@ footer a {
 
 #textOptions, #cellOptions {
   line-height: 20px;
-  letter-spacing: 0px;
+  /*letter-spacing: 0px;*/
 }
 
 #cellOptions span, #cellOptions svg {
