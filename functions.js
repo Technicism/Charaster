@@ -62,33 +62,30 @@ function rasterLine(p, q) {
   return list;
 }
 
-// Create a rectangle out of four lines.
+/**
+ * Lists all the points to be rastered at to form a rectangle.
+ *
+ * @param   {Point}   p - Top left.
+ * @param   {Point}   q - Bottom right.
+ * @return  {Point[]} Rectangle.
+ */
 function rasterRectangle(p, q) {
   var points = [];
-  var sideLeft = rasterLine(
-    p,
-    new Point(p.x, q.y)
-  );
-  var sideRight = rasterLine(
-    new Point(q.x, p.y),
-    q
-  );
-  var sideTop = rasterLine(
-    p,
-    new Point(q.x, p.y)
-  );
-  var sideBottom = rasterLine(
-    new Point(p.x, q.y),
-    charaster.cursor
-  );
-  points = points.concat(sideLeft);
-  points = points.concat(sideRight);
-  points = points.concat(sideTop);
-  points = points.concat(sideBottom);
+  points = points.concat(rasterLine(p, new Point(q.x, p.y)));  // Top.
+  points = points.concat(rasterLine(new Point(q.x, p.y), q));  // Right.
+  points = points.concat(rasterLine(new Point(p.x, q.y), q));  // Bottom.
+  points = points.concat(rasterLine(p, new Point(p.x, q.y)));  // Left.
   return points;
 }
 
-// Flood fill algorithm, see reference https://en.wikipedia.org/wiki/Flood_fill
+/**
+ * Flood fill algorithm that sets target cell properties to be that of the replacement.
+ *
+ * @see   {@link https://en.wikipedia.org/wiki/Flood_fill|Wikipedia}
+ * @param {Cell}  cell
+ * @param {Cell}  target
+ * @param {Cell}  replacement
+ */
 function rasterFlood(cell, target, replacement) {
   var queue = [];
   queue.push(cell);
@@ -101,10 +98,10 @@ function rasterFlood(cell, target, replacement) {
       floodCell.foreground = replacement.foreground;
       floodCell.background = replacement.background;
       charaster.setCell(floodCell);
-      queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y - 1)));
-      queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y + 1)));
-      queue.push(charaster.getCell(new Point(floodCell.point.x - 1, floodCell.point.y)));
-      queue.push(charaster.getCell(new Point(floodCell.point.x + 1, floodCell.point.y)));
+      queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y - 1))); // Top.
+      queue.push(charaster.getCell(new Point(floodCell.point.x + 1, floodCell.point.y))); // Right.
+      queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y + 1))); // Bottom.
+      queue.push(charaster.getCell(new Point(floodCell.point.x - 1, floodCell.point.y))); // Left.
     }
   }
 }
