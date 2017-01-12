@@ -113,6 +113,12 @@ class Charaster {
 
           // TODO font style.
           context.font = this.font;
+          if (cell.bold) {
+            context.font = "bold " + context.font
+          }
+          if (cell.italic) {
+            context.font = "italic " + context.font
+          }
           context.fillText(
             cell.character,
             row * this.fontWidth, (col + 1) * this.fontHeight - this.fontOffset
@@ -233,17 +239,16 @@ class Charaster {
       this.fontWidth, -this.fontHeight
     );
 
-    // Bold.
+    // Bold and italic font.
     context.font = this.font;
-    if ((cell.bold == null && this.bold) || (cell.bold)) {
+    if ((cell.bold == null && this.bold) || cell.bold) {
       context.font = "bold " + context.font
+      cell.bold = true;
     }
-
-    // Italic.
-    if ((cell.italic == null && this.italic) || (cell.italic)) {
+    if ((cell.italic == null && this.italic) || cell.italic) {
       context.font = "italic " + context.font
+      cell.italic = true;
     }
-
 
     // Background.
     if (cell.background == null && this.backgroundEnabled) {

@@ -14,28 +14,28 @@ charaster.themes["Stereokai"] = new Theme(
   "#f8f8f0",
   [
     "#262626",
-    "#529bff",
-    "#a6e22e",
-    "#1a83a6",
     "#cc0000",
-    "#d81dc3",
+    "#a6e22e",
     "#cfcf19",
+    "#529bff",
+    "#d81dc3",
+    "#ae81ff",
     "#d0d0d0",
-    "#7c7c7c",
-    "#0383f5",
-    "#74ff79",
-    "#58c2e5",
+    "#3e3e3e",
     "#fb4d53",
+    "#74ff79",
+    "#e6db74",
+    "#66d9ef",
     "#f63ba3",
-    "#cccc81",
+    "#2ad2f7",
     "#f8f8f0",
   ]
 );
 
-// Solarized theme sourced from http://ethanschoonover.com/solarized
+// Solarized theme sourced from https://github.com/ghuntley/terminator-solarized
 charaster.themes["Solarized"] = new Theme(
   "Solarized",
-  "#839496",
+  "#eee8d5",
   "#002b36",
   "#073642",
   "#586e75",
@@ -45,29 +45,29 @@ charaster.themes["Solarized"] = new Theme(
   "#586e75",
   "#839496",
   [
-    "#002b36",
     "#073642",
+    "#dc322f",
+    "#859900",
+    "#b58900",
+    "#268bd2",
+    "#d33682",
+    "#2aa198",
+    "#eee8d5",
+    "#586e75",
+    "#cb4b16",
     "#586e75",
     "#657b83",
     "#839496",
-    "#93a1a1",
-    "#eee8d5",
-    "#fdf6e3",
-    "#b58900",
-    "#cb4b16",
-    "#dc322f",
-    "#d33682",
     "#6c71c4",
-    "#268bd2",
-    "#2aa198",
-    "#859900"
+    "#93a1a1",
+    "#fdf6e3"
   ]
 );
 
-// Ubuntu theme sourced from http://superuser.com/a/497242 and https://design.ubuntu.com/brand/colour-palette
+// Ubuntu theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
 charaster.themes["Ubuntu"] = new Theme(
   "Ubuntu",
-  "#d3d7cf",
+  "#eeeeec",
   "#300a24",
   "#1e0617",
   "#4e9a06",
@@ -77,21 +77,22 @@ charaster.themes["Ubuntu"] = new Theme(
   "#4e9a06",
   "#cc0000",
   [
+
     "#2e3436",
-    "#3465a4",
-    "#4e9a06",
-    "#06989a",
     "#cc0000",
-    "#75507b",
+    "#4e9a06",
     "#c4a000",
+    "#3465a4",
+    "#75507b",
+    "#06989a",
     "#d3d7cf",
     "#555753",
-    "#729fcf",
-    "#8ae234",
-    "#34e2e2",
     "#ef2929",
-    "#ad7fa8",
+    "#8ae234",
     "#fce94f",
+    "#729fcf",
+    "#ad7fa8",
+    "#34e2e2",
     "#eeeeec"
   ]
 );
@@ -125,6 +126,38 @@ charaster.themes["Tango"] = new Theme(
     "#ad7fa8",
     "#34e2e2",
     "#eeeeec"
+  ]
+);
+
+// Tango theme sourced from https://blogs.n1zyy.com/andrew/2009/02/02/tango-color-scheme-for-xfce-terminal/
+charaster.themes["Obsidian"] = new Theme(
+  "Obsidian",
+  "#ffffff",
+  "#323232",
+  "#1e0617",
+  "#4e9a06",
+  "#AEA79F",
+  "#333333",
+  "#333333",
+  "#4e9a06",
+  "#cc0000",
+  [
+    "#000000",
+    "#a60001",
+    "#00bb00",
+    "#fecd22",
+    "#3a9bdb",
+    "#bb00bb",
+    "#00bbbb",
+    "#bbbbbb",
+    "#555555",
+    "#ff0003",
+    "#93c863",
+    "#fef874",
+    "#a1d7ff",
+    "#ff55ff",
+    "#55ffff",
+    "#ffffff"
   ]
 );
 

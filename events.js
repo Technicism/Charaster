@@ -337,19 +337,7 @@ document.getElementById("underlineCell").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("saveButton").addEventListener("click", function(e) {
-  var lines = "";
-  for (var col = 0; col < charaster.gridHeight; col++) {
-    var line = "";
-    for (var row = 0; row < charaster.gridWidth; row++) {
-      var cell = charaster.raster[col][row];
-      if (cell.character == null) {
-        line += " ";
-      } else {
-        line += charaster.raster[col][row].character;
-      }
-    }
-    lines += line + "\n";
-  }
+  var lines = saveShell();
   document.getElementById("saveRaw").innerHTML = lines;
   document.getElementById("saveDialog").style.visibility = "visible";
 }, false);

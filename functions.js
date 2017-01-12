@@ -6,7 +6,7 @@
  * @see     {@link http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/}
  * @param   {Point}   p - Origin.
  * @param   {Point}   q - Destination.
- * @return  {Point[]} Rectangle.
+ * @return  {Point[]} Line.
  */
 function rasterLine(p, q) {
   var pX = p.x;
@@ -218,4 +218,39 @@ function buttonStyle(id, active) {
       iconStrokes[i].style.stroke = charaster.theme.icon;
     }
   }
+}
+
+function saveText() {
+  var lines = "";
+  for (var col = 0; col < charaster.gridHeight; col++) {
+    var line = "";
+    for (var row = 0; row < charaster.gridWidth; row++) {
+      var cell = charaster.raster[col][row];
+      if (cell.character == null) {
+        line += " ";
+      } else {
+        line += charaster.raster[col][row].character;
+      }
+    }
+    lines += line + "\n";
+  }
+  return lines;
+}
+
+function saveShell() {
+  var string = "";
+  for (var col = 0; col < charaster.gridHeight; col++) {
+    for (var row = 0; row < charaster.gridWidth; row++) {
+      var cell = charaster.raster[col][row];
+      if (cell.character == null) {
+        string += " ";
+      } else {
+        string += "\\e[" + parseInt(cell.foregroundId + 29) + "m";
+        string += charaster.raster[col][row].character;
+      }
+    }
+    string += "\\n";
+  }
+  console.log(string);
+  return string;
 }
