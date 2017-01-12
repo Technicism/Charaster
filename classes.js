@@ -7,6 +7,7 @@ class Charaster {
     this.theme;
     this.colors = [];
     this.character = "*";
+    this.characterEnabled = true;
     this.fontName = "monospace";
     this.fontSize = "12";
     this.font = this.fontSize + "pt " + this.fontName;
@@ -225,23 +226,30 @@ class Charaster {
     if (context == null) {
       context = this.rasterContext;
     }
-    context.font = this.font;
-    if ((cell.bold == null && this.bold) || (cell.bold)) {
-      context.font = "bold " + context.font
-    }
-    if ((cell.italic == null && this.italic) || (cell.italic)) {
-      context.font = "italic " + context.font
-    }
+
+    // Clear previous cell.
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
     );
 
+    // Bold.
+    context.font = this.font;
+    if ((cell.bold == null && this.bold) || (cell.bold)) {
+      context.font = "bold " + context.font
+    }
+
+    // Italic.
+    if ((cell.italic == null && this.italic) || (cell.italic)) {
+      context.font = "italic " + context.font
+    }
+
+
     // Background.
     if (cell.background == null && this.backgroundEnabled) {
       cell.background = this.background;
     } else {
-      cell.background  = this.getCell(cell.point).background;
+      cell.background = this.getCell(cell.point).background;
     }
     if (cell.background != null) {
       context.fillStyle = cell.background;
@@ -250,9 +258,30 @@ class Charaster {
         this.fontWidth, this.fontHeight
       );
     }
+    if (cell.backgroundId == null) {
+      cell.backgroundId = this.backgroundId;
+    }
 
-    if (cell.foreground == null) {
+    // Foreground.
+    if (cell.foreground == null && this.foregroundEnabled) {
       cell.foreground = this.foreground;
+    } else {
+      var foreground = this.getCell(cell.point).foreground;
+      if (foreground != null) {
+        cell.foreground = foreground;
+      } else {
+        cell.foreground = this.theme.foreground;  // Can not stay null as it could be drawn.
+      }
+    }
+    if (cell.foregroundId == null) {
+      cell.foregroundId = this.foregroundId;
+    }
+
+    // Character.
+    if (cell.character == null && this.characterEnabled) {
+      cell.character = this.character;
+    } else {
+      cell.character = this.getCell(cell.point).character;
     }
     if (cell.character != null) {
       context.fillStyle = cell.foreground;
@@ -261,12 +290,8 @@ class Charaster {
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - this.fontOffset
       );
     }
-    if (cell.foregroundId == null) {
-      cell.foregroundId = this.foregroundId;
-    }
-    if (cell.backgroundId == null) {
-      cell.backgroundId = this.backgroundId;
-    }
+
+    // Save to raster.
     if (context == this.rasterContext) {
       this.raster[cell.point.y][cell.point.x] = cell;
     }

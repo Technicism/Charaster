@@ -1,6 +1,13 @@
 "use strict";
 
-// Draw a line using Bresenham's line algorithm, see reference http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/
+/**
+ * Lists all the points to be rastered at to form a line.
+ *
+ * @see     {@link http://tech-algorithm.com/articles/drawing-line-using-bresenham-algorithm/}
+ * @param   {Point}   p - Origin.
+ * @param   {Point}   q - Destination.
+ * @return  {Point[]} Rectangle.
+ */
 function rasterLine(p, q) {
   var pX = p.x;
   var pY = p.y;
@@ -65,8 +72,8 @@ function rasterLine(p, q) {
 /**
  * Lists all the points to be rastered at to form a rectangle.
  *
- * @param   {Point}   p - Top left.
- * @param   {Point}   q - Bottom right.
+ * @param   {Point}   p - Origin.
+ * @param   {Point}   q - Destination.
  * @return  {Point[]} Rectangle.
  */
 function rasterRectangle(p, q) {
@@ -81,7 +88,7 @@ function rasterRectangle(p, q) {
 /**
  * Flood fill algorithm that sets target cell properties to be that of the replacement.
  *
- * @see   {@link https://en.wikipedia.org/wiki/Flood_fill|Wikipedia}
+ * @see   {@link https://en.wikipedia.org/wiki/Flood_fill}
  * @param {Cell}  cell
  * @param {Cell}  target
  * @param {Cell}  replacement

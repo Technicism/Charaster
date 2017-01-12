@@ -49,6 +49,9 @@ function buttonCell(id, activate) {
     } else if (id == "backgroundCell") {
       charaster.backgroundEnabled = !charaster.backgroundEnabled;
       buttonStyle(id, charaster.backgroundEnabled);
+    } else if (id == "characterCell") {
+      charaster.characterEnabled = !charaster.characterEnabled;
+      buttonStyle(id, charaster.characterEnabled);
     }
   }, false);
 
@@ -116,6 +119,7 @@ window.addEventListener("load", function(e) {
   // Setup property buttons (multiple properties allowed at a time).
   buttonCell("boldCell", charaster.bold);
   buttonCell("italicCell", charaster.italic);
+  buttonCell("characterCell", charaster.characterEnabled);
   buttonCell("foregroundCell", charaster.foregroundEnabled);
   buttonCell("backgroundCell", charaster.backgroundEnabled);
 }, false);
@@ -181,7 +185,7 @@ window.addEventListener("keypress", function(e) {
   charaster.preview.value = charaster.character;
   if (charaster.mode == "TEXT") {
     var cursor = Object.assign({}, charaster.cursor);
-    charaster.setCell(new Cell(cursor, charaster.character));
+    charaster.setCell(new Cell(cursor));
     charaster.moveCursorRelative(1, 0);
   }
 }, false);
@@ -206,7 +210,7 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
         points = rasterRectangle(lineStart, charaster.cursor);
       }
       for (var i = 0; i < points.length; i++) {
-        charaster.setCell(new Cell(points[i], charaster.character), charaster.rasterTempContext);
+        charaster.setCell(new Cell(points[i]), charaster.rasterTempContext);
       }
     } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
       drawList.push(cell);
@@ -215,10 +219,8 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
 
         // Draw lines between cells.
         for (var i = 0; i < line.length; i++) {
-          var character = null;
           if (charaster.mode == "PENCIL") {
-            character = charaster.character;
-            charaster.setCell(new Cell(line[i], character));
+            charaster.setCell(new Cell(line[i]));
           } else if (charaster.mode == "ERASER") {
             charaster.clearCell(line[i]);
           }
@@ -250,7 +252,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
   charaster.cursor = charaster.coordToGrid(snapPos(pos));
   charaster.drawCursor();
   if (charaster.mode == "PENCIL") {
-    charaster.setCell(new Cell(charaster.cursor, charaster.character));
+    charaster.setCell(new Cell(charaster.cursor));
   } else if (charaster.mode == "ERASER") {
     charaster.clearCell(charaster.cursor);
   } else if (charaster.mode == "FLOOD") {
@@ -297,7 +299,7 @@ window.addEventListener("mouseup", function(e) {
     if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
       charaster.drawRaster("temp");
       for (var i = 0; i < points.length; i++) {
-        charaster.setCell(new Cell(points[i], charaster.character));
+        charaster.setCell(new Cell(points[i]));
       }
     }
   }
