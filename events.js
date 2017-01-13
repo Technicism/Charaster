@@ -329,11 +329,7 @@ document.getElementById("italicCell").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("underlineCell").addEventListener("click", function(e) {
-  if (charaster.italic) {
-    charaster.preview.style.fontStyle = "italic";
-  } else {
-    charaster.preview.style.fontStyle = "normal";
-  }
+
 }, false);
 
 document.getElementById("saveButton").addEventListener("click", function(e) {
@@ -346,6 +342,20 @@ document.getElementById("saveCancel").addEventListener("click", function(e) {
   document.getElementById("saveDialog").style.visibility = "hidden";
 }, false);
 
+
+
+window.addEventListener("keyup", function(e) {
+
+  // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
+  if (e.ctrlKey && e.keyCode == 86) {
+    if (e.shiftKey) {
+      pasteCell();
+    } else {
+      pasteText(document.getElementById("clipboardPaste").innerHTML);
+    }
+  }
+}, false);
+
 window.addEventListener("copy", function(e) {
   var clipboard = document.getElementById("clipboard");
   clipboard.innerHTML = "";
@@ -354,9 +364,8 @@ window.addEventListener("copy", function(e) {
     var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
     for (var y = startStop[0].y; y < startStop[1].y; y++) {
       for (var x = startStop[0].x; x < startStop[1].x; x++) {
-        var cell = charaster.getCell(new Point(x, y));
-        var copyCell = Object.assign({}, cell);
-        charaster.clipboard.push(copyCell);
+        var cell = charaster.getCell(new Point(x, y)).copy();
+        charaster.clipboard.push(cell);
         if (cell.character == null) {
           clipboard.innerHTML += " ";
         } else {
@@ -374,69 +383,11 @@ window.addEventListener("paste", function(e) {
   e.preventDefault();
   window.focus();
 
-
   // Get raw text from clipboard.
   e.stopPropagation();
   var clipboardData = e.clipboardData || window.clipboardData;
-  var text = clipboardData.getData('Text');
-
-  // Get cells from clipboard
-  var clipboardText = "";
-  if (charaster.clipboard.length > 0) {
-    var row = charaster.clipboard[0].point.y;
-    for (var i = 0; i < charaster.clipboard.length; i++) {
-      if (charaster.clipboard[i].point.y > row) {
-        clipboardText += "\n";
-        row = charaster.clipboard[i].point.y;
-      }
-      if (charaster.clipboard[i].character == null) {
-        clipboardText += " ";
-      } else {
-        clipboardText += charaster.clipboard[i].character;
-      }
-    }
-  }
-
-  // Guess whether to paste raw text (e.g. from outside program) or cells.
-  if (clipboardText.replace(/\s/g, "") != text.replace(/\s/g, "")) {
-
-    // Place it into raster one cell at a time from cursor location.
-    var x = 0;
-    var y = 0;
-    for (var i = 0; i < text.length; i++) {
-      if (text[i] == "\n") {
-        y++;
-        x = 0;
-      } else if (text[i] != "\r") {
-        var point = new Point(charaster.cursor.x + x, charaster.cursor.y + y);
-        if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
-          continue; // Out of range of raster.
-        }
-        var character = text[i];
-        if (character == " ") {
-          character = null;
-        }
-        var cell = new Cell(point, character);
-        charaster.setCell(cell);
-        x++;
-      }
-    }
-  } else if (charaster.clipboard.length > 0)  {
-    var offset = charaster.clipboard[0].point;
-    for (var i = 0; i < charaster.clipboard.length; i++) {
-      var cell = Object.assign({}, charaster.clipboard[i]);
-      var point = new Point(
-        charaster.cursor.x + Math.abs(offset.x - cell.point.x),
-        charaster.cursor.y + Math.abs(offset.y - cell.point.y)
-      );
-      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
-        continue; // Out of range of raster.
-      } else {
-        cell.point = point;
-        charaster.setCell(cell);
-      }
-    }
-  }
+  var text = clipboardData.getData("Text");
+  document.getElementById("clipboardPaste").innerHTML = text;
 }, false);
 
 window.addEventListener("resize", function(e) {

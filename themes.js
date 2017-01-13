@@ -129,7 +129,7 @@ charaster.themes["Tango"] = new Theme(
   ]
 );
 
-// Tango theme sourced from https://blogs.n1zyy.com/andrew/2009/02/02/tango-color-scheme-for-xfce-terminal/
+// Tango theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
 charaster.themes["Obsidian"] = new Theme(
   "Obsidian",
   "#ffffff",

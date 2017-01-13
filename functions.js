@@ -254,3 +254,45 @@ function saveShell() {
   console.log(string);
   return string;
 }
+
+function pasteText(text) {
+  var x = 0;
+  var y = 0;
+  for (var i = 0; i < text.length; i++) {
+    if (text[i] == "\n") {
+      y++;
+      x = 0;
+    } else if (text[i] != "\r") {
+      var point = new Point(charaster.cursor.x + x, charaster.cursor.y + y);
+      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
+        continue; // Out of range of raster.
+      }
+      var character = text[i];
+      var cell = new Cell(point, character);
+      charaster.setCell(cell);
+      x++;
+    }
+  }
+}
+
+function pasteCell() {
+  if (charaster.clipboard.length > 0)  {
+    var offset = charaster.clipboard[0].point;
+    for (var i = 0; i < charaster.clipboard.length; i++) {
+      var cell = charaster.clipboard[i].copy();
+      var point = new Point(
+        charaster.cursor.x + Math.abs(offset.x - cell.point.x),
+        charaster.cursor.y + Math.abs(offset.y - cell.point.y)
+      );
+      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
+        continue; // Out of range of raster.
+      } else {
+        if (cell.character == null) {
+          cell.character = " ";
+        }
+        cell.point = point;
+        charaster.setCell(cell);
+      }
+    }
+  }
+}

@@ -258,7 +258,7 @@ body {
 
 }
 
-#clipboard {
+#clipboard, #clipboardPaste {
   top: 0;
   position: absolute;
   float: left;

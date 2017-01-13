@@ -268,25 +268,31 @@ class Charaster {
     }
 
     // Foreground.
-    if (cell.foreground == null && this.foregroundEnabled) {
-      cell.foreground = this.foreground;
-    } else {
-      var foreground = this.getCell(cell.point).foreground;
-      if (foreground != null) {
-        cell.foreground = foreground;
+    if (cell.foreground == null) {
+      if (this.foregroundEnabled) {
+        cell.foreground = this.foreground;
+        cell.foregroundId = this.foregroundId;
       } else {
-        cell.foreground = this.theme.foreground;  // Can not stay null as it could be drawn.
+        var prevCell = this.getCell(cell.point);
+        if (prevCell.foreground != null) {
+          cell.foreground = prevCell.foreground;
+          cell.foregroundId = prevCell.foregroundId;
+        } else {
+          cell.foreground = this.theme.foreground;  // Can not stay null as it could be drawn.
+          cell.foregroundId = "foreground";
+        }
       }
     }
     if (cell.foregroundId == null) {
-      cell.foregroundId = this.foregroundId;
     }
 
     // Character.
-    if (cell.character == null && this.characterEnabled) {
-      cell.character = this.character;
-    } else {
-      cell.character = this.getCell(cell.point).character;
+    if (cell.character == null ) {
+      if (this.characterEnabled) {
+        cell.character = this.character;
+      } else {
+        cell.character = this.getCell(cell.point).character;
+      }
     }
     if (cell.character != null) {
       context.fillStyle = cell.foreground;
@@ -450,11 +456,16 @@ class Cell {
     this.foregroundId = null;
     this.backgroundId = null;
   }
+
   equality(other) {
     if (this.point == other.point && this.character == other.character) {
       return true;
     }
     return false;
+  }
+
+  copy() {
+    return new Cell(this.point, this.character, this.foreground, this.background, this.bold, this.italic);
   }
 }
 
