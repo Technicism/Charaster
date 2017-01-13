@@ -69,6 +69,7 @@ window.addEventListener("load", function(e) {
   for (var i = 0; i < charaster.theme.colors.length; i++) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
+  charaster.resetRaster(charaster.gridWidth, charaster.gridHeight);
 
 
 

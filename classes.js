@@ -221,6 +221,14 @@ class Charaster {
     return array;
   }
 
+  resetRaster(cols, rows) {
+    for (var row = 0; row < rows; row++) {
+      for (var col = 0; col < cols; col++) {
+        this.setCell(new Cell(new Point(col, row), " "));
+      }
+    }
+  }
+
   fitToContainer(canvas, context) {
     canvas.width  = this.gridWidth * this.fontWidth + 1;
     canvas.height = this.gridHeight * this.fontHeight + 1;
@@ -234,6 +242,7 @@ class Charaster {
     }
 
     // Clear previous cell.
+    var prevCell = this.getCell(cell.point);
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
@@ -251,10 +260,19 @@ class Charaster {
     }
 
     // Background.
-    if (cell.background == null && this.backgroundEnabled) {
-      cell.background = this.background;
-    } else {
-      cell.background = this.getCell(cell.point).background;
+    if (cell.background == null) {
+      if (this.backgroundEnabled) {
+        cell.background = this.background;
+        cell.backgroundId = this.backgroundId;
+      } else {
+        if (prevCell.background != null) {
+          cell.background = prevCell.background;
+          cell.backgroundId = prevCell.backgroundId;
+        } else {
+          cell.background = this.theme.background;
+          cell.backgroundId = "background";
+        }
+      }
     }
     if (cell.background != null) {
       context.fillStyle = cell.background;
@@ -263,9 +281,6 @@ class Charaster {
         this.fontWidth, this.fontHeight
       );
     }
-    if (cell.backgroundId == null) {
-      cell.backgroundId = this.backgroundId;
-    }
 
     // Foreground.
     if (cell.foreground == null) {
@@ -273,17 +288,14 @@ class Charaster {
         cell.foreground = this.foreground;
         cell.foregroundId = this.foregroundId;
       } else {
-        var prevCell = this.getCell(cell.point);
         if (prevCell.foreground != null) {
           cell.foreground = prevCell.foreground;
           cell.foregroundId = prevCell.foregroundId;
         } else {
-          cell.foreground = this.theme.foreground;  // Can not stay null as it could be drawn.
+          cell.foreground = this.theme.foreground;
           cell.foregroundId = "foreground";
         }
       }
-    }
-    if (cell.foregroundId == null) {
     }
 
     // Character.
@@ -291,7 +303,7 @@ class Charaster {
       if (this.characterEnabled) {
         cell.character = this.character;
       } else {
-        cell.character = this.getCell(cell.point).character;
+        cell.character = prevCell.character;
       }
     }
     if (cell.character != null) {
