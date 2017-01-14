@@ -70,8 +70,7 @@ window.addEventListener("load", function(e) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
   charaster.resetRaster(charaster.gridWidth, charaster.gridHeight);
-
-
+  zoom(charaster.defaultFontSize);
 
   // Apply events to color buttons.
   for (var i = 0; i < charaster.colors.length; i++) {

@@ -88,10 +88,10 @@ function rasterRectangle(p, q) {
 /**
  * Flood fill algorithm that sets target cell properties to be that of the replacement.
  *
- * @see   {@link https://en.wikipedia.org/wiki/Flood_fill}
- * @param {Cell}  cell
- * @param {Cell}  target
- * @param {Cell}  replacement
+ * @see     {@link https://en.wikipedia.org/wiki/Flood_fill}
+ * @param   {Cell}  cell
+ * @param   {Cell}  target
+ * @param   {Cell}  replacement
  */
 function rasterFlood(cell, target, replacement) {
   var queue = [];
@@ -152,11 +152,17 @@ function snapPos(point) {
   return new Point(x, y);
 }
 
+/**
+ * Measures and applies the font width, height and offset.
+ *
+ * @param   {String} font Family name.
+ */
 function measureCharacter(font) {
+  var largestCharacter = "█";
 
   // Find the width and height from the automatically sized bounding box.
   var span = document.createElement("span");
-  span.innerHTML = "█"
+  span.innerHTML = largestCharacter;
   span.style.font = font;
   document.body.appendChild(span);
   var box = span.getBoundingClientRect();
@@ -171,13 +177,17 @@ function measureCharacter(font) {
   context.fillStyle = "black";
   context.font = font;
   while (context.getImageData(0, 0, 1, 1).data[3] == 0) {
-    context.fillText("█", 0, charaster.fontHeight - fontOffset);
+    context.fillText(largestCharacter, 0, charaster.fontHeight - fontOffset);
     fontOffset++;
   }
   charaster.fontOffset = fontOffset;
 }
 
-// Zoom in or out by changing the font size.
+/**
+ * Achieves the effect of zooming in the raster by increasing or decreasing the font size.
+ *
+ * @param {Number} font Size in points.
+ */
 function zoom(size) {
   if (size < 4 || size > 512) {
     return; // Out of scale.
@@ -189,8 +199,10 @@ function zoom(size) {
   charaster.drawCursor();
   charaster.drawRaster();
   charaster.drawRaster("temp");
-  var display = Math.round((size / 12) * 100) + "%";
-  document.getElementById("zoomPercent").innerHTML = display;
+  var display = Math.round((size / charaster.defaultFontSize) * 100) + "%";
+  var info = document.getElementById("zoomPercent");
+  info.innerHTML = display;
+  info.title = charaster.fontSize + "pt font size";
 }
 
 function getStartStop(p, q) {
@@ -248,16 +260,17 @@ function saveText() {
   return lines;
 }
 
+// http://misc.flogisoft.com/bash/tip_colors_and_formatting
 function saveShell() {
   var string = "";
   for (var col = 0; col < charaster.gridHeight; col++) {
     for (var row = 0; row < charaster.gridWidth; row++) {
       var cell = charaster.raster[col][row];
-      if (cell.character == null) {
+      if (cell.character == null || cell.character == " ") {
         string += " ";
       } else {
-        string += "\\e[" + parseInt(cell.foregroundId + 29) + "m";
-        string += charaster.raster[col][row].character;
+        // TODO calculate number for bottom row colours
+        string += "\\e[" + parseInt(cell.backgroundId + 39) + "m\\e[" + parseInt(cell.foregroundId + 29) + "m" + charaster.raster[col][row].character + "\\e[0m";
       }
     }
     string += "\\n";

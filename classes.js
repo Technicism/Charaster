@@ -9,7 +9,8 @@ class Charaster {
     this.character = "*";
     this.characterEnabled = true;
     this.fontName = "monospace";
-    this.fontSize = "12";
+    this.fontSize = 12;
+    this.defaultFontSize = this.fontSize;
     this.font = this.fontSize + "pt " + this.fontName;
     this.foreground;
     this.background;
