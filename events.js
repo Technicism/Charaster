@@ -213,7 +213,7 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
       for (var i = 0; i < points.length; i++) {
         charaster.setCell(new Cell(points[i]), charaster.rasterTempContext);
       }
-    } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equality(cell)) {
+    } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equalForDraw(cell)) {
       drawList.push(cell);
       if (drawList.length >= 2) {
         var line = rasterLine(drawList[0].point, drawList[1].point);
@@ -258,7 +258,7 @@ charaster.cursorCanvas.addEventListener("click", function(e) {
     charaster.clearCell(charaster.cursor);
   } else if (charaster.mode == "FLOOD") {
     var cell = charaster.getCell(charaster.cursor);
-    var targetCell = Object.assign({}, cell);
+    var targetCell = cell.copy();
     rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foreground, charaster.background));
   } else if (charaster.mode == "SELECT") {
     charaster.selectBegin = lineStart;
@@ -277,8 +277,7 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
     if (charaster.mode == "ERASER") {
       charaster.clearCell(charaster.cursor);
     } else if (charaster.mode != "SELECT") {
-      var cell = new Cell(charaster.cursor, charaster.character);
-      charaster.setCell(cell);
+      charaster.setCell(new Cell(charaster.cursor));
     }
   }
   if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE" || charaster.mode == "SELECT") {

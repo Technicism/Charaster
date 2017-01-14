@@ -98,7 +98,7 @@ function rasterFlood(cell, target, replacement) {
   queue.push(cell);
   while (queue.length != 0) {
     var floodCell = queue.pop();
-    if (floodCell == null || equalForFill(target, replacement) || !equalForFill(floodCell, target)) {
+    if (floodCell == null || target.equalForFill(replacement) || !target.equalForFill(floodCell)) {
       continue;
     } else if (floodCell.character == target.character) {
       floodCell.character = replacement.character;
@@ -113,19 +113,25 @@ function rasterFlood(cell, target, replacement) {
   }
 }
 
-function equalForFill(a, b) {
-  if (a.character == b.character && a.foreground == b.foreground && a.background == b.background) {
-    return true;
-  }
-  return false;
-}
-
+/**
+ * Get the pixel position of the mouse on the canvas.
+ *
+ * @param   {HTMLCanvasElement} canavas
+ * @param   {MouseEvent}        e
+ * @return  {Point}
+ */
 function getMousePos(canvas, e) {
   var rect = canvas.getBoundingClientRect();
   return new Point(e.clientX - rect.left, e.clientY - rect.top);
 }
 
-// Snap a given value to the grid interval.
+/**
+ * Snap a value to a grid interval value.
+ *
+ * @param   {Number}  pos
+ * @param   {Number}  grid
+ * @return  {Number}  Snapped pos.
+ */
 function snap(pos, grid) {
   for (var i = 0; i < Math.max(charaster.rasterCanvas.width, charaster.rasterCanvas.height); i += grid) {
     if (pos <= i) {
@@ -134,7 +140,12 @@ function snap(pos, grid) {
   }
 }
 
-// Snap a given point to the grid.
+/**
+ * Snap a given point to the grid.
+ *
+ * @param   {Point} point
+ * @return  {Point} Snapped point.
+ */
 function snapPos(point) {
   var x = snap(point.x, charaster.fontWidth);
   var y = snap(point.y, charaster.fontHeight);

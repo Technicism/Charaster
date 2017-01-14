@@ -469,8 +469,17 @@ class Cell {
     this.backgroundId = null;
   }
 
-  equality(other) {
-    if (this.point == other.point && this.character == other.character) {
+  equalForDraw(other) {
+    if (this.point == other.point && this.equalForFill(other)) {
+      return true;
+    }
+    return false;
+  }
+
+  equalForFill(other) {
+    if (this.character == other.character
+     && this.foreground == other.foreground
+     && this.background == other.background) {
       return true;
     }
     return false;
