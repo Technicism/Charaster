@@ -157,32 +157,17 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
 }, false);
 
 window.addEventListener("keydown", function(e) {
-  if (e.keyCode == 46) {  // Delete.
-    if (charaster.mode == "SELECT") {
-      charaster.tool.keyDown(e);
-    } else {
-      charaster.clearCell(charaster.cursor);
-    }
-  }
   if (e.keyCode == 32) {
-    e.preventDefault(); // Space scrolling.
+    e.preventDefault(); // Stop space scrolling.
   }
-  if (charaster.mode == "TEXT") {
-    charaster.tool.keyDown(e);
-  }
+  charaster.tool.keyDown(e);
 }, false);
 
 window.addEventListener("keypress", function(e) {
   if([13].indexOf(e.keyCode) > -1) {
-    return;
+    return; // Stop enter/return.
   }
-  charaster.character = String.fromCharCode(e.charCode);
-  charaster.preview.value = charaster.character;
-  if (charaster.mode == "TEXT") {
-    var cursor = Object.assign({}, charaster.cursor);
-    charaster.setCell(new Cell(cursor));
-    charaster.moveCursorRelative(1, 0);
-  }
+  charaster.tool.keyPress(e);
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
@@ -227,18 +212,7 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
   if (e.which != 1) { // Only draw with left mouse button.
     return;
   }
-  mouseDown = true;
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE" || charaster.mode == "SELECT") {
-    draw = true;
-    if (charaster.mode == "ERASER") {
-      charaster.clearCell(charaster.cursor);
-    } else if (charaster.mode != "SELECT") {
-      charaster.setCell(new Cell(charaster.cursor));
-    }
-  }
-  if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE" || charaster.mode == "SELECT") {
-    lineStart = charaster.cursor;
-  }
+  charaster.tool.mouseDown(e);
 }, false);
 
 window.addEventListener("mouseup", function(e) {
@@ -265,7 +239,7 @@ window.addEventListener("mouseup", function(e) {
 
 
 charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
-  e.preventDefault();
+  e.preventDefault(); // Stop right click menu on canvas.
 }, false);
 
 document.getElementById("boldCell").addEventListener("click", function(e) {
