@@ -3,6 +3,8 @@
 class Charaster {
   constructor() {
     this.mode = "PENCIL";
+    this.tools = {pencil: new Pencil(), select: new Select(), text: new Text()};
+    this.tool = this.tools.pencil;
     this.themes = [];
     this.theme;
     this.colors = [];
@@ -506,3 +508,76 @@ class Theme {
     this.colors = colors;
   }
 }
+
+class Tool {
+  keyDown(e) {
+
+  }
+
+  mouseMove(e) {
+    var pos = getMousePos(charaster.rasterCanvas, e);
+    charaster.cursor = charaster.coordToGrid(snapPos(pos));
+    charaster.drawCursor();
+    if (draw) {
+      return true;
+    }
+    return false;
+  }
+}
+
+class Select extends Tool {
+  keyDown(e) {
+    var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
+    for (var y = startStop[0].y; y < startStop[1].y; y++) {
+      for (var x = startStop[0].x; x < startStop[1].x; x++) {
+        charaster.clearCell(new Point(x, y));
+      }
+    }
+  }
+
+  mouseMove(e) {
+    if (super.mouseMove(e)) {
+      charaster.selectBegin = lineStart;
+      charaster.selectClose = charaster.cursor;
+      charaster.drawSelect();
+    }
+    return draw;
+  }
+}
+
+class Text extends Tool {
+  keyDown(e) {
+    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+    }
+    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth - 1) {
+      charaster.moveCursorRelative(1, 0);   // Move right.
+    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight - 1) {
+      charaster.moveCursorRelative(0, 1);   // Move down.
+    } else if (e.keyCode == 37 && charaster.cursor.x > 0) {
+      charaster.moveCursorRelative(-1, 0);  // Move left.
+    } else if (e.keyCode == 38 && charaster.cursor.y > 0) {
+      charaster.moveCursorRelative(0, -1);  // Move up.
+    } else if (e.keyCode == 8) {
+      charaster.moveCursorRelative(-1, 0);  // Backspace.
+      charaster.clearCell(charaster.cursor);
+    } else if (e.keyCode == 32) {
+      charaster.moveCursorRelative(1, 0);   // Spacebar.
+    }
+  }
+
+  mouseMove(e) {
+    // Do not move cursor.
+  }
+}
+
+class Pencil extends Tool {
+  mouseMove(e) {
+    if (super.mouseMove(e)) {
+      charaster.selectBegin = lineStart;
+      charaster.selectClose = charaster.cursor;
+      charaster.drawSelect();
+    }
+  }
+}
+

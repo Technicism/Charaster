@@ -24,6 +24,15 @@ function buttonMode(id, mode, activate) {
       charaster.drawCursor();
     }
     charaster.mode = mode;
+
+    if (mode == "SELECT") {
+      charaster.tool = charaster.tools.select;
+    } else if (mode == "TEXT") {
+      charaster.tool = charaster.tools.text;
+    } else if (mode == "PENCIL") {
+      charaster.tool = charaster.tools.pencil;
+    }
+
   }, false);
 
   // Buttons may start off styled activated.
@@ -139,16 +148,10 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
   charaster.preview.style.backgroundColor = charaster.theme.background;
 }, false);
 
-
 window.addEventListener("keydown", function(e) {
   if (e.keyCode == 46) {  // Delete.
     if (charaster.mode == "SELECT") {
-      var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
-      for (var y = startStop[0].y; y < startStop[1].y; y++) {
-        for (var x = startStop[0].x; x < startStop[1].x; x++) {
-          charaster.clearCell(new Point(x, y));
-        }
-      }
+      charaster.tool.keyDown(e);
     } else {
       charaster.clearCell(charaster.cursor);
     }
@@ -157,23 +160,7 @@ window.addEventListener("keydown", function(e) {
     e.preventDefault(); // Space scrolling.
   }
   if (charaster.mode == "TEXT") {
-    if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
-    }
-    if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth - 1) {  // Move right.
-      charaster.moveCursorRelative(1, 0);
-    } else if (e.keyCode == 40 && charaster.cursor.y < charaster.gridHeight - 1) {  // Move down.
-      charaster.moveCursorRelative(0, 1);
-    } else if (e.keyCode == 37 && charaster.cursor.x > 0) { // Move left.
-      charaster.moveCursorRelative(-1, 0);
-    } else if (e.keyCode == 38 && charaster.cursor.y > 0) { // Move up.
-      charaster.moveCursorRelative(0, -1);
-    } else if (e.keyCode == 8) {  // Backspace.
-      charaster.moveCursorRelative(-1, 0);
-      charaster.clearCell(charaster.cursor);
-    } else if (e.keyCode == 32) { // Spacebar.
-      charaster.moveCursorRelative(1, 0);
-    }
+    charaster.tool.keyDown(e);
   }
 }, false);
 
@@ -191,11 +178,7 @@ window.addEventListener("keypress", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
-  if (charaster.mode != "TEXT") {
-    var pos = getMousePos(charaster.rasterCanvas, e);
-    charaster.cursor = charaster.coordToGrid(snapPos(pos));
-    charaster.drawCursor();
-  }
+  charaster.tool.mouseMove(e);
   if (!draw) {
     return;
   }
@@ -230,10 +213,6 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
     } else if (drawList.length == 0) {
       drawList.push(cell);
     }
-  } else if (charaster.mode == "SELECT") {
-    charaster.selectBegin = lineStart;
-    charaster.selectClose = charaster.cursor;
-    charaster.drawSelect();
   }
 }, false);
 
@@ -348,7 +327,7 @@ window.addEventListener("keyup", function(e) {
   // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
   if (e.ctrlKey && e.keyCode == 86) {
     if (e.shiftKey) {
-      pasteCell();
+      pasteCell(charaster.clipboard);
     } else {
       pasteText(document.getElementById("clipboardPaste").innerHTML);
     }

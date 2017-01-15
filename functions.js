@@ -299,24 +299,25 @@ function pasteText(text) {
   }
 }
 
-function pasteCell() {
-  if (charaster.clipboard.length > 0)  {
-    var offset = charaster.clipboard[0].point;
-    for (var i = 0; i < charaster.clipboard.length; i++) {
-      var cell = charaster.clipboard[i].copy();
-      var point = new Point(
-        charaster.cursor.x + Math.abs(offset.x - cell.point.x),
-        charaster.cursor.y + Math.abs(offset.y - cell.point.y)
-      );
-      if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
-        continue; // Out of range of raster.
-      } else {
-        if (cell.character == null) {
-          cell.character = " ";
-        }
-        cell.point = point;
-        charaster.setCell(cell);
+function pasteCell(cells) {
+  if (cells.length == 0)  {
+    return;
+  }
+  var offset = cells[0].point;
+  for (var i = 0; i < cells.length; i++) {
+    var cell = cells[i].copy();
+    var point = new Point(
+      charaster.cursor.x + Math.abs(offset.x - cell.point.x),
+      charaster.cursor.y + Math.abs(offset.y - cell.point.y)
+    );
+    if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
+      continue; // Out of range of raster.
+    } else {
+      if (cell.character == null) {
+        cell.character = " ";
       }
+      cell.point = point;
+      charaster.setCell(cell);
     }
   }
 }
