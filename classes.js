@@ -3,7 +3,15 @@
 class Charaster {
   constructor() {
     this.mode = "PENCIL";
-    this.tools = {pencil: new Pencil(), select: new Select(), text: new Text()};
+    this.tools = {
+      pencil: new Pencil(),
+      select: new Select(),
+      text: new Text(),
+      eraser: new Eraser(),
+      flood: new Flood(),
+      line: new Line(),
+      rectangle: new Rectangle()
+    };
     this.tool = this.tools.pencil;
     this.themes = [];
     this.theme;
@@ -515,13 +523,47 @@ class Tool {
   }
 
   mouseMove(e) {
-    var pos = getMousePos(charaster.rasterCanvas, e);
-    charaster.cursor = charaster.coordToGrid(snapPos(pos));
-    charaster.drawCursor();
-    if (draw) {
-      return true;
+    mouseToCursor(e);
+  }
+
+  mouseLeave(e) {
+
+    // Reset drawing to avoid unwanted lines from enter and exit points.
+    draw = false;
+    drawList = [];
+    if (mouseDown) {
+      draw = true;
     }
-    return false;
+  }
+
+  click(e) {
+    mouseToCursor(e);
+  }
+}
+
+class Line extends Tool {
+  mouseMove(e) {
+    super.mouseMove(e);
+    if (draw) {
+      charaster.drawRaster("temp");
+      var points = rasterLine(lineStart, charaster.cursor);
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i]), charaster.rasterTempContext);
+      }
+    }
+  }
+}
+
+class Rectangle extends Tool {
+  mouseMove(e) {
+    super.mouseMove(e);
+    if (draw) {
+      charaster.drawRaster("temp");
+      var points = rasterRectangle(lineStart, charaster.cursor);
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i]), charaster.rasterTempContext);
+      }
+    }
   }
 }
 
@@ -536,12 +578,18 @@ class Select extends Tool {
   }
 
   mouseMove(e) {
-    if (super.mouseMove(e)) {
+    super.mouseMove(e);
+    if (draw) {
       charaster.selectBegin = lineStart;
       charaster.selectClose = charaster.cursor;
       charaster.drawSelect();
     }
-    return draw;
+  }
+
+  click(e) {
+    charaster.selectBegin = lineStart;
+    charaster.selectClose = charaster.cursor;
+    charaster.drawSelect();
   }
 }
 
@@ -579,5 +627,25 @@ class Pencil extends Tool {
       charaster.drawSelect();
     }
   }
+
+  click(e) {
+    super.click(e);
+    charaster.setCell(new Cell(charaster.cursor));
+  }
 }
 
+class Eraser extends Tool {
+  click(e) {
+    super.click(e);
+    charaster.clearCell(new Cell(charaster.cursor));
+  }
+}
+
+class Flood extends Tool {
+  click(e) {
+    super.click(e);
+    var cell = charaster.getCell(charaster.cursor);
+    var targetCell = cell.copy();
+    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foreground, charaster.background));
+  }
+}

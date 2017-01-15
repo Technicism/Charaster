@@ -31,6 +31,14 @@ function buttonMode(id, mode, activate) {
       charaster.tool = charaster.tools.text;
     } else if (mode == "PENCIL") {
       charaster.tool = charaster.tools.pencil;
+    } else if (mode == "LINE") {
+      charaster.tool = charaster.tools.line;
+    } else if (mode == "RECTANGLE") {
+      charaster.tool = charaster.tools.rectangle;
+    } else if (mode == "ERASER") {
+      charaster.tool = charaster.tools.eraser;
+    } else if (mode == "FLOOD") {
+      charaster.tool = charaster.tools.flood;
     }
 
   }, false);
@@ -185,16 +193,7 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
   if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
     var cell = new Cell(charaster.cursor, charaster.character);
     if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-      charaster.drawRaster("temp");
-      var points = [];
-      if (charaster.mode == "LINE") {
-        points = rasterLine(lineStart, charaster.cursor);
-      } else if (charaster.mode == "RECTANGLE") {
-        points = rasterRectangle(lineStart, charaster.cursor);
-      }
-      for (var i = 0; i < points.length; i++) {
-        charaster.setCell(new Cell(points[i]), charaster.rasterTempContext);
-      }
+
     } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equalForDraw(cell)) {
       drawList.push(cell);
       if (drawList.length >= 2) {
@@ -217,32 +216,11 @@ charaster.cursorCanvas.addEventListener("mousemove", function(e) {
 }, false);
 
 charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
-
-  // Reset drawing to avoid unwanted lines from enter and exit points.
-  draw = false;
-  drawList = [];
-  if (mouseDown) {
-    draw = true;
-  }
+  charaster.tool.mouseLeave(e);
 }, false);
 
 charaster.cursorCanvas.addEventListener("click", function(e) {
-  var pos = getMousePos(charaster.rasterCanvas, e);
-  charaster.cursor = charaster.coordToGrid(snapPos(pos));
-  charaster.drawCursor();
-  if (charaster.mode == "PENCIL") {
-    charaster.setCell(new Cell(charaster.cursor));
-  } else if (charaster.mode == "ERASER") {
-    charaster.clearCell(charaster.cursor);
-  } else if (charaster.mode == "FLOOD") {
-    var cell = charaster.getCell(charaster.cursor);
-    var targetCell = cell.copy();
-    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foreground, charaster.background));
-  } else if (charaster.mode == "SELECT") {
-    charaster.selectBegin = lineStart;
-    charaster.selectClose = charaster.cursor;
-    charaster.drawSelect();
-  }
+  charaster.tool.click(e);
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousedown", function(e) {

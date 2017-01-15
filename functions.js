@@ -216,6 +216,12 @@ function getStartStop(p, q) {
   return ordered;
 }
 
+function mouseToCursor(e) {
+  var pos = getMousePos(charaster.rasterCanvas, e);
+  charaster.cursor = charaster.coordToGrid(snapPos(pos));
+  charaster.drawCursor();
+}
+
 function buttonStyle(id, active) {
   var button = document.getElementById(id);
   if (active) {
