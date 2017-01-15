@@ -25,6 +25,7 @@ function buttonMode(id, mode, activate) {
     }
     charaster.mode = mode;
 
+    // TODO replace this.
     if (mode == "SELECT") {
       charaster.tool = charaster.tools.select;
     } else if (mode == "TEXT") {
@@ -40,7 +41,6 @@ function buttonMode(id, mode, activate) {
     } else if (mode == "FLOOD") {
       charaster.tool = charaster.tools.flood;
     }
-
   }, false);
 
   // Buttons may start off styled activated.

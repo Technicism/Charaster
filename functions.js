@@ -276,7 +276,25 @@ function saveShell() {
         string += " ";
       } else {
         // TODO calculate number for bottom row colours
-        string += "\\e[" + parseInt(cell.backgroundId + 39) + "m\\e[" + parseInt(cell.foregroundId + 29) + "m" + charaster.raster[col][row].character + "\\e[0m";
+        var background = 49;
+        if (cell.backgroundId != "background") {
+          if (cell.backgroundId <= 8) {
+            background = parseInt(cell.backgroundId + 39);
+          } else {
+            background = parseInt(cell.backgroundId + 91);
+          }
+        }
+        var foreground = 39;
+        if (cell.foregroundId != "foreground") {
+          if (cell.foregroundId <= 8) {
+            foreground = parseInt(cell.foregroundId + 29);
+          } else {
+            foreground = parseInt(cell.foregroundId + 81);
+          }
+        }
+
+
+        string += "\\e[" + background + "m\\e[" + foreground + "m" + charaster.raster[col][row].character + "\\e[0m";
       }
     }
     string += "\\n";
