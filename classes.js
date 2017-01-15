@@ -548,7 +548,15 @@ class Tool {
     draw = true;
   }
 
+  mouseUp(e) {
+    mouseDown = false;
+  }
+
   click(e) {
     mouseToCursor(e);
+  }
+
+  copy(e) {
+
   }
 }

@@ -15,6 +15,18 @@ class Line extends Tool {
     lineStart = charaster.cursor;
     charaster.setCell(new Cell(charaster.cursor));
   }
+
+  mouseUp(e) {
+    super.mouseUp(e);
+    if (draw) {
+      var points = rasterLine(lineStart, charaster.cursor);
+      charaster.drawRaster("temp");
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i]));
+      }
+      endDraw();
+    }
+  }
 }
 
 class Rectangle extends Tool {
@@ -34,14 +46,28 @@ class Rectangle extends Tool {
     lineStart = charaster.cursor;
     charaster.setCell(new Cell(charaster.cursor));
   }
+
+  mouseUp(e) {
+    super.mouseUp(e);
+    if (draw) {
+      var points = rasterRectangle(lineStart, charaster.cursor);
+      charaster.drawRaster("temp");
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i]));
+      }
+      endDraw();
+    }
+  }
 }
 
 class Select extends Tool {
   keyDown(e) {
-    var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
-    for (var y = startStop[0].y; y < startStop[1].y; y++) {
-      for (var x = startStop[0].x; x < startStop[1].x; x++) {
-        charaster.clearCell(new Point(x, y));
+    if (e.keyCode == 46) {  // Delete.
+      var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
+      for (var y = startStop[0].y; y < startStop[1].y; y++) {
+        for (var x = startStop[0].x; x < startStop[1].x; x++) {
+          charaster.clearCell(new Point(x, y));
+        }
       }
     }
   }
@@ -64,6 +90,32 @@ class Select extends Tool {
     charaster.selectBegin = lineStart;
     charaster.selectClose = charaster.cursor;
     charaster.drawSelect();
+  }
+
+  mouseUp(e) {
+    super.mouseUp(e);
+    endDraw();
+  }
+
+  copy(e) {
+    var clipboard = document.getElementById("clipboard");
+    clipboard.innerHTML = "";
+    charaster.clipboard = [];
+    var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
+    for (var y = startStop[0].y; y < startStop[1].y; y++) {
+      for (var x = startStop[0].x; x < startStop[1].x; x++) {
+        var cell = charaster.getCell(new Point(x, y)).copy();
+        charaster.clipboard.push(cell);
+        if (cell.character == null) {
+          clipboard.innerHTML += " ";
+        } else {
+          clipboard.innerHTML += cell.character;
+        }
+      }
+      clipboard.innerHTML += "\n";
+    }
+    clipboard.focus();
+    clipboard.select();
   }
 }
 
@@ -103,6 +155,8 @@ class Text extends Tool {
   mouseDown(e) {
     // Do not need.
   }
+
+
 }
 
 class Pencil extends Tool {
@@ -124,6 +178,11 @@ class Pencil extends Tool {
     super.click(e);
     charaster.setCell(new Cell(charaster.cursor));
   }
+
+  mouseUp(e) {
+    super.mouseUp(e);
+    endDraw();
+  }
 }
 
 class Eraser extends Tool {
@@ -135,6 +194,11 @@ class Eraser extends Tool {
   mouseDown(e) {
     super.mouseDown(e);
     charaster.clearCell(charaster.cursor);
+  }
+
+  mouseUp(e) {
+    super.mouseUp(e);
+    endDraw();
   }
 }
 

@@ -327,3 +327,8 @@ function pasteCell(cells) {
     }
   }
 }
+
+function endDraw() {
+  draw = false;
+  drawList = [];
+}

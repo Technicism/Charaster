@@ -216,25 +216,7 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
 }, false);
 
 window.addEventListener("mouseup", function(e) {
-  mouseDown = false;
-
-  // Finish off drawing.
-  if (draw) {
-    var points = [];
-    if (charaster.mode == "LINE") {
-      points = rasterLine(lineStart, charaster.cursor);
-    } else if (charaster.mode == "RECTANGLE") {
-      points = rasterRectangle(lineStart, charaster.cursor);
-    }
-    if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-      charaster.drawRaster("temp");
-      for (var i = 0; i < points.length; i++) {
-        charaster.setCell(new Cell(points[i]));
-      }
-    }
-  }
-  draw = false;
-  drawList = [];
+  charaster.tool.mouseUp(e);
 }, false);
 
 
@@ -272,8 +254,6 @@ document.getElementById("saveCancel").addEventListener("click", function(e) {
   document.getElementById("saveDialog").style.visibility = "hidden";
 }, false);
 
-
-
 window.addEventListener("keyup", function(e) {
 
   // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
@@ -287,26 +267,7 @@ window.addEventListener("keyup", function(e) {
 }, false);
 
 window.addEventListener("copy", function(e) {
-  var clipboard = document.getElementById("clipboard");
-  clipboard.innerHTML = "";
-  charaster.clipboard = [];
-  if (charaster.mode == "SELECT") {
-    var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
-    for (var y = startStop[0].y; y < startStop[1].y; y++) {
-      for (var x = startStop[0].x; x < startStop[1].x; x++) {
-        var cell = charaster.getCell(new Point(x, y)).copy();
-        charaster.clipboard.push(cell);
-        if (cell.character == null) {
-          clipboard.innerHTML += " ";
-        } else {
-          clipboard.innerHTML += cell.character;
-        }
-      }
-      clipboard.innerHTML += "\n";
-    }
-  }
-  clipboard.focus();
-  clipboard.select();
+  charaster.tool.copy(e);
 }, false);
 
 window.addEventListener("paste", function(e) {
