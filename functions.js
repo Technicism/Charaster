@@ -323,7 +323,6 @@ function saveShell() {
     }
     string += "\\n";
   }
-  console.log(string);
   return string;
 }
 

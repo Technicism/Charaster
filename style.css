@@ -157,7 +157,7 @@ footer svg {
   vertical-align: middle;
 }
 
-.bar img:hover, .bar svg:hover, .bar span:hover, #themeList li:hover {
+.bar img:hover, .bar svg:hover, .bar span:hover, #themeList li:hover, .list li:hover {
   background-color: #ddd !important;
 }
 
@@ -265,7 +265,7 @@ body {
   opacity: 0;
 }
 
-#themeList {
+.list {
   position: absolute;
   z-index: 5;
   background-color: white;
@@ -276,18 +276,18 @@ body {
   border: 1px solid red;
 }
 
-#themeList li {
+.list li {
   padding: 2px;
   border-radius: 2px;
   cursor: default;
   margin-bottom: 2px;
 }
 
-#themeList li:last-child {
+.list li:last-child {
   margin-bottom: 0;
 }
 
-#themeList:after, #themeList:before {
+.list:after, .list:before {
   border: solid transparent;
   bottom: 100%;
   content: " ";
@@ -297,14 +297,14 @@ body {
   width: 0;
 }
 
-#themeList:after {
+.list:after {
   border-color: transparent;
   border-bottom-color: white;
   border-width: 4px;
   margin-left: -4px;
 }
 
-#themeList:before {
+.list:before {
   border-color: transparent;
   border-bottom-color: green;
   border-width: 5px;

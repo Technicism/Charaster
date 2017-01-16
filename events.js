@@ -245,9 +245,34 @@ document.getElementById("underlineCell").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("saveButton").addEventListener("click", function(e) {
+  var list = document.getElementById("saveList");
+  if (list.style.visibility != "visible") {
+    var rect = e.target.getBoundingClientRect();
+    list.style.visibility = "visible";
+    list.style.left = rect.left + "px";
+    list.style.top = rect.top + 32 + "px";
+    list.style.visibility = "visible";
+  } else {
+    list.style.visibility = "hidden";
+  }
+}, false);
+
+document.getElementById("saveBash").addEventListener("click", function(e) {
   var lines = saveShell();
   var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.sh");
+}, false);
+
+document.getElementById("savePlain").addEventListener("click", function(e) {
+  var lines = saveText();
+  var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
+  saveAs(blob, "charaster.txt");
+}, false);
+
+document.getElementById("saveImage").addEventListener("click", function(e) {
+  charaster.rasterCanvas.toBlob(function(blob) {
+      saveAs(blob, "charaster.png");
+  });
 }, false);
 
 window.addEventListener("keyup", function(e) {
