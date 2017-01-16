@@ -267,6 +267,13 @@ function saveText() {
 }
 
 // http://misc.flogisoft.com/bash/tip_colors_and_formatting
+// http://askubuntu.com/a/528938
+/**
+ * Save the raster to Bash shell, which is able to support many cell proprieties.
+ *
+ * @see     {@link http://misc.flogisoft.com/bash/tip_colors_and_formatting} and {@link http://askubuntu.com/a/528938} for the escape sequences
+ * @return  {String} Bash code.
+ */
 function saveShell() {
   var string = "";
   for (var col = 0; col < charaster.gridHeight; col++) {
@@ -275,7 +282,8 @@ function saveShell() {
       if (cell.character == null || cell.character == " ") {
         string += " ";
       } else {
-        // TODO calculate number for bottom row colours
+
+        // Colours.
         var background = 49;
         if (cell.backgroundId != "background") {
           if (cell.backgroundId <= 8) {
@@ -292,9 +300,25 @@ function saveShell() {
             foreground = parseInt(cell.foregroundId + 81);
           }
         }
+        string += "\\e[" + background + "m\\e[" + foreground + "m";
 
+        // Text styling.
+        if (cell.bold) {
+          string += "\\e[1m";
+        }
+        if (cell.italic) {
+          string += "\\e[3m";
+        }
 
-        string += "\\e[" + background + "m\\e[" + foreground + "m" + charaster.raster[col][row].character + "\\e[0m";
+        // Character.
+        if (cell.character == null) {
+          string += " ";
+        } else {
+          string += cell.character;
+        }
+
+        // Reset to normal after every cell.
+        string += "\\e[0m";
       }
     }
     string += "\\n";

@@ -246,12 +246,8 @@ document.getElementById("underlineCell").addEventListener("click", function(e) {
 
 document.getElementById("saveButton").addEventListener("click", function(e) {
   var lines = saveShell();
-  document.getElementById("saveRaw").innerHTML = lines;
-  document.getElementById("saveDialog").style.visibility = "visible";
-}, false);
-
-document.getElementById("saveCancel").addEventListener("click", function(e) {
-  document.getElementById("saveDialog").style.visibility = "hidden";
+  var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
+  saveAs(blob, "charaster.sh");
 }, false);
 
 window.addEventListener("keyup", function(e) {
