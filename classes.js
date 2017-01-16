@@ -79,6 +79,7 @@ class Charaster {
     var canvas = this.gridCanvas;
     var context = this.gridContext;
     this.fitToContainer(canvas, context);
+    context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.strokeStyle = this.theme.grid;
     context.beginPath();
@@ -143,11 +144,12 @@ class Charaster {
     var canvas = this.cursorCanvas;
     var context = this.cursorContext;
     this.fitToContainer(canvas, context);
+    context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
     context.strokeStyle = this.theme.cursor;
     context.rect(
-      this.cursor.x * this.fontWidth, this.cursor.y * this.fontHeight,
+      this.cursor.x * this.fontWidth - 1, this.cursor.y * this.fontHeight - 1,
       this.fontWidth, this.fontHeight
     );
     context.stroke();
@@ -159,6 +161,7 @@ class Charaster {
     var canvas = this.selectCanvas;
     var context = this.selectContext;
     this.fitToContainer(canvas, context);
+    context.translate(0.5, 0.5);
     if (this.mode != "SELECT") {
       return;
     }
@@ -244,7 +247,6 @@ class Charaster {
     canvas.width  = this.gridWidth * this.fontWidth + 1;
     canvas.height = this.gridHeight * this.fontHeight + 1;
     canvas.style.top = controls.clientHeight + 1 + "px";
-    context.translate(0.5, 0.5);
   }
 
   setCell(cell, context) {
