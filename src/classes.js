@@ -81,8 +81,7 @@ class Charaster {
     this.fitToContainer(canvas, context);
     context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    // context.strokeStyle = this.theme.grid;
-    context.strokeStyle = "rgba(255, 255, 255, 0.1)";
+    context.strokeStyle = this.theme.grid;
     for (var row = 0; row < canvas.height; row += this.fontHeight) {
       context.beginPath();
       context.moveTo(0, row);
@@ -483,7 +482,8 @@ class Theme {
     this.name = name;
     this.foreground = foreground;
     this.background = background;
-    this.grid = grid;
+    var rgb = hexToRgb(grid);
+    this.grid = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0.75)";
     this.cursor = cursor;
     this.colors = colors;
   }

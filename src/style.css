@@ -205,18 +205,16 @@ body {
   height: 10px;
   width: 10px;
   border-radius: 2px;
-  border: solid 1px black;
+  border: solid 1px #ddd;
   margin-top: -5px;
 }
 
-.colorGroup svg:hover {
-  background-color: white;
-}
+
 
 #preview {
   height: 20px;
   width: 10px;
-  border: solid 1px black;
+  border: solid 1px #ddd;
   border-radius: 2px;
 }
 
@@ -230,9 +228,13 @@ body {
   height: 10px;
   width: 10px;
   border-radius: 2px;
-  border: solid 1px black;
+  border: solid 1px #ddd;
   padding: 0;
   display: inline-block;
+}
+
+.colorGroup svg:hover {
+  background-color: white;
 }
 
 .colorGroup:last-child {
@@ -273,7 +275,7 @@ body {
   list-style: none;
   padding: 2px;
   border-radius: 2px;
-  border: 1px solid red;
+  border: 1px solid #ddd;
 }
 
 .list li {
@@ -306,20 +308,26 @@ body {
 
 .list:before {
   border-color: transparent;
-  border-bottom-color: green;
+  border-bottom-color: #ddd;
   border-width: 5px;
   margin-left: -5px;
 }
 
 .active {
-  color: red;
-  background-color: yellow;
+  color: #fff;
+  background-color: #555;
 }
 
 .activeFill {
-  fill: red !important;
+  fill: #fff !important;
 }
 
 .activeStroke {
-  stroke: red !important;
+  stroke: #fff !important;
+}
+
+#upload {
+  visibility: hidden
+  width: 1px;
+  height: 1px;
 }

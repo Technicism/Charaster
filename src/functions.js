@@ -369,3 +369,29 @@ function endDraw() {
   draw = false;
   drawList = [];
 }
+
+/**
+ * Finds the red, green and blue components as integers for a HTML hex colour code.
+ *
+ * @see     {@link http://stackoverflow.com/a/11508164}
+ * @return  {Object} r, g, b.
+ */
+function hexToRgb(hex) {
+  hex = hex.replace("#", "");
+  var int = parseInt(hex, 16);
+  var r = (int >> 16) & 255;
+  var g = (int >> 8) & 255;
+  var b = int & 255;
+  return {r: r, g: g, b: b};
+}
+
+
+function openText() {
+  var nBytes = 0,
+       oFiles = document.getElementById("upload").files,
+       nFiles = oFiles.length;
+   for (var nFileId = 0; nFileId < nFiles; nFileId++) {
+     nBytes += oFiles[nFileId].size;
+   }
+   console.log(nBytes);
+}

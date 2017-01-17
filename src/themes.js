@@ -53,6 +53,31 @@ charaster.themes["Solarized"] = new Theme(
     "#fdf6e3"
   ]
 );
+charaster.themes["Solarized Light"] = new Theme(
+  "Solarized Light",
+  "#536870",
+  "#fcf4dc",
+  "#073642",
+  "#586e75",
+  [
+    "#073642",
+    "#dc322f",
+    "#859900",
+    "#b58900",
+    "#268bd2",
+    "#d33682",
+    "#2aa198",
+    "#eee8d5",
+    "#586e75",
+    "#cb4b16",
+    "#586e75",
+    "#657b83",
+    "#839496",
+    "#6c71c4",
+    "#93a1a1",
+    "#fdf6e3"
+  ]
+);
 
 // Ubuntu theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
 charaster.themes["Ubuntu"] = new Theme(
@@ -60,7 +85,7 @@ charaster.themes["Ubuntu"] = new Theme(
   "#eeeeec",
   "#300a24",
   "#1e0617",
-  "#4e9a06",
+  "#bbbbbb",
   [
 
     "#2e3436",

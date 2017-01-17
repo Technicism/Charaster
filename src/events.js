@@ -275,6 +275,10 @@ document.getElementById("saveImage").addEventListener("click", function(e) {
   });
 }, false);
 
+document.getElementById("openButton").addEventListener("click", function(e) {
+  document.getElementById('upload').click();
+}, false);
+
 window.addEventListener("keyup", function(e) {
 
   // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
@@ -303,6 +307,7 @@ window.addEventListener("paste", function(e) {
 }, false);
 
 window.addEventListener("resize", function(e) {
+  zoom(Math.ceil(window.devicePixelRatio * charaster.defaultFontSize));
   var top = document.getElementById("controls").clientHeight + 1;
   charaster.gridCanvas.style.top = top + "px";
   charaster.rasterCanvas.style.top = top + "px";
@@ -311,13 +316,11 @@ window.addEventListener("resize", function(e) {
 }, false);
 
 document.getElementById("zoomIn").addEventListener("click", function(e) {
-  var size = parseInt(charaster.fontSize) + 1;
-  zoom(size);
+  zoom(parseInt(charaster.fontSize) + 1);
 }, false);
 
 document.getElementById("zoomOut").addEventListener("click", function(e) {
-  var size = parseInt(charaster.fontSize) - 1;
-  zoom(size);
+  zoom(parseInt(charaster.fontSize) - 1);
 }, false);
 
 document.getElementById("gridToggle").addEventListener("click", function(e) {
@@ -345,5 +348,20 @@ charaster.themeSelect.addEventListener("click", function(e) {
     list.style.visibility = "visible";
   } else {
     list.style.visibility = "hidden";
+  }
+}, false);
+
+
+window.addEventListener("mousewheel", function(e) {
+
+  // Zoom In: Ctrl + Mouse Wheel Up
+  // Zoom Out: Ctrl + Mouse Wheel Down
+  if (e.ctrlKey) {
+    e.preventDefault();
+    if (e.deltaY > 0) {
+      zoom(parseInt(charaster.fontSize) - 1);
+    } else if (e.deltaY < 0) {
+      zoom(parseInt(charaster.fontSize) + 1);
+    }
   }
 }, false);
