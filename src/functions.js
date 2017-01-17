@@ -322,7 +322,10 @@ function saveShell() {
   return string;
 }
 
-function pasteText(text) {
+function pasteText(text, startPoint) {
+  if (startPoint == null) {
+    startPoint = charaster.cursor;
+  }
   var x = 0;
   var y = 0;
   for (var i = 0; i < text.length; i++) {
@@ -330,7 +333,7 @@ function pasteText(text) {
       y++;
       x = 0;
     } else if (text[i] != "\r") {
-      var point = new Point(charaster.cursor.x + x, charaster.cursor.y + y);
+      var point = new Point(startPoint.x + x, startPoint.y + y);
       if (point.x >= charaster.gridWidth || point.y >= charaster.gridHeight) {
         continue; // Out of range of raster.
       }

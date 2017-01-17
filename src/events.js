@@ -365,3 +365,15 @@ window.addEventListener("mousewheel", function(e) {
     }
   }
 }, false);
+
+
+document.getElementById("upload").addEventListener("change", function(e) {
+  var file = document.getElementById("upload").files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = reader.result;
+    console.log(text);
+    pasteText(text, new Point(0, 0));
+  }
+  reader.readAsText(file);
+}, false);
