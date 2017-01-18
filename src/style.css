@@ -314,8 +314,8 @@ body {
 }
 
 .active {
-  color: #fff;
-  background-color: #555;
+  color: #fff !important;
+  background-color: #555 !important;
 }
 
 .activeFill {
@@ -330,4 +330,13 @@ body {
   visibility: hidden
   width: 1px;
   height: 1px;
+}
+
+.icon {
+  color: #333;
+  fill: #333;
+}
+
+.iconStroke {
+  stroke: #333;
 }

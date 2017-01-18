@@ -14,15 +14,17 @@ function buttonMode(id, mode, activate) {
     // Apply style to current button to indicate it is selected.
     buttonStyle(id, true);
 
-    // Apply new mode.
-    if (charaster.mode == "TEXT" && (mode == "PENCIL") || mode == "ERASER") {
+    // Text mode has independent cursor.
+    if (charaster.mode == "TEXT" && mode != "TEXT") {
       charaster.prevCursor = charaster.cursor;
       charaster.drawCursor();
     }
-    if ((charaster.mode == "PENCIL" || charaster.mode == "ERASER") && mode == "TEXT") {
+    if (charaster.mode != "TEXT" && mode == "TEXT") {
       charaster.cursor = charaster.prevCursor;
       charaster.drawCursor();
     }
+
+    // Apply new mode.
     charaster.mode = mode;
 
     // TODO replace this.

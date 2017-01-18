@@ -142,7 +142,6 @@ class Charaster {
         }
       }
     }
-
   }
 
   drawCursor() {
@@ -153,8 +152,16 @@ class Charaster {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
     context.strokeStyle = this.theme.cursor;
+    var offsetX = -1;
+    if (this.cursor.x == 0) {
+      offsetX = 0;
+    }
+    var offsetY = -1;
+    if (this.cursor.y == 0) {
+      offsetY = 0;
+    }
     context.rect(
-      this.cursor.x * this.fontWidth, this.cursor.y * this.fontHeight,
+      this.cursor.x * this.fontWidth + offsetX, this.cursor.y * this.fontHeight + offsetY,
       this.fontWidth, this.fontHeight
     );
     context.stroke();
