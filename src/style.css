@@ -159,6 +159,7 @@ footer svg {
 
 .bar img:hover, .bar svg:hover, .bar span:hover, #themeList li:hover, .list li:hover {
   background-color: #ddd !important;
+  border-radius: 2px;
 }
 
 .bar div {

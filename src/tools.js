@@ -139,6 +139,15 @@ class Text extends Tool {
     } else if (e.keyCode == 32) {
       charaster.moveCursorRelative(1, 0);   // Spacebar.
     }
+
+    // Enter.
+    if (charaster.cursor.y > charaster.selectBegin.y) {
+      charaster.selectBegin.y = charaster.cursor.y;
+    }
+    if (e.keyCode == 13) {
+      charaster.selectBegin.y++;
+      charaster.moveCursor(charaster.selectBegin.x, charaster.selectBegin.y);
+    }
   }
 
   keyPress(e) {
@@ -146,6 +155,7 @@ class Text extends Tool {
     var cursor = Object.assign({}, charaster.cursor);
     charaster.setCell(new Cell(cursor));
     charaster.moveCursorRelative(1, 0);
+    console.log("ok");
   }
 
   mouseMove(e) {
@@ -156,6 +166,14 @@ class Text extends Tool {
     // Do not need.
   }
 
+  click(e) {
+    super.click(e);
+    charaster.selectBegin = charaster.cursor.copy();
+  }
+
+  apply() {
+    charaster.selectBegin = charaster.cursor.copy();
+  }
 
 }
 
@@ -179,6 +197,7 @@ class Pencil extends Tool {
   click(e) {
     super.click(e);
     charaster.setCell(new Cell(charaster.cursor));
+    rasterHistory();
   }
 
   mouseUp(e) {

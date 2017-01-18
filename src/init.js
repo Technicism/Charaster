@@ -34,3 +34,4 @@ var mouseDown = false;
 var draw = false;
 var drawList = [];
 var lineStart;
+var rasterStack = [];

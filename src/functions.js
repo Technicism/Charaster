@@ -408,3 +408,19 @@ function interpolate(cell) {
     drawList.push(cell);
   }
 }
+
+function insideGrid(x, y) {
+  if (x >= 0 && x < charaster.gridWidth && y >= 0 && y < charaster.gridHeight) {
+    return true;
+  }
+  return false;
+}
+
+function rasterHistory() {
+  var raster = [];
+  for (var i = 0; i < charaster.raster.length; i++) {
+    raster[i] = charaster.raster[i].slice();
+  }
+  rasterStack.push(raster);
+  console.log(rasterStack);
+}

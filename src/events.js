@@ -43,6 +43,7 @@ function buttonMode(id, mode, activate) {
     } else if (mode == "FLOOD") {
       charaster.tool = charaster.tools.flood;
     }
+    charaster.tool.apply();
   }, false);
 
   // Buttons may start off styled activated.
@@ -141,6 +142,8 @@ window.addEventListener("load", function(e) {
   buttonCell("characterCell", charaster.characterEnabled);
   buttonCell("foregroundCell", charaster.foregroundEnabled);
   buttonCell("backgroundCell", charaster.backgroundEnabled);
+
+  rasterHistory();
 }, false);
 
 // Left click to reset foreground.
@@ -348,7 +351,27 @@ document.getElementById("upload").addEventListener("change", function(e) {
   reader.onload = function(e) {
     var text = reader.result;
     console.log(text);
+    charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
+    charaster.drawAll();
     pasteText(text, new Point(0, 0));
   }
   reader.readAsText(file);
+}, false);
+
+document.getElementById("undo").addEventListener("click", function(e) {
+  console.log(rasterStack);
+
+  if (rasterStack.length < 2) {
+    return;
+  }
+  charaster.raster = rasterStack[rasterStack.length - 2];
+  rasterStack.pop();
+  charaster.drawAll();
+  console.log(rasterStack);
+  console.log("---");
+
+}, false);
+
+document.getElementById("redo").addEventListener("click", function(e) {
+
 }, false);
