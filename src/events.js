@@ -174,32 +174,6 @@ window.addEventListener("keypress", function(e) {
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
   charaster.tool.mouseMove(e);
-  if (!draw) {
-    return;
-  }
-  if (charaster.mode == "PENCIL" || charaster.mode == "ERASER" || charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-    var cell = new Cell(charaster.cursor, charaster.character);
-    if (charaster.mode == "LINE" || charaster.mode == "RECTANGLE") {
-
-    } else if (drawList.length >= 1 && !drawList[drawList.length - 1].equalForDraw(cell)) {
-      drawList.push(cell);
-      if (drawList.length >= 2) {
-        var line = rasterLine(drawList[0].point, drawList[1].point);
-
-        // Draw lines between cells.
-        for (var i = 0; i < line.length; i++) {
-          if (charaster.mode == "PENCIL") {
-            charaster.setCell(new Cell(line[i]));
-          } else if (charaster.mode == "ERASER") {
-            charaster.clearCell(line[i]);
-          }
-        }
-        drawList.shift();
-      }
-    } else if (drawList.length == 0) {
-      drawList.push(cell);
-    }
-  }
 }, false);
 
 charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
@@ -367,7 +341,6 @@ window.addEventListener("mousewheel", function(e) {
     }
   }
 }, false);
-
 
 document.getElementById("upload").addEventListener("change", function(e) {
   var file = document.getElementById("upload").files[0];

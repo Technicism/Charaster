@@ -161,10 +161,12 @@ class Text extends Tool {
 
 class Pencil extends Tool {
   mouseMove(e) {
-    if (super.mouseMove(e)) {
+    super.mouseMove(e)
+    if (draw) {
       charaster.selectBegin = lineStart;
       charaster.selectClose = charaster.cursor;
       charaster.drawSelect();
+      interpolate(new Cell(charaster.cursor, charaster.character));
     }
   }
 
@@ -199,6 +201,16 @@ class Eraser extends Tool {
   mouseUp(e) {
     super.mouseUp(e);
     endDraw();
+  }
+
+  mouseMove(e) {
+    super.mouseMove(e)
+    if (draw) {
+      charaster.selectBegin = lineStart;
+      charaster.selectClose = charaster.cursor;
+      charaster.drawSelect();
+      interpolate(new Cell(charaster.cursor, null));
+    }
   }
 }
 

@@ -388,13 +388,23 @@ function hexToRgb(hex) {
   return {r: r, g: g, b: b};
 }
 
+function interpolate(cell) {
+  if (drawList.length >= 1 && !drawList[drawList.length - 1].equalForDraw(cell)) {
+    drawList.push(cell);
+    if (drawList.length >= 2) {
+      var line = rasterLine(drawList[0].point, drawList[1].point);
 
-function openText() {
-  var nBytes = 0,
-       oFiles = document.getElementById("upload").files,
-       nFiles = oFiles.length;
-   for (var nFileId = 0; nFileId < nFiles; nFileId++) {
-     nBytes += oFiles[nFileId].size;
-   }
-   console.log(nBytes);
+      // Draw lines between cells.
+      for (var i = 0; i < line.length; i++) {
+        if (cell.character == null) {
+          charaster.clearCell(line[i]);
+        } else {
+          charaster.setCell(new Cell(line[i]));
+        }
+      }
+      drawList.shift();
+    }
+  } else if (drawList.length == 0) {
+    drawList.push(cell);
+  }
 }
