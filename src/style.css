@@ -15,6 +15,7 @@ canvas {
   padding-top: 2px;
   padding-left: 2px;
   margin-left: 1px;
+  outline: none;
 }
 
 #grid {

@@ -142,8 +142,6 @@ window.addEventListener("load", function(e) {
   buttonCell("characterCell", charaster.characterEnabled);
   buttonCell("foregroundCell", charaster.foregroundEnabled);
   buttonCell("backgroundCell", charaster.backgroundEnabled);
-
-  rasterHistory();
 }, false);
 
 // Left click to reset foreground.
@@ -161,14 +159,14 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
   charaster.preview.style.backgroundColor = charaster.theme.background;
 }, false);
 
-window.addEventListener("keydown", function(e) {
+charaster.cursorCanvas.addEventListener("keydown", function(e) {
   if (e.keyCode == 32) {
     e.preventDefault(); // Stop space scrolling.
   }
   charaster.tool.keyDown(e);
 }, false);
 
-window.addEventListener("keypress", function(e) {
+charaster.cursorCanvas.addEventListener("keypress", function(e) {
   if([13].indexOf(e.keyCode) > -1) {
     return; // Stop enter/return.
   }
@@ -258,7 +256,7 @@ document.getElementById("openButton").addEventListener("click", function(e) {
   document.getElementById('upload').click();
 }, false);
 
-window.addEventListener("keyup", function(e) {
+charaster.cursorCanvas.addEventListener("keyup", function(e) {
 
   // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
   if (e.ctrlKey && e.keyCode == 86) {
@@ -286,7 +284,7 @@ window.addEventListener("paste", function(e) {
 }, false);
 
 window.addEventListener("resize", function(e) {
-  zoom(Math.ceil(window.devicePixelRatio * charaster.defaultFontSize));
+  // zoom(Math.ceil(window.devicePixelRatio * charaster.defaultFontSize));
   var top = document.getElementById("controls").clientHeight + 1;
   charaster.gridCanvas.style.top = top + "px";
   charaster.rasterCanvas.style.top = top + "px";
@@ -358,20 +356,13 @@ document.getElementById("upload").addEventListener("change", function(e) {
   reader.readAsText(file);
 }, false);
 
+
 document.getElementById("undo").addEventListener("click", function(e) {
-  console.log(rasterStack);
-
-  if (rasterStack.length < 2) {
-    return;
-  }
-  charaster.raster = rasterStack[rasterStack.length - 2];
-  rasterStack.pop();
+  charaster.raster = rasterHistory.undo();
   charaster.drawAll();
-  console.log(rasterStack);
-  console.log("---");
-
 }, false);
 
 document.getElementById("redo").addEventListener("click", function(e) {
-
+  charaster.raster = rasterHistory.redo();
+  charaster.drawAll();
 }, false);

@@ -547,3 +547,33 @@ class Tool {
 
   }
 }
+
+class History {
+  constructor() {
+    this.rasters = [];
+    this.index = 0;
+  }
+
+  add(rasterO) {
+    var raster = [];
+    for (var i = 0; i < charaster.raster.length; i++) {
+      raster[i] = rasterO[i].slice();
+    }
+    this.rasters.splice(this.index, 0, raster);
+    for (var i = this.rasters.length - 1; i > this.index; i--) {
+      this.rasters.splice(this.rasters.indexOf(i));
+    }
+    this.index++;
+  }
+
+  undo() {
+    // this.index--;
+    this.index = Math.max(0, this.index - 1);
+    return this.rasters[this.index];
+  }
+
+  redo() {
+    this.index = Math.min(this.rasters.length, this.index + 1);
+    return this.rasters[this.index];
+  }
+}

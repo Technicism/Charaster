@@ -197,7 +197,7 @@ class Pencil extends Tool {
   click(e) {
     super.click(e);
     charaster.setCell(new Cell(charaster.cursor));
-    rasterHistory();
+    rasterHistory.add(charaster.raster);
   }
 
   mouseUp(e) {

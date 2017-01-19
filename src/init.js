@@ -1,5 +1,7 @@
 "use strict";
 
+var charaster = new Charaster();
+
 // Canvases.
 charaster.gridCanvas = document.getElementById("grid");
 charaster.gridContext = charaster.gridCanvas.getContext("2d");
@@ -34,4 +36,5 @@ var mouseDown = false;
 var draw = false;
 var drawList = [];
 var lineStart;
-var rasterStack = [];
+var rasterHistory = new History();
+rasterHistory.add(charaster.raster)
