@@ -554,10 +554,10 @@ class History {
     this.index = 0;
   }
 
-  add(rasterO) {
+  add(recordRaster) {
     var raster = [];
     for (var i = 0; i < charaster.raster.length; i++) {
-      raster[i] = rasterO[i].slice();
+      raster[i] = recordRaster[i].slice();
     }
     this.rasters.splice(this.index, 0, raster);
     for (var i = this.rasters.length - 1; i > this.index; i--) {
@@ -567,13 +567,12 @@ class History {
   }
 
   undo() {
-    // this.index--;
     this.index = Math.max(0, this.index - 1);
     return this.rasters[this.index];
   }
 
   redo() {
-    this.index = Math.min(this.rasters.length, this.index + 1);
+    this.index = Math.min(this.rasters.length - 1, this.index + 1);
     return this.rasters[this.index];
   }
 }

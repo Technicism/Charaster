@@ -155,7 +155,7 @@ class Text extends Tool {
     var cursor = Object.assign({}, charaster.cursor);
     charaster.setCell(new Cell(cursor));
     charaster.moveCursorRelative(1, 0);
-    console.log("ok");
+    rasterHistory.add(charaster.raster);
   }
 
   mouseMove(e) {

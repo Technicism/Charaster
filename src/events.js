@@ -166,11 +166,18 @@ charaster.cursorCanvas.addEventListener("keydown", function(e) {
   charaster.tool.keyDown(e);
 }, false);
 
-charaster.cursorCanvas.addEventListener("keypress", function(e) {
+window.addEventListener("keypress", function(e) {
+  if (e.target.id == "preview") {
+    return; // Do not interfere with manual character entering.
+  }
   if([13].indexOf(e.keyCode) > -1) {
     return; // Stop enter/return.
   }
   charaster.tool.keyPress(e);
+}, false);
+
+charaster.preview.addEventListener("change", function(e) {
+  charaster.character = charaster.preview.value;
 }, false);
 
 charaster.cursorCanvas.addEventListener("mousemove", function(e) {
@@ -195,7 +202,6 @@ charaster.cursorCanvas.addEventListener("mousedown", function(e) {
 window.addEventListener("mouseup", function(e) {
   charaster.tool.mouseUp(e);
 }, false);
-
 
 charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
   e.preventDefault(); // Stop right click menu on canvas.
@@ -256,16 +262,27 @@ document.getElementById("openButton").addEventListener("click", function(e) {
   document.getElementById('upload').click();
 }, false);
 
-charaster.cursorCanvas.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function(e) {
+  console.log(e);
 
-  // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
-  if (e.ctrlKey && e.keyCode == 86) {
-    if (e.shiftKey) {
+  if (e.ctrlKey) {
+
+    // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
+    if (e.keyCode == 86 && e.shiftKey) {
       pasteCell(charaster.clipboard);
-    } else {
+    } else if (e.keyCode == 86) {
       pasteText(document.getElementById("clipboardPaste").innerHTML);
     }
+
+    // Reset zoom: Ctrl + 0.
+    if (e.key == "0") {
+      zoom(charaster.defaultFontSize);
+    } else if (e.key == "+") {
+      e.preventDefault();
+    }
   }
+
+
 }, false);
 
 window.addEventListener("copy", function(e) {
