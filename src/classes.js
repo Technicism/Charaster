@@ -33,8 +33,8 @@ class Charaster {
     this.fontHeight;
     this.fontWidth;
     this.fontOffset;
-    this.gridWidth = 16;
-    this.gridHeight = 4;
+    this.gridWidth = 80;
+    this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
     this.prevCursor = new Point(0, 0);
@@ -444,12 +444,17 @@ class Charaster {
   copyRaster(raster) {
     var rasterCopy = [];
     for (var i = 0; i < raster.length; i++) {
+    for (var i = 0; i < raster.length; i++) {
       rasterCopy[i] = [];
       for (var j = 0; j < raster[i].length; j++) {
         rasterCopy[i].push(raster[i][j].copy());
       }
     }
     return rasterCopy;
+  }
+
+  setRaster(raster) {
+    // TODO needed because of themes needing to be applied to history.
   }
 }
 
@@ -573,15 +578,22 @@ class History {
       this.rasters.pop();
     }
     this.rasters.push(raster);
+    if (this.index > 0) {
+      // TODO provide child as property instead.
+      document.getElementById("undo").children[1].classList.remove("inactive");
+    }
   }
 
   undo() {
-    this.index--;
+    this.index = Math.max(this.index - 1, 0);
+    if (this.index == 0) {
+      document.getElementById("undo").children[1].classList.add("inactive");
+    }
     return charaster.copyRaster(this.rasters[this.index]);
   }
 
   redo() {
-    this.index++;
+    this.index = Math.min(this.index + 1, this.rasters.length - 1);
     return charaster.copyRaster(this.rasters[this.index]);
   }
 }

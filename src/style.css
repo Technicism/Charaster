@@ -342,3 +342,7 @@ body {
 .iconStroke {
   stroke: #333;
 }
+
+.inactive {
+  fill: red !important;
+}
