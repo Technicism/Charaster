@@ -60,9 +60,19 @@ function buttonCell(id, activate) {
     if (id == "boldCell") {
       charaster.bold = !charaster.bold;
       buttonStyle(id, charaster.bold);
+      if (charaster.bold) {
+        charaster.preview.style.fontWeight = "bold";
+      } else {
+        charaster.preview.style.fontWeight = "normal";
+      }
     } else if (id == "italicCell") {
       charaster.italic = !charaster.italic;
       buttonStyle(id, charaster.italic);
+      if (charaster.italic) {
+        charaster.preview.style.fontStyle = "italic";
+      } else {
+        charaster.preview.style.fontStyle = "normal";
+      }
     } else if (id == "foregroundCell") {
       charaster.foregroundEnabled = !charaster.foregroundEnabled;
       buttonStyle(id, charaster.foregroundEnabled);
@@ -207,26 +217,6 @@ charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
   e.preventDefault(); // Stop right click menu on canvas.
 }, false);
 
-document.getElementById("boldCell").addEventListener("click", function(e) {
-  if (charaster.bold) {
-    charaster.preview.style.fontWeight = "bold";
-  } else {
-    charaster.preview.style.fontWeight = "normal";
-  }
-}, false);
-
-document.getElementById("italicCell").addEventListener("click", function(e) {
-  if (charaster.italic) {
-    charaster.preview.style.fontStyle = "italic";
-  } else {
-    charaster.preview.style.fontStyle = "normal";
-  }
-}, false);
-
-document.getElementById("underlineCell").addEventListener("click", function(e) {
-
-}, false);
-
 document.getElementById("saveButton").addEventListener("click", function(e) {
   var list = document.getElementById("saveList");
   if (list.style.visibility != "visible") {
@@ -247,7 +237,7 @@ document.getElementById("saveBash").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("savePlain").addEventListener("click", function(e) {
-  var lines = saveText();
+  var lines = saveText(charaster.raster);
   var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.txt");
 }, false);
@@ -263,8 +253,6 @@ document.getElementById("openButton").addEventListener("click", function(e) {
 }, false);
 
 window.addEventListener("keyup", function(e) {
-  console.log(e);
-
   if (e.ctrlKey) {
 
     // Paste: Ctrl + V = text, Ctrl + Shift + V = cell.
@@ -277,8 +265,13 @@ window.addEventListener("keyup", function(e) {
     // Reset zoom: Ctrl + 0.
     if (e.key == "0") {
       zoom(charaster.defaultFontSize);
-    } else if (e.key == "+") {
-      e.preventDefault();
+    }
+
+    if (e.key == "`") {
+      for (var i = 0; i < rasterHistory.rasters.length; i++) {
+        console.log(i);
+        console.log(saveText(rasterHistory.rasters[i]));
+      }
     }
   }
 
@@ -365,7 +358,6 @@ document.getElementById("upload").addEventListener("change", function(e) {
   var reader = new FileReader();
   reader.onload = function(e) {
     var text = reader.result;
-    console.log(text);
     charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
     charaster.drawAll();
     pasteText(text, new Point(0, 0));

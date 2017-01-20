@@ -33,8 +33,8 @@ class Charaster {
     this.fontHeight;
     this.fontWidth;
     this.fontOffset;
-    this.gridWidth = 80;
-    this.gridHeight = 24;
+    this.gridWidth = 16;
+    this.gridHeight = 4;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
     this.cursor = new Point(0, 0);
     this.prevCursor = new Point(0, 0);
@@ -110,8 +110,6 @@ class Charaster {
     if (canvas != this.rasterCanvas) {
       return;
     }
-
-    // Background is drawn sweperatlyu from
     for (var col = 0; col < this.raster.length; col++) {
       for (var row = 0; row < this.raster[0].length; row++) {
         var cell = this.raster[col][row];
@@ -442,6 +440,17 @@ class Charaster {
     this.fontSize = size;
     this.font = this.fontSize + "pt " + this.fontName;
   }
+
+  copyRaster(raster) {
+    var rasterCopy = [];
+    for (var i = 0; i < raster.length; i++) {
+      rasterCopy[i] = [];
+      for (var j = 0; j < raster[i].length; j++) {
+        rasterCopy[i].push(raster[i][j].copy());
+      }
+    }
+    return rasterCopy;
+  }
 }
 
 class Point {
@@ -551,28 +560,28 @@ class Tool {
 class History {
   constructor() {
     this.rasters = [];
-    this.index = 0;
+    this.index = -1;
   }
 
-  add(recordRaster) {
-    var raster = [];
-    for (var i = 0; i < charaster.raster.length; i++) {
-      raster[i] = recordRaster[i].slice();
-    }
-    this.rasters.splice(this.index, 0, raster);
-    for (var i = this.rasters.length - 1; i > this.index; i--) {
-      this.rasters.splice(this.rasters.indexOf(i));
-    }
+  add(raster) {
+    var raster = charaster.copyRaster(raster)
+    var length = this.rasters.length;
     this.index++;
+
+    // Remove past history if new history was added after an undo.
+    for (var i = this.index; i < length; i++) {
+      this.rasters.pop();
+    }
+    this.rasters.push(raster);
   }
 
   undo() {
-    this.index = Math.max(0, this.index - 1);
-    return this.rasters[this.index];
+    this.index--;
+    return charaster.copyRaster(this.rasters[this.index]);
   }
 
   redo() {
-    this.index = Math.min(this.rasters.length - 1, this.index + 1);
-    return this.rasters[this.index];
+    this.index++;
+    return charaster.copyRaster(this.rasters[this.index]);
   }
 }

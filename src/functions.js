@@ -247,19 +247,19 @@ function buttonStyle(id, active) {
   }
 }
 
-function saveText() {
+function saveText(raster) {
   var lines = "";
   for (var col = 0; col < charaster.gridHeight; col++) {
     var line = "";
     for (var row = 0; row < charaster.gridWidth; row++) {
-      var cell = charaster.raster[col][row];
+      var cell = raster[col][row];
       if (cell.character == null) {
         line += " ";
       } else {
-        line += charaster.raster[col][row].character;
+        line += raster[col][row].character;
       }
     }
-    lines += line + "\n";
+    lines += line + "\n"; // TODO Address different OS line endings
   }
   return lines;
 }
