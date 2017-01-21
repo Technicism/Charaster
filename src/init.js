@@ -36,5 +36,7 @@ var mouseDown = false;
 var draw = false;
 var drawList = [];
 var lineStart;
-var rasterHistory = new History();
-rasterHistory.add(charaster.raster)
+var rasterHistory = new History(
+  document.getElementById("undo").children[1],
+  document.getElementById("redo").children[1]
+);

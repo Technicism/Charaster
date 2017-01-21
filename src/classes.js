@@ -263,9 +263,17 @@ class Charaster {
     if (context == null) {
       context = this.rasterContext;
     }
+    var prevCell = this.getCell(cell.point);
+
+    // Save to raster.
+    if (context == this.rasterContext) {
+      this.raster[cell.point.y][cell.point.x] = cell;
+    }
+    if (prevCell.equalForDraw(cell)) {
+      return; // Don't have to draw if they are the same.
+    }
 
     // Clear previous cell.
-    var prevCell = this.getCell(cell.point);
     context.clearRect(
       cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
@@ -335,11 +343,6 @@ class Charaster {
         cell.character,
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - this.fontOffset
       );
-    }
-
-    // Save to raster.
-    if (context == this.rasterContext) {
-      this.raster[cell.point.y][cell.point.x] = cell;
     }
   }
 
@@ -444,7 +447,6 @@ class Charaster {
   copyRaster(raster) {
     var rasterCopy = [];
     for (var i = 0; i < raster.length; i++) {
-    for (var i = 0; i < raster.length; i++) {
       rasterCopy[i] = [];
       for (var j = 0; j < raster[i].length; j++) {
         rasterCopy[i].push(raster[i][j].copy());
@@ -466,6 +468,13 @@ class Point {
 
   copy() {
     return new Point(this.x, this.y);
+  }
+
+  equals(other) {
+    if (this.x == other.x && this.y == other.y) {
+      return true;
+    }
+    return false;
   }
 }
 
@@ -563,9 +572,12 @@ class Tool {
 }
 
 class History {
-  constructor() {
+  constructor(undoElement, redoElement) {
     this.rasters = [];
     this.index = -1;
+    this.add(charaster.raster);
+    this.undoElement = undoElement;
+    this.redoElement = redoElement;
   }
 
   add(raster) {
@@ -580,19 +592,29 @@ class History {
     this.rasters.push(raster);
     if (this.index > 0) {
       // TODO provide child as property instead.
-      document.getElementById("undo").children[1].classList.remove("inactive");
+      this.undoElement.classList.remove("inactive");
+      this.redoElement.classList.add("inactive");
     }
   }
 
   undo() {
     this.index = Math.max(this.index - 1, 0);
     if (this.index == 0) {
-      document.getElementById("undo").children[1].classList.add("inactive");
+      this.undoElement.classList.add("inactive");
+    }
+    if (this.index < this.rasters.length - 1) {
+      this.redoElement.classList.remove("inactive");
     }
     return charaster.copyRaster(this.rasters[this.index]);
   }
 
   redo() {
+    if (this.index == this.rasters.length - 2) {
+      this.redoElement.classList.add("inactive");
+    }
+    if (this.index > 0) {
+      this.undoElement.classList.remove("inactive");
+    }
     this.index = Math.min(this.index + 1, this.rasters.length - 1);
     return charaster.copyRaster(this.rasters[this.index]);
   }

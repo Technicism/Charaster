@@ -321,8 +321,21 @@ document.getElementById("gridToggle").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("gridSize").addEventListener("click", function(e) {
-  charaster.gridHeight++;
-  charaster.drawAll();
+  // charaster.gridHeight++;
+  // charaster.drawAll();
+  var list = document.getElementById("gridList");
+  if (list.style.visibility != "visible") {
+    var rect = e.target.getBoundingClientRect();
+    list.style.visibility = "visible";
+    list.style.left = rect.left + "px";
+    list.style.top = rect.top - 212 + "px";
+    list.style.visibility = "visible";
+  } else {
+    list.style.visibility = "hidden";
+    charaster.gridWidth = document.getElementById("gridWidth").value;
+    charaster.gridHeight = document.getElementById("gridHeight").value;
+    charaster.drawAll();
+  }
 }, false);
 
 charaster.themeSelect.addEventListener("click", function(e) {

@@ -218,8 +218,13 @@ function getStartStop(p, q) {
 
 function mouseToCursor(e) {
   var pos = getMousePos(charaster.rasterCanvas, e);
-  charaster.cursor = charaster.coordToGrid(snapPos(pos));
-  charaster.drawCursor();
+  var cursor = charaster.coordToGrid(snapPos(pos));
+
+  // Draw cursor if it has moved.
+  if (!charaster.cursor.equals(cursor)) {
+    charaster.cursor = cursor;
+    charaster.drawCursor();
+  }
 }
 
 function buttonStyle(id, active) {

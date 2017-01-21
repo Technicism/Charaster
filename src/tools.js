@@ -181,9 +181,6 @@ class Pencil extends Tool {
   mouseMove(e) {
     super.mouseMove(e)
     if (draw) {
-      charaster.selectBegin = lineStart;
-      charaster.selectClose = charaster.cursor;
-      charaster.drawSelect();
       interpolate(new Cell(charaster.cursor, charaster.character));
     }
   }
