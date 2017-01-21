@@ -321,8 +321,6 @@ document.getElementById("gridToggle").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("gridSize").addEventListener("click", function(e) {
-  // charaster.gridHeight++;
-  // charaster.drawAll();
   var list = document.getElementById("gridList");
   if (list.style.visibility != "visible") {
     var rect = e.target.getBoundingClientRect();
@@ -334,6 +332,9 @@ document.getElementById("gridSize").addEventListener("click", function(e) {
     list.style.visibility = "hidden";
     charaster.gridWidth = document.getElementById("gridWidth").value;
     charaster.gridHeight = document.getElementById("gridHeight").value;
+
+    // TODO place raster into history and account for different sizes.
+    charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
     charaster.drawAll();
   }
 }, false);

@@ -500,7 +500,11 @@ class Cell {
   equalForFill(other) {
     if (this.character == other.character
      && this.foreground == other.foreground
-     && this.background == other.background) {
+     && this.background == other.background
+     && this.bold == other.bold
+     && this.italic == other.italic
+     && this.backgroundId == other.backgroundId
+     && this.foregroundId == other.foregroundId) {
       return true;
     }
     return false;
@@ -591,7 +595,6 @@ class History {
     }
     this.rasters.push(raster);
     if (this.index > 0) {
-      // TODO provide child as property instead.
       this.undoElement.classList.remove("inactive");
       this.redoElement.classList.add("inactive");
     }
