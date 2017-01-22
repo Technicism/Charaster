@@ -260,6 +260,9 @@ class Charaster {
   }
 
   setCell(cell, context) {
+    if (cell == null || !insideGrid(cell.point.x, cell.point.y)) {
+      return;
+    }
     if (context == null) {
       context = this.rasterContext;
     }
@@ -269,7 +272,7 @@ class Charaster {
     if (context == this.rasterContext) {
       this.raster[cell.point.y][cell.point.x] = cell;
     }
-    if (prevCell.equalForDraw(cell)) {
+    if (prevCell != null && prevCell.equalForDraw(cell)) {
       return; // Don't have to draw if they are the same.
     }
 

@@ -231,7 +231,7 @@ document.getElementById("saveButton").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("saveBash").addEventListener("click", function(e) {
-  var lines = saveShell();
+  var lines = saveShell(charaster.raster);
   var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.sh");
 }, false);
@@ -332,10 +332,7 @@ document.getElementById("gridSize").addEventListener("click", function(e) {
     list.style.visibility = "hidden";
     charaster.gridWidth = document.getElementById("gridWidth").value;
     charaster.gridHeight = document.getElementById("gridHeight").value;
-
-    // TODO place raster into history and account for different sizes.
-    charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
-    charaster.drawAll();
+    applyRasterSize();
   }
 }, false);
 
@@ -382,10 +379,14 @@ document.getElementById("upload").addEventListener("change", function(e) {
 
 document.getElementById("undo").addEventListener("click", function(e) {
   charaster.raster = rasterHistory.undo();
+  charaster.gridHeight = charaster.raster.length;
+  charaster.gridWidth = charaster.raster[0].length;
   charaster.drawAll();
 }, false);
 
 document.getElementById("redo").addEventListener("click", function(e) {
   charaster.raster = rasterHistory.redo();
+  charaster.gridHeight = charaster.raster.length;
+  charaster.gridWidth = charaster.raster[0].length;
   charaster.drawAll();
 }, false);

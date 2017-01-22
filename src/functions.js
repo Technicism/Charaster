@@ -205,6 +205,13 @@ function zoom(size) {
   info.title = charaster.fontSize + "pt font size";
 }
 
+/**
+ * Find the correct order for starting and stopping drawing a line.
+ *
+ * @param   {Point} p
+ * @param   {Point} q
+ * @return  {Point} Ordered coordinates from p and q.
+ */
 function getStartStop(p, q) {
   var startX = Math.min(p.x, q.x);
   var startY = Math.min(p.y, q.y);
@@ -216,6 +223,11 @@ function getStartStop(p, q) {
   return ordered;
 }
 
+/**
+ * Move and draw the cursor under the mouse.
+ *
+ * @param   {MouseEvent} e
+ */
 function mouseToCursor(e) {
   var pos = getMousePos(charaster.rasterCanvas, e);
   var cursor = charaster.coordToGrid(snapPos(pos));
@@ -227,6 +239,12 @@ function mouseToCursor(e) {
   }
 }
 
+/**
+ * Apply visual styles to button depending if they are active or not.
+ *
+ * @param   {String}  id
+ * @param   {Boolean} active
+ */
 function buttonStyle(id, active) {
   var button = document.getElementById(id);
   if (active) {
@@ -252,6 +270,12 @@ function buttonStyle(id, active) {
   }
 }
 
+/**
+ * Write raster contents to a string of plain text.
+ *
+ * @param   {Cell[][]} raster
+ * @return  {String}
+ */
 function saveText(raster) {
   var lines = "";
   for (var col = 0; col < charaster.gridHeight; col++) {
@@ -270,16 +294,17 @@ function saveText(raster) {
 }
 
 /**
- * Save the raster to Bash shell, which is able to support many cell proprieties.
+ * Write raster contents to a string of bash code, which is able to support many cell proprieties.
  *
  * @see     {@link http://misc.flogisoft.com/bash/tip_colors_and_formatting} and {@link http://askubuntu.com/a/528938} for the escape sequences.
- * @return  {String} Bash code.
+ * @param   {Cell[][]} raster
+ * @return  {String}
  */
-function saveShell() {
+function saveShell(raster) {
   var string = "";
   for (var col = 0; col < charaster.gridHeight; col++) {
     for (var row = 0; row < charaster.gridWidth; row++) {
-      var cell = charaster.raster[col][row];
+      var cell = raster[col][row];
       if (cell.character == null || cell.character == " ") {
         string += " ";
       } else {
@@ -373,6 +398,9 @@ function pasteCell(cells) {
   }
 }
 
+/**
+ * Stops the drawing process so it can be started fresh again.
+ */
 function endDraw() {
   draw = false;
   drawList = [];
@@ -382,6 +410,7 @@ function endDraw() {
  * Finds the red, green and blue components as integers for a HTML hex colour code.
  *
  * @see     {@link http://stackoverflow.com/a/11508164}
+ * @param   {String} hex - With HTML #rrggbb notation.
  * @return  {Object} r, g, b.
  */
 function hexToRgb(hex) {
@@ -419,4 +448,16 @@ function insideGrid(x, y) {
     return true;
   }
   return false;
+}
+
+function applyRasterSize() {
+  var prevRaster = charaster.copyRaster(charaster.raster);
+  charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
+  for (var col = 0; col < prevRaster.length; col++) {
+    for (var row = 0; row < prevRaster[col].length; row++) {
+      charaster.setCell(prevRaster[col][row]);
+    }
+  }
+  rasterHistory.add(charaster.raster);
+  charaster.drawAll();
 }
