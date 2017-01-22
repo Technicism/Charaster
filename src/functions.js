@@ -455,7 +455,9 @@ function applyRasterSize() {
   charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
   for (var col = 0; col < prevRaster.length; col++) {
     for (var row = 0; row < prevRaster[col].length; row++) {
-      charaster.setCell(prevRaster[col][row]);
+      if (prevRaster[col][row].character != null) {
+        charaster.setCell(prevRaster[col][row]);
+      }
     }
   }
   rasterHistory.add(charaster.raster);

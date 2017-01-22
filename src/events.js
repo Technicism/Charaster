@@ -177,7 +177,7 @@ charaster.cursorCanvas.addEventListener("keydown", function(e) {
 }, false);
 
 window.addEventListener("keypress", function(e) {
-  if (e.target.id == "preview") {
+  if (e.target.tagName == "INPUT") {
     return; // Do not interfere with manual character entering.
   }
   if([13].indexOf(e.keyCode) > -1) {
@@ -223,7 +223,7 @@ document.getElementById("saveButton").addEventListener("click", function(e) {
     var rect = e.target.getBoundingClientRect();
     list.style.visibility = "visible";
     list.style.left = rect.left + "px";
-    list.style.top = rect.top + 32 + "px";
+    list.style.top = rect.top + 38 + "px";
     list.style.visibility = "visible";
   } else {
     list.style.visibility = "hidden";
@@ -322,18 +322,26 @@ document.getElementById("gridToggle").addEventListener("click", function(e) {
 
 document.getElementById("gridSize").addEventListener("click", function(e) {
   var list = document.getElementById("gridList");
+  var gridWidth = document.getElementById("gridWidth");
+  var gridHeight = document.getElementById("gridHeight");
   if (list.style.visibility != "visible") {
     var rect = e.target.getBoundingClientRect();
+    gridWidth.value = charaster.gridWidth;
+    gridHeight.value = charaster.gridHeight;
     list.style.visibility = "visible";
     list.style.left = rect.left + "px";
     list.style.top = rect.top - 212 + "px";
     list.style.visibility = "visible";
   } else {
     list.style.visibility = "hidden";
-    charaster.gridWidth = document.getElementById("gridWidth").value;
-    charaster.gridHeight = document.getElementById("gridHeight").value;
-    applyRasterSize();
   }
+}, false);
+
+document.getElementById("resizeGrid").addEventListener("click", function(e) {
+  charaster.gridWidth = gridWidth.value;
+  charaster.gridHeight = gridHeight.value;
+  applyRasterSize();
+  document.getElementById("themeList").style.visibility = "hidden";
 }, false);
 
 charaster.themeSelect.addEventListener("click", function(e) {

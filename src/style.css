@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   font-family: monospace;
+  font-size: 10pt;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
@@ -286,7 +287,7 @@ body {
   bottom: 100%;
   content: " ";
   height: 0;
-  left: 5px;
+  left: 6px;
   position: absolute;
   width: 0;
 }
@@ -336,3 +337,26 @@ body {
 .inactive {
   fill: #999 !important;
 }
+
+#gridList label {
+  display: inline-block;
+  min-width: 64px;
+  text-align: right;
+}
+
+#resizeGrid, #autoCrop {
+  text-align: center;
+  border-radius: 2px;
+  border: solid 1px #ddd;
+}
+
+input {
+  border: solid 1px #ddd;
+  border-radius: 2px;
+}
+
+#gridList input {
+  text-align: right;
+  padding: 2px;
+}
+
