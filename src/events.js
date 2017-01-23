@@ -344,6 +344,11 @@ document.getElementById("resizeGrid").addEventListener("click", function(e) {
   document.getElementById("themeList").style.visibility = "hidden";
 }, false);
 
+document.getElementById("autoCrop").addEventListener("click", function(e) {
+  autoCrop();
+  document.getElementById("themeList").style.visibility = "hidden";
+}, false);
+
 charaster.themeSelect.addEventListener("click", function(e) {
   var list = document.getElementById("themeList");
   if (list.style.visibility != "visible") {

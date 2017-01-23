@@ -450,6 +450,9 @@ function insideGrid(x, y) {
   return false;
 }
 
+/**
+ * Sets the new raster size by cropping cells, also adds to history the previous raster.
+ */
 function applyRasterSize() {
   var prevRaster = charaster.copyRaster(charaster.raster);
   charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
@@ -459,6 +462,83 @@ function applyRasterSize() {
         charaster.setCell(prevRaster[col][row]);
       }
     }
+  }
+  rasterHistory.add(charaster.raster);
+  charaster.drawAll();
+}
+
+function emptyCell(cell) {
+  if ((cell.character == " " || cell.character == null)
+   // && cell.foregroundId == "foreground"
+   // && cell.backgroundId == "background"
+   && !cell.bold
+   && !cell.italic) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Find the smallest size the raster is cropped to, then applies it.
+ */
+function autoCrop() {
+
+  // Find origin and destination to form a rectangle.
+  var top = charaster.gridHeight;
+  for (var col = 0; col < charaster.gridWidth; col++) {
+    for (var row = 0; row < charaster.gridHeight; row++) {
+      var cell = charaster.getCell(new Point(col, row));
+      if (!emptyCell(cell) && row < top) {
+        top = row;
+      }
+    }
+  }
+  var right = 0;
+  for (var col = 0; col < charaster.gridWidth; col++) {
+    for (var row = 0; row < charaster.gridHeight; row++) {
+      var cell = charaster.getCell(new Point(col, row));
+      if (!emptyCell(cell) && col > right) {
+        right = col;
+      }
+    }
+  }
+  right++;
+  var bottom = 0;
+  for (var col = 0; col < charaster.gridWidth; col++) {
+    for (var row = 0; row < charaster.gridHeight; row++) {
+      var cell = charaster.getCell(new Point(col, row));
+      if (!emptyCell(cell) && row > bottom) {
+        bottom = row;
+      }
+    }
+  }
+  bottom++;
+  var left = charaster.gridWidth;
+  for (var col = 0; col < charaster.gridWidth; col++) {
+    for (var row = 0; row < charaster.gridHeight; row++) {
+      var cell = charaster.getCell(new Point(col, row));
+      if (!emptyCell(cell) && col < left) {
+        left = col;
+      }
+    }
+  }
+
+  // Copy the cells to move.
+  var cells = [];
+  for (var col = left; col < right; col++) {
+    for (var row = top; row < bottom; row++) {
+      cells.push(charaster.getCell(new Point(col, row)).copy());
+    }
+  }
+
+  // New smaller raster.
+  charaster.gridWidth = right - left;
+  charaster.gridHeight = bottom - top;
+  charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
+  for (var i = 0; i < cells.length; i++) {
+    cells[i].point.x -= left;
+    cells[i].point.y -= top;
+    charaster.setCell(cells[i]);
   }
   rasterHistory.add(charaster.raster);
   charaster.drawAll();
