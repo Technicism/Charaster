@@ -25,6 +25,7 @@ function buttonMode(id, mode, activate) {
     }
 
     // Apply new mode.
+    charaster.tool.finish();
     charaster.mode = mode;
 
     // TODO replace this.
@@ -249,7 +250,7 @@ document.getElementById("saveImage").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("openButton").addEventListener("click", function(e) {
-  document.getElementById('upload').click();
+  document.getElementById("upload").click();
 }, false);
 
 window.addEventListener("keyup", function(e) {
@@ -267,15 +268,13 @@ window.addEventListener("keyup", function(e) {
       zoom(charaster.defaultFontSize);
     }
 
-    if (e.key == "`") {
-      for (var i = 0; i < rasterHistory.rasters.length; i++) {
-        console.log(i);
-        console.log(saveText(rasterHistory.rasters[i]));
-      }
+    // History: Ctrl + Z = undo, Ctrl + Y = redo
+    if (e.code == "KeyZ") {
+      undo();
+    } else if (e.code == "KeyY") {
+      redo();
     }
   }
-
-
 }, false);
 
 window.addEventListener("copy", function(e) {
@@ -283,6 +282,9 @@ window.addEventListener("copy", function(e) {
 }, false);
 
 window.addEventListener("paste", function(e) {
+  if (e.target.tagName == "INPUT") {
+    return; // Do not interfere with manual character entering.
+  }
   e.preventDefault();
   window.focus();
 
@@ -378,28 +380,14 @@ window.addEventListener("mousewheel", function(e) {
 }, false);
 
 document.getElementById("upload").addEventListener("change", function(e) {
-  var file = document.getElementById("upload").files[0];
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var text = reader.result;
-    charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
-    charaster.drawAll();
-    pasteText(text, new Point(0, 0));
-  }
-  reader.readAsText(file);
+  openText(document.getElementById("upload").files[0]);
 }, false);
 
 
 document.getElementById("undo").addEventListener("click", function(e) {
-  charaster.raster = rasterHistory.undo();
-  charaster.gridHeight = charaster.raster.length;
-  charaster.gridWidth = charaster.raster[0].length;
-  charaster.drawAll();
+  undo();
 }, false);
 
 document.getElementById("redo").addEventListener("click", function(e) {
-  charaster.raster = rasterHistory.redo();
-  charaster.gridHeight = charaster.raster.length;
-  charaster.gridWidth = charaster.raster[0].length;
-  charaster.drawAll();
+  redo();
 }, false);

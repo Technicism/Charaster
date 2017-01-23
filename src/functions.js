@@ -293,6 +293,29 @@ function saveText(raster) {
   return lines;
 }
 
+function openText(path) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = reader.result;
+
+    // Resize to fit.
+    var textArray = text.split("\n");
+    charaster.gridHeight = textArray.length;
+    charaster.gridWidth = 1;
+    for (var row = 0; row < textArray.length; row++) {
+      if (textArray[row].length > charaster.gridWidth) {
+        charaster.gridWidth = textArray[row].length;
+      }
+    }
+    charaster.gridHeight++;
+    charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
+    charaster.drawAll();
+    pasteText(text, new Point(0, 0));
+    rasterHistory.clearAll();
+  }
+  reader.readAsText(path);
+}
+
 /**
  * Write raster contents to a string of bash code, which is able to support many cell proprieties.
  *
@@ -541,5 +564,19 @@ function autoCrop() {
     charaster.setCell(cells[i]);
   }
   rasterHistory.add(charaster.raster);
+  charaster.drawAll();
+}
+
+function undo() {
+  charaster.raster = rasterHistory.undo();
+  charaster.gridHeight = charaster.raster.length;
+  charaster.gridWidth = charaster.raster[0].length;
+  charaster.drawAll();
+}
+
+function redo() {
+  charaster.raster = rasterHistory.redo();
+  charaster.gridHeight = charaster.raster.length;
+  charaster.gridWidth = charaster.raster[0].length;
   charaster.drawAll();
 }

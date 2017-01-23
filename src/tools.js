@@ -117,6 +117,10 @@ class Select extends Tool {
     clipboard.focus();
     clipboard.select();
   }
+
+  finish() {
+    charaster.selectContext.clearRect(0, 0, charaster.selectCanvas.width, charaster.selectCanvas.height);
+  }
 }
 
 class Text extends Tool {

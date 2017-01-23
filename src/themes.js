@@ -5,7 +5,7 @@ charaster.themes["Stereokai"] = new Theme(
   "Stereokai",
   "#f8f2f2",
   "#262626",
-  "#2b2b2b",
+  "#333333",
   "#ffffff",
   [
     "#262626",
@@ -23,13 +23,13 @@ charaster.themes["Stereokai"] = new Theme(
     "#66d9ef",
     "#f63ba3",
     "#2ad2f7",
-    "#f8f8f0",
+    "#f8f8f0"
   ]
 );
 
 // Solarized theme sourced from https://github.com/ghuntley/terminator-solarized
-charaster.themes["Solarized"] = new Theme(
-  "Solarized",
+charaster.themes["Solarized Dark"] = new Theme(
+  "Solarized Dark",
   "#eee8d5",
   "#002b36",
   "#073642",
@@ -87,7 +87,6 @@ charaster.themes["Ubuntu"] = new Theme(
   "#1e0617",
   "#bbbbbb",
   [
-
     "#2e3436",
     "#cc0000",
     "#4e9a06",
@@ -134,7 +133,7 @@ charaster.themes["Tango"] = new Theme(
   ]
 );
 
-// Tango theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
+// Obsidian theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
 charaster.themes["Obsidian"] = new Theme(
   "Obsidian",
   "#ffffff",

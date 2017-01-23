@@ -576,6 +576,10 @@ class Tool {
   copy(e) {
 
   }
+
+  finish() {
+
+  }
 }
 
 class History {
@@ -623,5 +627,11 @@ class History {
     }
     this.index = Math.min(this.index + 1, this.rasters.length - 1);
     return charaster.copyRaster(this.rasters[this.index]);
+  }
+
+  clearAll() {
+    this.rasters = [];
+    this.index = -1;
+    this.add(charaster.raster);
   }
 }
