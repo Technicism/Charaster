@@ -184,6 +184,9 @@ window.addEventListener("keypress", function(e) {
   if([13].indexOf(e.keyCode) > -1) {
     return; // Stop enter/return.
   }
+  if (e.ctrlKey) {
+    return; // Stop shortcuts.
+  }
   charaster.tool.keyPress(e);
 }, false);
 

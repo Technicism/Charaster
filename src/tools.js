@@ -119,7 +119,7 @@ class Select extends Tool {
   }
 
   finish() {
-    charaster.selectContext.clearRect(0, 0, charaster.selectCanvas.width, charaster.selectCanvas.height);
+    charaster.selectContext.clearRect(-1, -1, charaster.selectCanvas.width, charaster.selectCanvas.height);
   }
 }
 
@@ -152,6 +152,9 @@ class Text extends Tool {
       charaster.selectBegin.y++;
       charaster.moveCursor(charaster.selectBegin.x, charaster.selectBegin.y);
     }
+
+    autoScroll();
+
   }
 
   keyPress(e) {
@@ -160,6 +163,7 @@ class Text extends Tool {
     charaster.setCell(new Cell(cursor));
     charaster.moveCursorRelative(1, 0);
     rasterHistory.add(charaster.raster);
+    autoScroll();
   }
 
   mouseMove(e) {
@@ -240,6 +244,7 @@ class Flood extends Tool {
     var cell = charaster.getCell(charaster.cursor);
     var targetCell = cell.copy();
     rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foreground, charaster.background));
+    charaster.drawAll();
   }
 
   mouseDown(e) {

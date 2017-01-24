@@ -580,3 +580,25 @@ function redo() {
   charaster.gridWidth = charaster.raster[0].length;
   charaster.drawAll();
 }
+
+function autoScroll() {
+  var main =  document.getElementById("main");
+
+  // Horizontal.
+  var pixelX = charaster.cursor.x * charaster.fontWidth;
+  while (pixelX > (main.scrollLeft + window.innerWidth - charaster.fontWidth * 4)) {
+    main.scrollLeft += charaster.fontWidth;
+  }
+  while (pixelX < main.scrollLeft ) {
+    main.scrollLeft -= charaster.fontWidth;
+  }
+
+  // Vertical.
+  var pixelY = charaster.cursor.y * charaster.fontHeight;
+  while (pixelY > (main.scrollTop + window.innerHeight - charaster.fontHeight * 6)) {
+    main.scrollTop += charaster.fontHeight;
+  }
+  while (pixelY < main.scrollTop ) {
+    main.scrollTop -= charaster.fontHeight;
+  }
+}

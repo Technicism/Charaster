@@ -506,8 +506,9 @@ class Cell {
      && this.background == other.background
      && this.bold == other.bold
      && this.italic == other.italic
-     && this.backgroundId == other.backgroundId
-     && this.foregroundId == other.foregroundId) {
+     // && this.backgroundId == other.backgroundId
+     // && this.foregroundId == other.foregroundId
+    ) {
       return true;
     }
     return false;
