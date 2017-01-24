@@ -2,15 +2,14 @@
 
 class Charaster {
   constructor() {
-    this.mode = "PENCIL";
     this.tools = {
-      pencil: new Pencil(),
-      select: new Select(),
-      text: new Text(),
-      eraser: new Eraser(),
-      flood: new Flood(),
-      line: new Line(),
-      rectangle: new Rectangle()
+      pencil: new Pencil("Pencil"),
+      select: new Select("Select"),
+      text: new Text("Text"),
+      eraser: new Eraser("Eraser"),
+      flood: new Flood("Flood"),
+      line: new Line("Line"),
+      rectangle: new Rectangle("Rectangle")
     };
     this.tool = this.tools.pencil;
     this.themes = [];
@@ -70,9 +69,6 @@ class Charaster {
     this.noColor;
     this.themeSelect;
     this.themeList;
-
-    // Dynamic CSS workaround for before and after styles.
-    this.beforeAfter = document.head.appendChild(document.createElement("style"));
   }
 
   drawGrid() {
@@ -172,7 +168,7 @@ class Charaster {
     var context = this.selectContext;
     this.fitToContainer(canvas, context);
     context.translate(0.5, 0.5);
-    if (this.mode != "SELECT") {
+    if (this.tool.name != this.tools.select.name) {
       return;
     }
 
@@ -532,6 +528,10 @@ class Theme {
 }
 
 class Tool {
+  constructor(name) {
+    this.name = name;
+  }
+
   apply() {
 
   }

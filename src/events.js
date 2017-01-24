@@ -1,7 +1,7 @@
 "use strict";
 
-// When a button is clicked change the mode and visual style of it.
-function buttonMode(id, mode, activate) {
+// When a button is clicked change the tool and visual style of it.
+function buttonMode(id, tool, activate) {
   var button = document.getElementById(id);
   button.addEventListener("click", function(e) {
 
@@ -14,36 +14,19 @@ function buttonMode(id, mode, activate) {
     // Apply style to current button to indicate it is selected.
     buttonStyle(id, true);
 
-    // Text mode has independent cursor.
-    if (charaster.mode == "TEXT" && mode != "TEXT") {
+    // Text tool has independent cursor.
+    if (charaster.tool.name == charaster.tools.text.name && tool.name != charaster.tools.text.name) {
       charaster.prevCursor = charaster.cursor;
       charaster.drawCursor();
     }
-    if (charaster.mode != "TEXT" && mode == "TEXT") {
+    if (charaster.tool.name != charaster.tools.text.name && tool.name == charaster.tools.text.name) {
       charaster.cursor = charaster.prevCursor;
       charaster.drawCursor();
     }
 
-    // Apply new mode.
+    // Apply new tool.
     charaster.tool.finish();
-    charaster.mode = mode;
-
-    // TODO replace this.
-    if (mode == "SELECT") {
-      charaster.tool = charaster.tools.select;
-    } else if (mode == "TEXT") {
-      charaster.tool = charaster.tools.text;
-    } else if (mode == "PENCIL") {
-      charaster.tool = charaster.tools.pencil;
-    } else if (mode == "LINE") {
-      charaster.tool = charaster.tools.line;
-    } else if (mode == "RECTANGLE") {
-      charaster.tool = charaster.tools.rectangle;
-    } else if (mode == "ERASER") {
-      charaster.tool = charaster.tools.eraser;
-    } else if (mode == "FLOOD") {
-      charaster.tool = charaster.tools.flood;
-    }
+    charaster.tool = tool;
     charaster.tool.apply();
   }, false);
 
@@ -139,13 +122,13 @@ window.addEventListener("load", function(e) {
   charaster.applyTheme();
 
   // Setup mode buttons (one mode at a time).
-  buttonMode("textMode", "TEXT", false);
-  buttonMode("eraserMode", "ERASER", false);
-  buttonMode("pencilMode", "PENCIL", true);
-  buttonMode("lineMode", "LINE", false);
-  buttonMode("rectangleMode", "RECTANGLE", false);
-  buttonMode("floodMode", "FLOOD", false);
-  buttonMode("selectMode", "SELECT", false);
+  buttonMode("textMode", charaster.tools.text, false);
+  buttonMode("eraserMode", charaster.tools.eraser, false);
+  buttonMode("pencilMode", charaster.tools.pencil, true);
+  buttonMode("lineMode", charaster.tools.line, false);
+  buttonMode("rectangleMode", charaster.tools.rectangle, false);
+  buttonMode("floodMode", charaster.tools.flood, false);
+  buttonMode("selectMode", charaster.tools.select, false);
 
   // Setup property buttons (multiple properties allowed at a time).
   buttonCell("boldCell", charaster.bold);
