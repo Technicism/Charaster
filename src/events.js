@@ -170,7 +170,10 @@ charaster.noColor.addEventListener("contextmenu", function(e) {
   charaster.preview.style.backgroundColor = charaster.theme.background;
 }, false);
 
-charaster.cursorCanvas.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function(e) {
+  if (e.target.tagName == "INPUT") {
+    return; // Do not interfere with manual character entering.
+  }
   if (e.keyCode == 32) {
     e.preventDefault(); // Stop space scrolling.
   }

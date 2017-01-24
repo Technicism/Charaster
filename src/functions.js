@@ -508,43 +508,31 @@ function autoCrop() {
 
   // Find origin and destination to form a rectangle.
   var top = charaster.gridHeight;
-  for (var col = 0; col < charaster.gridWidth; col++) {
-    for (var row = 0; row < charaster.gridHeight; row++) {
-      var cell = charaster.getCell(new Point(col, row));
-      if (!emptyCell(cell) && row < top) {
-        top = row;
-      }
-    }
-  }
   var right = 0;
-  for (var col = 0; col < charaster.gridWidth; col++) {
-    for (var row = 0; row < charaster.gridHeight; row++) {
-      var cell = charaster.getCell(new Point(col, row));
-      if (!emptyCell(cell) && col > right) {
-        right = col;
-      }
-    }
-  }
-  right++;
   var bottom = 0;
-  for (var col = 0; col < charaster.gridWidth; col++) {
-    for (var row = 0; row < charaster.gridHeight; row++) {
-      var cell = charaster.getCell(new Point(col, row));
-      if (!emptyCell(cell) && row > bottom) {
-        bottom = row;
-      }
-    }
-  }
-  bottom++;
   var left = charaster.gridWidth;
   for (var col = 0; col < charaster.gridWidth; col++) {
     for (var row = 0; row < charaster.gridHeight; row++) {
       var cell = charaster.getCell(new Point(col, row));
-      if (!emptyCell(cell) && col < left) {
+      if (emptyCell(cell)) {
+        continue;
+      }
+      if (row < top) {
+        top = row;
+      }
+      if (col > right) {
+        right = col;
+      }
+      if (row > bottom) {
+        bottom = row;
+      }
+      if (col < left) {
         left = col;
       }
     }
   }
+  right++;
+  bottom++;
 
   // Copy the cells to move.
   var cells = [];
