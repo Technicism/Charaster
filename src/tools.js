@@ -255,7 +255,11 @@ class Flood extends Tool {
 class Picker extends Tool {
   click(e) {
     super.click(e);
+    var cell = charaster.getCell(charaster.cursor);
 
+    // TODO set as whole cell that takes into account preview too.
+    charaster.character = cell.character;
+    charaster.preview.value = cell.character;
   }
 
   mouseDown(e) {
