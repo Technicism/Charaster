@@ -251,3 +251,14 @@ class Flood extends Tool {
     // Do not need.
   }
 }
+
+class Picker extends Tool {
+  click(e) {
+    super.click(e);
+
+  }
+
+  mouseDown(e) {
+    // Do not need.
+  }
+}

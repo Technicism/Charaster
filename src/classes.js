@@ -7,6 +7,7 @@ class Charaster {
       select: new Select("Select"),
       text: new Text("Text"),
       eraser: new Eraser("Eraser"),
+      picker: new Picker("Picker"),
       flood: new Flood("Flood"),
       line: new Line("Line"),
       rectangle: new Rectangle("Rectangle")
@@ -35,6 +36,7 @@ class Charaster {
     this.gridWidth = 80;
     this.gridHeight = 24;
     this.raster = this.createRaster(this.gridWidth, this.gridHeight);
+    this.cell = new Cell(null, "*", "foreground", "background", false, false);
     this.cursor = new Point(0, 0);
     this.prevCursor = new Point(0, 0);
     this.selectBegin = new Point(0, 0);

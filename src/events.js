@@ -124,6 +124,7 @@ window.addEventListener("load", function(e) {
   // Setup mode buttons (one mode at a time).
   buttonMode("textMode", charaster.tools.text, false);
   buttonMode("eraserMode", charaster.tools.eraser, false);
+  buttonMode("pickerMode", charaster.tools.picker, false);
   buttonMode("pencilMode", charaster.tools.pencil, true);
   buttonMode("lineMode", charaster.tools.line, false);
   buttonMode("rectangleMode", charaster.tools.rectangle, false);
