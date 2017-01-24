@@ -14,7 +14,7 @@ class Charaster {
     };
     this.tool = this.tools.pencil;
     this.themes = [];
-    this.theme;
+    this.theme = null;
     this.colors = [];
     this.character = "*";
     this.characterEnabled = true;
@@ -35,8 +35,7 @@ class Charaster {
     this.fontOffset;
     this.gridWidth = 80;
     this.gridHeight = 24;
-    this.raster = this.createRaster(this.gridWidth, this.gridHeight);
-    this.cell = new Cell(null, "*", "foreground", "background", false, false);
+    this.cell = null;
     this.cursor = new Point(0, 0);
     this.prevCursor = new Point(0, 0);
     this.selectBegin = new Point(0, 0);
@@ -480,15 +479,27 @@ class Point {
 }
 
 class Cell {
-  constructor(point, character, foreground, background, bold, italic) {
+  constructor(point, character, foregroundId, backgroundId, bold, italic) {
     this.point = point;
     this.character = character;
-    this.foreground = foreground;
-    this.background = background;
     this.bold = bold;
     this.italic = italic;
-    this.foregroundId = null;
-    this.backgroundId = null;
+    this.foregroundId = foregroundId;
+    if (this.foregroundId == null) {
+      this.foregroundId = "foreground";
+    }
+    this.backgroundId = backgroundId;
+    if (this.backgroundId == null) {
+      this.backgroundId = "background";
+    }
+    this.foreground = charaster.theme.foreground;
+    if (this.foregroundId != "foreground") {
+      this.foreground = charaster.theme.colors[this.foregroundId];
+    }
+    this.background = charaster.theme.background;
+    if (this.backgroundId != "background") {
+      this.background = charaster.theme.colors[this.backgroundId];
+    }
   }
 
   equalForDraw(other) {
@@ -499,13 +510,14 @@ class Cell {
   }
 
   equalForFill(other) {
+    // console.log(other);
     if (this.character == other.character
-     && this.foreground == other.foreground
-     && this.background == other.background
+     // && this.foreground == other.foreground
+     // && this.background == other.background
      && this.bold == other.bold
      && this.italic == other.italic
-     // && this.backgroundId == other.backgroundId
-     // && this.foregroundId == other.foregroundId
+     && this.backgroundId == other.backgroundId
+     && this.foregroundId == other.foregroundId
     ) {
       return true;
     }
@@ -513,7 +525,7 @@ class Cell {
   }
 
   copy() {
-    return new Cell(this.point, this.character, this.foreground, this.background, this.bold, this.italic);
+    return new Cell(this.point, this.character, this.foregroundId, this.backgroundId, this.bold, this.italic);
   }
 }
 

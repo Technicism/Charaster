@@ -391,7 +391,7 @@ function pasteText(text, startPoint) {
         continue; // Out of range of raster.
       }
       var character = text[i];
-      var cell = new Cell(point, character, charaster.foreground, charaster.background);
+      var cell = new Cell(point, character, charaster.foregroundId, charaster.backgroundId);
       charaster.setCell(cell);
       x++;
     }

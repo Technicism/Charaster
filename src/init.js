@@ -1,6 +1,13 @@
 "use strict";
 
 var charaster = new Charaster();
+var themes = loadThemes();
+charaster.themes = themes.list;
+charaster.theme = themes.defaultTheme;
+
+// Can now create raster and work with cells.
+charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
+charaster.cell = new Cell(null, "*", "foreground", "background", false, false);
 
 // Canvases.
 charaster.gridCanvas = document.getElementById("grid");
@@ -32,6 +39,7 @@ charaster.noColor = document.getElementById("noColor");
 charaster.themeSelect = document.getElementById("themeSelect");
 charaster.themeList = document.getElementById("themeList");
 
+// Other globals.
 var mouseDown = false;
 var draw = false;
 var drawList = [];
