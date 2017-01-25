@@ -80,7 +80,7 @@ window.addEventListener("load", function(e) {
   // Setup raster.
   measureCharacter(charaster.font);
   charaster.preview.value = charaster.character;
-  for (var i = 0; i < charaster.theme.colors.length; i++) {
+  for (var i = 0; i < currentTheme.colors.length; i++) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
   charaster.resetRaster(charaster.gridWidth, charaster.gridHeight);
@@ -92,29 +92,29 @@ window.addEventListener("load", function(e) {
     // Left click to apply colour to foreground.
     charaster.colors[i].addEventListener("click", function(e) {
       var index = e.target.id.replace("color", "") - 1;
-      charaster.foreground = charaster.theme.colors[index];
+      charaster.foreground = currentTheme.colors[index];
       charaster.foregroundId = index + 1;
-      charaster.preview.style.color = charaster.theme.colors[index];
+      charaster.preview.style.color = currentTheme.colors[index];
     }, false);
 
     // Right click to apply colour to background.
     charaster.colors[i].addEventListener("contextmenu", function(e) {
       e.preventDefault();
       var index = e.target.id.replace("color", "") - 1;
-      charaster.background = charaster.theme.colors[index];
+      charaster.background = currentTheme.colors[index];
       charaster.backgroundId = index + 1;
-      charaster.preview.style.backgroundColor = charaster.theme.colors[index];
+      charaster.preview.style.backgroundColor = currentTheme.colors[index];
     }, false);
   }
 
   // Theme list.
   var list = document.getElementById("themeList");
-  for (var key in charaster.themes) {
+  for (var key in themes) {
     var theme = document.createElement("li");
-    theme.appendChild(document.createTextNode(charaster.themes[key].name));
+    theme.appendChild(document.createTextNode(themes[key].name));
     list.appendChild(theme);
     theme.addEventListener("click", function(e) {
-      charaster.theme = charaster.themes[e.target.innerHTML];
+      currentTheme = themes[e.target.innerHTML];
       charaster.applyTheme();
       document.getElementById("themeList").style.visibility = "hidden";
     }, false);
@@ -141,17 +141,17 @@ window.addEventListener("load", function(e) {
 
 // Left click to reset foreground.
 charaster.noColor.addEventListener("click", function(e) {
-  charaster.foreground = charaster.theme.foreground;
+  charaster.foreground = currentTheme.foreground;
   charaster.foregroundId = "foreground";
-  charaster.preview.style.color = charaster.theme.foreground;
+  charaster.preview.style.color = currentTheme.foreground;
 }, false);
 
 // Right click to reset background.
 charaster.noColor.addEventListener("contextmenu", function(e) {
   e.preventDefault();
-  charaster.background = charaster.theme.background;
+  charaster.background = currentTheme.background;
   charaster.backgroundId = "background";
-  charaster.preview.style.backgroundColor = charaster.theme.background;
+  charaster.preview.style.backgroundColor = currentTheme.background;
 }, false);
 
 window.addEventListener("keydown", function(e) {

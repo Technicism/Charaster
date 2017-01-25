@@ -13,8 +13,6 @@ class Charaster {
       rectangle: new Rectangle("Rectangle")
     };
     this.tool = this.tools.pencil;
-    this.themes = [];
-    this.theme;
     this.colors = [];
     this.character = "*";
     this.characterEnabled = true;
@@ -79,7 +77,7 @@ class Charaster {
     this.fitToContainer(canvas, context);
     context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.strokeStyle = this.theme.grid;
+    context.strokeStyle = currentTheme.grid;
     for (var row = 0; row < canvas.height; row += this.fontHeight) {
       context.beginPath();
       context.moveTo(0, row);
@@ -147,7 +145,7 @@ class Charaster {
     context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
-    context.strokeStyle = this.theme.cursor;
+    context.strokeStyle = currentTheme.cursor;
     var offsetX = -1;
     if (this.cursor.x == 0) {
       offsetX = 0;
@@ -189,7 +187,7 @@ class Charaster {
     }
 
     // Draw dashed rectangle.
-    this.selectContext.strokeStyle = this.theme.cursor;
+    this.selectContext.strokeStyle = currentTheme.cursor;
     this.selectContext.setLineDash([6, 4]);
     this.selectContext.beginPath();
     this.selectContext.rect(
@@ -264,14 +262,11 @@ class Charaster {
     if (context == null) {
       context = this.rasterContext;
     }
-    var prevCell = this.getCell(cell.point);
+    var prevCell = this.getCell(cell.point).copy();
 
     // Save to raster.
     if (context == this.rasterContext) {
       this.raster[cell.point.y][cell.point.x] = cell;
-    }
-    if (prevCell != null && prevCell.equalForDraw(cell)) {
-      return; // Don't have to draw if they are the same.
     }
 
     // Clear previous cell.
@@ -282,31 +277,35 @@ class Charaster {
 
     // Bold and italic font.
     context.font = this.font;
-    if ((cell.bold == null && this.bold) || cell.bold) {
+    if ((cell.bold == false && this.bold) || cell.bold) {
       context.font = "bold " + context.font
       cell.bold = true;
     }
-    if ((cell.italic == null && this.italic) || cell.italic) {
+    if ((cell.italic == false && this.italic) || cell.italic) {
       context.font = "italic " + context.font
       cell.italic = true;
     }
 
     // Background.
-    if (cell.background == null) {
+    if (cell.backgroundId == null) {
       if (this.backgroundEnabled) {
         cell.background = this.background;
         cell.backgroundId = this.backgroundId;
       } else {
-        if (prevCell.background != null) {
+        if (prevCell.backgroundId != null) {
           cell.background = prevCell.background;
           cell.backgroundId = prevCell.backgroundId;
         } else {
-          cell.background = this.theme.background;
+          cell.background = currentTheme.background;
           cell.backgroundId = "background";
         }
       }
+    } else if (cell.backgroundId == "background") {
+      cell.background = currentTheme.background;
+    } else {
+      cell.background = currentTheme.colors[cell.backgroundId - 1];
     }
-    if (cell.background != null) {
+    if (cell.backgroundId != "background") {
       context.fillStyle = cell.background;
       context.fillRect(
         cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
@@ -315,19 +314,23 @@ class Charaster {
     }
 
     // Foreground.
-    if (cell.foreground == null) {
+    if (cell.foregroundId == null) {
       if (this.foregroundEnabled) {
         cell.foreground = this.foreground;
         cell.foregroundId = this.foregroundId;
       } else {
-        if (prevCell.foreground != null) {
+        if (prevCell.foregroundId != null) {
           cell.foreground = prevCell.foreground;
           cell.foregroundId = prevCell.foregroundId;
         } else {
-          cell.foreground = this.theme.foreground;
+          cell.foreground = currentTheme.foreground;
           cell.foregroundId = "foreground";
         }
       }
+    } else if (cell.foregroundId == "foreground") {
+      cell.foreground = currentTheme.foreground;
+    } else {
+      cell.foreground = currentTheme.colors[cell.foregroundId - 1];
     }
 
     // Character.
@@ -367,35 +370,35 @@ class Charaster {
   applyTheme() {
 
     // Set the colors of the page.
-    this.body.style.background = this.theme.background;
-    this.cursorCanvas.style.borderColor = this.theme.grid;
+    this.body.style.background = currentTheme.background;
+    this.cursorCanvas.style.borderColor = currentTheme.grid;
 
     // Theme selection.
     for (var i = 0; i < this.themeList.children.length; i++) {
-      if (this.themeList.children[i].innerHTML == this.theme.name) {
-        this.themeList.children[i].style.background = this.theme.iconActive;
-        this.themeList.children[i].style.color = this.theme.iconActiveText;
+      if (this.themeList.children[i].innerHTML == currentTheme.name) {
+        this.themeList.children[i].style.background = currentTheme.iconActive;
+        this.themeList.children[i].style.color = currentTheme.iconActiveText;
       } else {
-        this.themeList.children[i].style.color = this.theme.icon;
+        this.themeList.children[i].style.color = currentTheme.icon;
         this.themeList.children[i].style.background = "none";
       }
     }
 
     // Set theme colors.
     for (var i = 0; i < this.colors.length; i++) {
-      this.colors[i].style.backgroundColor = this.theme.colors[i];
+      this.colors[i].style.backgroundColor = currentTheme.colors[i];
     }
 
     // Set character colors.
     if (this.foregroundId == "foreground") {
-      this.foreground = this.theme.foreground;
+      this.foreground = currentTheme.foreground;
     } else {
-      this.foreground = this.theme.colors[this.foregroundId - 1];
+      this.foreground = currentTheme.colors[this.foregroundId - 1];
     }
     if (this.backgroundId == "background") {
-      this.background = this.theme.background;
+      this.background = currentTheme.background;
     } else {
-      this.background = this.theme.colors[this.backgroundId - 1];
+      this.background = currentTheme.colors[this.backgroundId - 1];
     }
     this.preview.style.color = this.foreground;
     this.preview.style.backgroundColor = this.background;
@@ -405,15 +408,15 @@ class Charaster {
       for (var row = 0; row < this.raster[0].length; row++) {
         var foregroundId = this.raster[col][row].foregroundId;
         if (foregroundId == "foreground") {
-          this.raster[col][row].foreground = this.theme.foreground;
+          this.raster[col][row].foreground = currentTheme.foreground;
         } else {
-          this.raster[col][row].foreground = this.theme.colors[foregroundId - 1];
+          this.raster[col][row].foreground = currentTheme.colors[foregroundId - 1];
         }
         var backgroundId = this.raster[col][row].backgroundId;
         if (backgroundId == "background") {
-          this.raster[col][row].background = this.theme.background;
+          this.raster[col][row].background = currentTheme.background;
         } else {
-          this.raster[col][row].background = this.theme.colors[backgroundId - 1];
+          this.raster[col][row].background = currentTheme.colors[backgroundId - 1];
         }
       }
     }
@@ -480,15 +483,21 @@ class Point {
 }
 
 class Cell {
-  constructor(point, character, foreground, background, bold, italic) {
+  constructor(point, character, foregroundId, backgroundId, bold, italic) {
     this.point = point;
     this.character = character;
-    this.foreground = foreground;
-    this.background = background;
     this.bold = bold;
+    if (this.bold == null) {
+      this.bold = false;
+    }
     this.italic = italic;
-    this.foregroundId = null;
-    this.backgroundId = null;
+    if (this.italic == null) {
+      this.italic = false;
+    }
+    this.foregroundId = foregroundId;
+    this.backgroundId = backgroundId;
+    this.foreground = null;
+    this.background = null;
   }
 
   equalForDraw(other) {
@@ -500,12 +509,12 @@ class Cell {
 
   equalForFill(other) {
     if (this.character == other.character
-     && this.foreground == other.foreground
-     && this.background == other.background
+     // && this.foreground == other.foreground
+     // && this.background == other.background
      && this.bold == other.bold
      && this.italic == other.italic
-     // && this.backgroundId == other.backgroundId
-     // && this.foregroundId == other.foregroundId
+     && this.backgroundId == other.backgroundId
+     && this.foregroundId == other.foregroundId
     ) {
       return true;
     }
@@ -513,7 +522,7 @@ class Cell {
   }
 
   copy() {
-    return new Cell(this.point, this.character, this.foreground, this.background, this.bold, this.italic);
+    return new Cell(this.point, this.character, this.foregroundId, this.backgroundId, this.bold, this.italic);
   }
 }
 

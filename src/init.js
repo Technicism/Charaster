@@ -1,5 +1,6 @@
 "use strict";
 
+var currentTheme = themes["Stereokai"];
 var charaster = new Charaster();
 
 // Canvases.

@@ -1,9 +1,9 @@
 "use strict";
 
-// TODO themes as global object.
+var themes = [];
 
 // Stereokai theme sourced from https://github.com/carlcalderon/sublime-color-schemes/blob/master/Stereokai/Stereokai.tmTheme
-charaster.themes["Stereokai"] = new Theme(
+themes["Stereokai"] = new Theme(
   "Stereokai",
   "#f8f2f2",
   "#262626",
@@ -30,7 +30,7 @@ charaster.themes["Stereokai"] = new Theme(
 );
 
 // Solarized theme sourced from https://github.com/ghuntley/terminator-solarized
-charaster.themes["Solarized Dark"] = new Theme(
+themes["Solarized Dark"] = new Theme(
   "Solarized Dark",
   "#eee8d5",
   "#002b36",
@@ -55,7 +55,7 @@ charaster.themes["Solarized Dark"] = new Theme(
     "#fdf6e3"
   ]
 );
-charaster.themes["Solarized Light"] = new Theme(
+themes["Solarized Light"] = new Theme(
   "Solarized Light",
   "#536870",
   "#fcf4dc",
@@ -82,7 +82,7 @@ charaster.themes["Solarized Light"] = new Theme(
 );
 
 // Ubuntu theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
-charaster.themes["Ubuntu"] = new Theme(
+themes["Ubuntu"] = new Theme(
   "Ubuntu",
   "#eeeeec",
   "#300a24",
@@ -109,7 +109,7 @@ charaster.themes["Ubuntu"] = new Theme(
 );
 
 // Tango theme sourced from https://blogs.n1zyy.com/andrew/2009/02/02/tango-color-scheme-for-xfce-terminal/
-charaster.themes["Tango"] = new Theme(
+themes["Tango"] = new Theme(
   "Tango",
   "#ffffff",
   "#323232",
@@ -136,7 +136,7 @@ charaster.themes["Tango"] = new Theme(
 );
 
 // Obsidian theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
-charaster.themes["Obsidian"] = new Theme(
+themes["Obsidian"] = new Theme(
   "Obsidian",
   "#ffffff",
   "#323232",
@@ -161,6 +161,3 @@ charaster.themes["Obsidian"] = new Theme(
     "#ffffff"
   ]
 );
-
-// Default theme.
-charaster.theme = charaster.themes["Stereokai"];

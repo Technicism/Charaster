@@ -102,8 +102,8 @@ function rasterFlood(cell, target, replacement) {
       continue;
     } else if (floodCell.character == target.character) {
       floodCell.character = replacement.character;
-      floodCell.foreground = replacement.foreground;
-      floodCell.background = replacement.background;
+      floodCell.foregroundId = replacement.foregroundId;
+      floodCell.backgroundId = replacement.backgroundId;
       charaster.setCell(floodCell);
       queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y - 1))); // Top.
       queue.push(charaster.getCell(new Point(floodCell.point.x + 1, floodCell.point.y))); // Right.
