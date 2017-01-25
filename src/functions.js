@@ -100,7 +100,7 @@ function rasterFlood(cell, target, replacement) {
     var floodCell = queue.pop();
     if (floodCell == null || target.equalForFill(replacement) || !target.equalForFill(floodCell)) {
       continue;
-    } else if (floodCell.character == target.character) {
+    } else {
       floodCell.character = replacement.character;
       floodCell.foregroundId = replacement.foregroundId;
       floodCell.backgroundId = replacement.backgroundId;

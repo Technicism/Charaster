@@ -173,8 +173,8 @@ class Charaster {
     }
 
     // Wrap around selected cell(s).
-    var selectBegin = Object.assign({}, this.selectBegin);
-    var selectClose = Object.assign({}, this.selectClose);
+    var selectBegin = this.selectBegin.copy();
+    var selectClose = this.selectClose.copy();
     if (this.selectClose.x <= this.selectBegin.x) {
       selectBegin.x++;
     } else if (this.selectClose.x > this.selectBegin.x) {
@@ -211,22 +211,18 @@ class Charaster {
   }
 
   moveCursorRelative(x, y) {
-    this.cursorContext.clearRect(
-      this.cursor.x * this.fontWidth, this.cursor.y * this.fontHeight,
-      this.fontWidth, -this.fontHeight
-    );
-    this.cursor.x += x;
-    this.cursor.y += y;
+    var cursor = this.cursor.copy();
+    cursor.x += x;
+    cursor.y += y;
+    this.cursor = cursor;
     this.drawCursor();
   }
 
   moveCursor(x, y) {
-    this.cursorContext.clearRect(
-      this.cursor.x * this.fontWidth, this.cursor.y * this.fontHeight,
-      this.fontWidth, -this.fontHeight
-    );
-    this.cursor.x = x;
-    this.cursor.y = y;
+    var cursor = this.cursor.copy();
+    cursor.x = x;
+    cursor.y = y;
+    this.cursor = cursor;
     this.drawCursor();
   }
 
@@ -360,7 +356,7 @@ class Charaster {
   clearCell(point) {
 
     // TODO take into account properties instead.
-    this.raster[point.y][point.x] = new Cell(point, null);
+    this.raster[point.y][point.x] = new Cell(point, " ", "foreground", "background", false, false);
     this.rasterContext.clearRect(
       point.x * this.fontWidth, (point.y + 1) * this.fontHeight,
       this.fontWidth, -this.fontHeight
@@ -501,7 +497,7 @@ class Cell {
   }
 
   equalForDraw(other) {
-    if (this.point == other.point && this.equalForFill(other)) {
+    if (this.point.equals(other.point) && this.equalForFill(other)) {
       return true;
     }
     return false;
@@ -509,8 +505,6 @@ class Cell {
 
   equalForFill(other) {
     if (this.character == other.character
-     // && this.foreground == other.foreground
-     // && this.background == other.background
      && this.bold == other.bold
      && this.italic == other.italic
      && this.backgroundId == other.backgroundId

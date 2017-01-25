@@ -127,7 +127,7 @@ class Text extends Tool {
   keyDown(e) {
     super.keyDown(e);
     if([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
+      e.preventDefault();                   // Stop arrow keys panning.
     }
     if (e.keyCode == 39 && charaster.cursor.x < charaster.gridWidth - 1) {
       charaster.moveCursorRelative(1, 0);   // Move right.
@@ -152,14 +152,12 @@ class Text extends Tool {
       charaster.selectBegin.y++;
       charaster.moveCursor(charaster.selectBegin.x, charaster.selectBegin.y);
     }
-
     autoScroll();
-
   }
 
   keyPress(e) {
     super.keyPress(e);
-    var cursor = Object.assign({}, charaster.cursor);
+    var cursor = charaster.cursor.copy();
     charaster.setCell(new Cell(cursor));
     charaster.moveCursorRelative(1, 0);
     rasterHistory.add(charaster.raster);
@@ -256,7 +254,7 @@ class Picker extends Tool {
   click(e) {
     super.click(e);
     var cell = charaster.getCell(charaster.cursor);
-
+    console.log(cell);
     // TODO set as whole cell that takes into account preview too.
     charaster.character = cell.character;
     charaster.preview.value = cell.character;
