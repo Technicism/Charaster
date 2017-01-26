@@ -289,7 +289,7 @@ function buttonStyle(id, active) {
  * @param   {Cell[][]} raster
  * @return  {String}
  */
-function saveText(raster) {
+function savePlain(raster) {
   var lines = "";
   for (var col = 0; col < charaster.gridHeight; col++) {
     var line = "";
@@ -306,7 +306,7 @@ function saveText(raster) {
   return lines;
 }
 
-function openText(path) {
+function openPlain(path) {
   var reader = new FileReader();
   reader.onload = function(e) {
     var text = reader.result;
@@ -323,6 +323,7 @@ function openText(path) {
     charaster.gridHeight++;
     charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
     charaster.drawAll();
+    charaster.resetProperties();
     pasteText(text, new Point(0, 0));
     rasterHistory.clearAll();
   }
@@ -523,8 +524,8 @@ function applyRasterSize() {
 
 function emptyCell(cell) {
   if ((cell.character == " " || cell.character == null)
-   // && cell.foregroundId == "foreground"
-   // && cell.backgroundId == "background"
+   && cell.foregroundId == "foreground"
+   && cell.backgroundId == "background"
    && !cell.bold
    && !cell.italic) {
     return true;
@@ -620,4 +621,19 @@ function autoScroll() {
   while (pixelY < main.scrollTop ) {
     main.scrollTop -= charaster.fontHeight;
   }
+}
+
+/**
+ * Makes sure cell points are at the correct location, useful when moving cells around.
+ *
+ * @param   {Cell[][]} raster
+ * @return  {Cell[][]}
+ */
+function applyCoordinates(raster) {
+  for (var col = 0; col < raster.length; col++) {
+    for (var row = 0; row < raster[0].length; row++) {
+      raster[col][row].point = new Point(row, col);
+    }
+  }
+  return raster;
 }

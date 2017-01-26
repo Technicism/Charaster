@@ -63,7 +63,7 @@ footer {
   line-height: 18pt;
   display: block;
   border-top: solid 1px #777;
-  height: 26px;
+  height: 27px;
   padding-left: 4px;
 }
 
@@ -195,7 +195,7 @@ body {
 #main {
   margin-top: 34px;
   overflow: scroll;
-  height: calc(100% - 60px);
+  height: calc(100% - 61px);
   width: 100%;
   position: relative;
 }
@@ -368,4 +368,11 @@ input {
 
 .barButton:hover {
   background-color: #ddd !important;
+}
+
+
+#details {
+  float: right;
+  text-align: right;
+  margin-right: 4px;
 }

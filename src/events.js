@@ -396,7 +396,7 @@ window.addEventListener("mousewheel", function(e) {
 
 document.getElementById("upload").addEventListener("change", function(e) {
   if (openMode == "plain") {
-    openText(document.getElementById("upload").files[0]);
+    openPlain(document.getElementById("upload").files[0]);
   } else if (openMode == "json") {
     openJson(document.getElementById("upload").files[0]);
   }

@@ -245,6 +245,21 @@ class Charaster {
     }
   }
 
+  resetProperties() {
+    this.character = "*";
+    this.preview.value = this.character;
+    this.foregroundId = "foreground";
+    this.backgroundId = "background";
+    this.foreground = currentTheme.foreground;
+    this.background = currentTheme.background;
+    this.preview.style.color = this.foreground;
+    this.preview.style.background = this.background;
+    this.bold = false
+    this.italic = false;
+    this.preview.style.fontWeight = "normal";
+    this.preview.style.fontStyle = "normal";
+  }
+
   fitToContainer(canvas, context) {
     canvas.width  = this.gridWidth * this.fontWidth + 1;
     canvas.height = this.gridHeight * this.fontHeight + 1;
@@ -602,6 +617,7 @@ class Tool {
   }
 }
 
+// TODO add history to more tools and copy, paste.
 class History {
   constructor(undoElement, redoElement) {
     this.rasters = [];
@@ -612,7 +628,7 @@ class History {
   }
 
   add(raster) {
-    var raster = charaster.copyRaster(raster)
+    var raster = charaster.copyRaster(raster);
     var length = this.rasters.length;
     this.index++;
 
@@ -635,7 +651,8 @@ class History {
     if (this.index < this.rasters.length - 1) {
       this.redoElement.classList.remove("inactive");
     }
-    return charaster.applyNewTheme(charaster.copyRaster(this.rasters[this.index]));
+    var raster = charaster.applyNewTheme(charaster.copyRaster(this.rasters[this.index]));
+    return applyCoordinates(raster);
   }
 
   redo() {
@@ -646,7 +663,8 @@ class History {
       this.undoElement.classList.remove("inactive");
     }
     this.index = Math.min(this.index + 1, this.rasters.length - 1);
-    return charaster.applyNewTheme(charaster.copyRaster(this.rasters[this.index]));
+    var raster = charaster.applyNewTheme(charaster.copyRaster(this.rasters[this.index]));
+    return applyCoordinates(raster);
   }
 
   clearAll() {

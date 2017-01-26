@@ -254,6 +254,7 @@ class Picker extends Tool {
   click(e) {
     super.click(e);
     var cell = charaster.getCell(charaster.cursor);
+    console.log(cell);
 
     // TODO set as whole cell that takes into account preview too instead of this:
     charaster.character = cell.character;
@@ -266,8 +267,6 @@ class Picker extends Tool {
     charaster.preview.style.background = cell.background;
     charaster.bold = cell.bold;
     charaster.italic = cell.italic;
-    charaster.preview.style.fontWeight = "bold";
-    charaster.preview.style.fontStyle = "italic";
     if (charaster.bold) {
       charaster.preview.style.fontWeight = "bold";
     } else {
