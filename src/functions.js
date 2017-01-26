@@ -101,9 +101,7 @@ function rasterFlood(cell, target, replacement) {
     if (floodCell == null || target.equalForFill(replacement) || !target.equalForFill(floodCell)) {
       continue;
     } else {
-      floodCell.character = replacement.character;
-      floodCell.foregroundId = replacement.foregroundId;
-      floodCell.backgroundId = replacement.backgroundId;
+      floodCell = floodProperties(floodCell, replacement);
       charaster.setCell(floodCell);
       queue.push(charaster.getCell(new Point(floodCell.point.x, floodCell.point.y - 1))); // Top.
       queue.push(charaster.getCell(new Point(floodCell.point.x + 1, floodCell.point.y))); // Right.
@@ -111,6 +109,21 @@ function rasterFlood(cell, target, replacement) {
       queue.push(charaster.getCell(new Point(floodCell.point.x - 1, floodCell.point.y))); // Left.
     }
   }
+}
+
+function floodProperties(cell, replacement) {
+  var flooded = cell.copy();
+  if (charaster.characterEnabled) {
+    flooded.character = replacement.character;
+  }
+  if (charaster.foregroundEnabled) {
+    flooded.foregroundId = replacement.foregroundId;
+  }
+  if (charaster.backgroundEnabled) {
+    flooded.backgroundId = replacement.backgroundId;
+  }
+  // TODO handle bold and italic.
+  return flooded;
 }
 
 /**

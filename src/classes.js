@@ -336,7 +336,7 @@ class Charaster {
         cell.character = prevCell.character;
       }
     }
-    if (cell.character != null && this.characterEnabled) {
+    if (cell.character != null) {
       context.fillStyle = cell.foreground;
       context.fillText(
         cell.character,
@@ -518,11 +518,11 @@ class Cell {
   }
 
   equalForFill(other) {
-    if (this.character == other.character
+    if ((this.character == other.character || (!charaster.characterEnabled && other.character != " "))
      && this.bold == other.bold
      && this.italic == other.italic
-     && this.backgroundId == other.backgroundId
-     && this.foregroundId == other.foregroundId
+     && (this.backgroundId == other.backgroundId || !charaster.backgroundEnabled)
+     && (this.foregroundId == other.foregroundId || !charaster.foregroundEnabled)
     ) {
       return true;
     }
