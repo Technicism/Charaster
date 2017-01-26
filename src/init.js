@@ -41,3 +41,4 @@ var rasterHistory = new History(
   document.getElementById("undo").children[1],
   document.getElementById("redo").children[1]
 );
+var openMode = "plain";

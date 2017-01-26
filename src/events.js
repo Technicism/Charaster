@@ -239,8 +239,33 @@ document.getElementById("saveImage").addEventListener("click", function(e) {
   });
 }, false);
 
+document.getElementById("saveJson").addEventListener("click", function(e) {
+  var string = JSON.stringify(charaster.raster);
+  var blob = new Blob([string], {type: "text/plain;charset=utf-8"});
+  saveAs(blob, "charaster.json");
+}, false);
+
+document.getElementById("openJson").addEventListener("click", function(e) {
+  openMode = "json";
+  document.getElementById("upload").click(e);
+}, false);
+
+document.getElementById("openPlain").addEventListener("click", function(e) {
+  openMode = "plain";
+  document.getElementById("upload").click(e);
+}, false);
+
 document.getElementById("openButton").addEventListener("click", function(e) {
-  document.getElementById("upload").click();
+  var list = document.getElementById("openList");
+  if (list.style.visibility != "visible") {
+    var rect = e.target.getBoundingClientRect();
+    list.style.visibility = "visible";
+    list.style.left = rect.left + "px";
+    list.style.top = rect.top + 38 + "px";
+    list.style.visibility = "visible";
+  } else {
+    list.style.visibility = "hidden";
+  }
 }, false);
 
 window.addEventListener("keyup", function(e) {
@@ -370,7 +395,11 @@ window.addEventListener("mousewheel", function(e) {
 }, false);
 
 document.getElementById("upload").addEventListener("change", function(e) {
-  openText(document.getElementById("upload").files[0]);
+  if (openMode == "plain") {
+    openText(document.getElementById("upload").files[0]);
+  } else if (openMode == "json") {
+    openJson(document.getElementById("upload").files[0]);
+  }
 }, false);
 
 

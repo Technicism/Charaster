@@ -455,8 +455,23 @@ class Charaster {
     return rasterCopy;
   }
 
-  setRaster(raster) {
-    // TODO needed because of themes needing to be applied to history.
+  applyNewTheme(raster) {
+    for (var i = 0; i < raster.length; i++) {
+      for (var j = 0; j < raster[i].length; j++) {
+        var cell = raster[i][j];
+        if (cell.foregroundId == "foreground") {
+          cell.foreground = currentTheme.foreground;
+        } else {
+          cell.foreground = currentTheme.colors[cell.foregroundId - 1];
+        }
+        if (cell.backgroundId == "background") {
+          cell.background = currentTheme.background;
+        } else {
+          cell.background = currentTheme.colors[cell.backgroundId - 1];
+        }
+      }
+    }
+    return raster;
   }
 }
 
@@ -621,7 +636,7 @@ class History {
     if (this.index < this.rasters.length - 1) {
       this.redoElement.classList.remove("inactive");
     }
-    return charaster.copyRaster(this.rasters[this.index]);
+    return charaster.applyNewTheme(charaster.copyRaster(this.rasters[this.index]));
   }
 
   redo() {
@@ -632,7 +647,7 @@ class History {
       this.undoElement.classList.remove("inactive");
     }
     this.index = Math.min(this.index + 1, this.rasters.length - 1);
-    return charaster.copyRaster(this.rasters[this.index]);
+    return charaster.applyNewTheme(charaster.copyRaster(this.rasters[this.index]));
   }
 
   clearAll() {

@@ -316,6 +316,24 @@ function openText(path) {
   reader.readAsText(path);
 }
 
+function openJson(path) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = reader.result;
+    charaster.raster = JSON.parse(text);
+    charaster.gridWidth = charaster.raster[0].length;
+    charaster.gridHeight = charaster.raster.length;
+    for (var col = 0; col < charaster.gridHeight; col++) {
+      for (var row = 0; row < charaster.gridWidth; row++) {
+        charaster.raster[col][row].__proto__ = Cell.prototype;
+      }
+    }
+    charaster.drawAll();
+    rasterHistory.clearAll();
+  }
+  reader.readAsText(path);
+}
+
 /**
  * Write raster contents to a string of bash code, which is able to support many cell proprieties.
  *
@@ -391,7 +409,7 @@ function pasteText(text, startPoint) {
         continue; // Out of range of raster.
       }
       var character = text[i];
-      var cell = new Cell(point, character, charaster.foreground, charaster.background);
+      var cell = new Cell(point, character, charaster.foregroundId, charaster.backgroundId);
       charaster.setCell(cell);
       x++;
     }
