@@ -316,14 +316,13 @@ class Charaster {
         cell.foregroundId = this.foregroundId;
       } else {
         if (prevCell.foregroundId != null) {
-          cell.foreground = prevCell.foreground;
           cell.foregroundId = prevCell.foregroundId;
         } else {
-          cell.foreground = currentTheme.foreground;
           cell.foregroundId = "foreground";
         }
       }
-    } else if (cell.foregroundId == "foreground") {
+    }
+    if (cell.foregroundId == "foreground") {
       cell.foreground = currentTheme.foreground;
     } else {
       cell.foreground = currentTheme.colors[cell.foregroundId - 1];
@@ -337,7 +336,7 @@ class Charaster {
         cell.character = prevCell.character;
       }
     }
-    if (cell.character != null) {
+    if (cell.character != null && this.characterEnabled) {
       context.fillStyle = cell.foreground;
       context.fillText(
         cell.character,

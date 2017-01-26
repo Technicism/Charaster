@@ -254,10 +254,30 @@ class Picker extends Tool {
   click(e) {
     super.click(e);
     var cell = charaster.getCell(charaster.cursor);
-    console.log(cell);
-    // TODO set as whole cell that takes into account preview too.
+
+    // TODO set as whole cell that takes into account preview too instead of this:
     charaster.character = cell.character;
     charaster.preview.value = cell.character;
+    charaster.foregroundId = cell.foregroundId;
+    charaster.backgroundId = cell.backgroundId;
+    charaster.foreground = cell.foreground;
+    charaster.background = cell.background;
+    charaster.preview.style.color = cell.foreground;
+    charaster.preview.style.background = cell.background;
+    charaster.bold = cell.bold;
+    charaster.italic = cell.italic;
+    charaster.preview.style.fontWeight = "bold";
+    charaster.preview.style.fontStyle = "italic";
+    if (charaster.bold) {
+      charaster.preview.style.fontWeight = "bold";
+    } else {
+      charaster.preview.style.fontWeight = "normal";
+    }
+    if (charaster.italic) {
+      charaster.preview.style.fontStyle = "italic";
+    } else {
+      charaster.preview.style.fontStyle = "normal";
+    }
   }
 
   mouseDown(e) {
