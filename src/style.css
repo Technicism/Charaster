@@ -370,9 +370,14 @@ input {
   background-color: #ddd !important;
 }
 
-
 #details {
   float: right;
   text-align: right;
   margin-right: 4px;
+  font-weight: bold;
+}
+
+#gridToggle {
+  min-width: 0 !important;
+  vertical-align: top;
 }

@@ -316,13 +316,11 @@ class Charaster {
     } else {
       cell.background = currentTheme.colors[cell.backgroundId - 1];
     }
-    if (cell.backgroundId != "background") {
-      context.fillStyle = cell.background;
-      context.fillRect(
-        cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
-        this.fontWidth, this.fontHeight
-      );
-    }
+    context.fillStyle = cell.background;
+    context.fillRect(
+      cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
+      this.fontWidth, this.fontHeight
+    );
 
     // Foreground.
     if (cell.foregroundId == null) {
@@ -370,11 +368,8 @@ class Charaster {
   clearCell(point) {
 
     // TODO take into account properties instead.
-    this.raster[point.y][point.x] = new Cell(point, " ", "foreground", "background", false, false);
-    this.rasterContext.clearRect(
-      point.x * this.fontWidth, (point.y + 1) * this.fontHeight,
-      this.fontWidth, -this.fontHeight
-    );
+    var cell = new Cell(point, " ", "foreground", "background", false, false);
+    this.setCell(cell);
   }
 
   applyTheme() {

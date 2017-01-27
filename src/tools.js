@@ -25,6 +25,7 @@ class Line extends Tool {
         charaster.setCell(new Cell(points[i]));
       }
       endDraw();
+      rasterHistory.add(charaster.raster);
     }
   }
 }
@@ -56,6 +57,7 @@ class Rectangle extends Tool {
         charaster.setCell(new Cell(points[i]));
       }
       endDraw();
+      rasterHistory.add(charaster.raster);
     }
   }
 }
@@ -140,6 +142,7 @@ class Text extends Tool {
     } else if (e.keyCode == 8) {
       charaster.moveCursorRelative(-1, 0);  // Backspace.
       charaster.clearCell(charaster.cursor);
+      rasterHistory.add(charaster.raster);
     } else if (e.keyCode == 32) {
       charaster.moveCursorRelative(1, 0);   // Spacebar.
     }
@@ -197,32 +200,27 @@ class Pencil extends Tool {
     charaster.setCell(new Cell(charaster.cursor));
   }
 
-  click(e) {
-    super.click(e);
-    charaster.setCell(new Cell(charaster.cursor));
-    rasterHistory.add(charaster.raster);
-  }
-
   mouseUp(e) {
-    super.mouseUp(e);
-    endDraw();
+    if (draw) {
+      super.mouseUp(e);
+      endDraw();
+      rasterHistory.add(charaster.raster);
+    }
   }
 }
 
 class Eraser extends Tool {
-  click(e) {
-    super.click(e);
-    charaster.clearCell(charaster.cursor);
-  }
-
   mouseDown(e) {
     super.mouseDown(e);
     charaster.clearCell(charaster.cursor);
   }
 
   mouseUp(e) {
-    super.mouseUp(e);
-    endDraw();
+    if (draw) {
+      super.mouseUp(e);
+      endDraw();
+      rasterHistory.add(charaster.raster);
+    }
   }
 
   mouseMove(e) {
