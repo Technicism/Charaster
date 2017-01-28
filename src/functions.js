@@ -111,6 +111,13 @@ function rasterFlood(cell, target, replacement) {
   }
 }
 
+/**
+ * Apply cell properties to a cell being flooded.
+ *
+ * @param   {Cell}   cell
+ * @param   {Cell}   replacement
+ * @return  {Cell}
+ */
 function floodProperties(cell, replacement) {
   var flooded = cell.copy();
   if (charaster.characterEnabled) {
@@ -303,7 +310,7 @@ function buttonStyle(id, active) {
 /**
  * Write raster contents to a string of plain text.
  *
- * @param   {Cell[][]} raster
+ * @param   {Cell[][]}  raster
  * @return  {String}
  */
 function savePlain(raster) {
@@ -323,6 +330,11 @@ function savePlain(raster) {
   return lines;
 }
 
+/**
+ * Open a file as plain text to the raster.
+ *
+ * @param   {String}  path - To file.
+ */
 function openPlain(path) {
   var reader = new FileReader();
   reader.onload = function(e) {
@@ -347,6 +359,11 @@ function openPlain(path) {
   reader.readAsText(path);
 }
 
+/**
+ * Open a file as JSON to the raster.
+ *
+ * @param   {String}  path - To file.
+ */
 function openJson(path) {
   var reader = new FileReader();
   reader.onload = function(e) {
@@ -424,6 +441,12 @@ function saveShell(raster) {
   return string;
 }
 
+/**
+ * Paste text to the raster.
+ *
+ * @param   {String}  text
+ * @param   {Point}   startPoint - Top left location.
+ */
 function pasteText(text, startPoint) {
   if (text.length == 0) {
     return;
@@ -451,6 +474,11 @@ function pasteText(text, startPoint) {
   rasterHistory.add(charaster.raster);
 }
 
+/**
+ * Paste cells to the raster.
+ *
+ * @param   {Cell[]}  cells
+ */
 function pasteCell(cells) {
   if (cells.length == 0)  {
     return;
@@ -499,6 +527,12 @@ function hexToRgb(hex) {
   return {r: r, g: g, b: b};
 }
 
+/**
+ * Interpolate by drawing lines between points.
+ *
+ * @param   {Cell}    cell - Interpolation cell.
+ * @return  {Cell[]}  Cells that form the interpolation.
+ */
 function interpolate(cell) {
   if (drawList.length >= 1 && !drawList[drawList.length - 1].equalForDraw(cell)) {
     drawList.push(cell);
@@ -520,7 +554,14 @@ function interpolate(cell) {
   }
 }
 
-function insideGrid(x, y) {
+/**
+ * Check if points are within the grid.
+ *
+ * @param   {Number}  x
+ * @param   {Number}  y
+ * @return  {Boolean} True if inside.
+ */
+function isInsideGrid(x, y) {
   if (x >= 0 && x < charaster.gridWidth && y >= 0 && y < charaster.gridHeight) {
     return true;
   }
@@ -544,7 +585,13 @@ function applyRasterSize() {
   charaster.drawAll();
 }
 
-function emptyCell(cell) {
+/**
+ * Check if cell is empty.
+ *
+ * @param   {Cell}  cell
+ * @return  {Boolean} True if empty.
+ */
+function isEmptyCell(cell) {
   if ((cell.character == " " || cell.character == null)
    && cell.foregroundId == "foreground"
    && cell.backgroundId == "background"
@@ -568,7 +615,7 @@ function autoCrop() {
   for (var col = 0; col < charaster.gridWidth; col++) {
     for (var row = 0; row < charaster.gridHeight; row++) {
       var cell = charaster.getCell(new Point(col, row));
-      if (emptyCell(cell)) {
+      if (isEmptyCell(cell)) {
         continue;
       }
       if (row < top) {
@@ -609,6 +656,9 @@ function autoCrop() {
   charaster.drawAll();
 }
 
+/**
+ * Undo the current raster.
+ */
 function undo() {
   charaster.raster = rasterHistory.undo();
   charaster.gridHeight = charaster.raster.length;
@@ -616,6 +666,9 @@ function undo() {
   charaster.drawAll();
 }
 
+/**
+ * Redo the current raster.
+ */
 function redo() {
   charaster.raster = rasterHistory.redo();
   charaster.gridHeight = charaster.raster.length;
@@ -623,6 +676,9 @@ function redo() {
   charaster.drawAll();
 }
 
+/**
+ * Scroll so that the cursor is in view.
+ */
 function autoScroll() {
   var main =  document.getElementById("main");
 
@@ -660,6 +716,9 @@ function applyCoordinates(raster) {
   return raster;
 }
 
+/**
+ * Clear cells in the selected region.
+ */
 function clearSelectedCells() {
   var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
   for (var y = startStop[0].y; y < startStop[1].y; y++) {

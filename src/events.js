@@ -195,6 +195,9 @@ charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
 }, false);
 
 window.addEventListener("click", function(e) {
+  if (e.target.tagName == "LI") {
+    e.target.parentNode.style.visibility = "hidden";  // Hide lists when chosen from.
+  }
   if (e.target.tagName != "CANVAS") {
     return; // Do not interfere with clicking buttons.
   }
@@ -236,7 +239,7 @@ document.getElementById("saveBash").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("savePlain").addEventListener("click", function(e) {
-  var lines = saveText(charaster.raster);
+  var lines = savePlain(charaster.raster);
   var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.txt");
 }, false);

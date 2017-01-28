@@ -93,6 +93,7 @@ class Charaster {
       context.stroke();
       context.closePath();
     }
+    this.gridSizeText.innerHTML = "[" + this.gridWidth + ", " + this.gridHeight + "]";
   }
 
   drawRaster(temp) {
@@ -268,7 +269,7 @@ class Charaster {
   }
 
   setCell(cell, context) {
-    if (cell == null || !insideGrid(cell.point.x, cell.point.y)) {
+    if (cell == null || !isInsideGrid(cell.point.x, cell.point.y)) {
       return;
     }
     if (context == null) {
