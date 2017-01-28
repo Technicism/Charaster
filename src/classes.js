@@ -116,7 +116,7 @@ class Charaster {
           if (cell.background != null) {
             context.fillStyle = cell.background;
             context.fillRect(
-              cell.point.x * this.fontWidth, cell.point.y * this.fontHeight,
+              row * this.fontWidth, col * this.fontHeight,
               this.fontWidth, this.fontHeight
             );
           }
@@ -605,6 +605,10 @@ class Tool {
   }
 
   copy(e) {
+
+  }
+
+  cut(e) {
 
   }
 

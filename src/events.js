@@ -304,6 +304,10 @@ window.addEventListener("copy", function(e) {
   charaster.tool.copy(e);
 }, false);
 
+window.addEventListener("cut", function(e) {
+  charaster.tool.cut(e);
+}, false);
+
 window.addEventListener("paste", function(e) {
   if (e.target.tagName == "INPUT") {
     return; // Do not interfere with manual character entering.

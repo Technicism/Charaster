@@ -65,12 +65,7 @@ class Rectangle extends Tool {
 class Select extends Tool {
   keyDown(e) {
     if (e.keyCode == 46) {  // Delete.
-      var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
-      for (var y = startStop[0].y; y < startStop[1].y; y++) {
-        for (var x = startStop[0].x; x < startStop[1].x; x++) {
-          charaster.clearCell(new Point(x, y));
-        }
-      }
+      clearSelectedCells();
       rasterHistory.add(charaster.raster);
     }
   }
@@ -119,6 +114,12 @@ class Select extends Tool {
     }
     clipboard.focus();
     clipboard.select();
+  }
+
+  cut(e) {
+    this.copy(null);  // TODO fix problem where does not paste cut raw text
+    clearSelectedCells();
+    rasterHistory.add(charaster.raster);
   }
 
   finish() {

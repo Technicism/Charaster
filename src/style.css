@@ -385,3 +385,7 @@ input {
   min-width: 0 !important;
   vertical-align: top;
 }
+
+noscript p {
+  padding: 4px;
+}

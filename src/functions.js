@@ -425,6 +425,9 @@ function saveShell(raster) {
 }
 
 function pasteText(text, startPoint) {
+  if (text.length == 0) {
+    return;
+  }
   if (startPoint == null) {
     startPoint = charaster.cursor;
   }
@@ -445,6 +448,7 @@ function pasteText(text, startPoint) {
       x++;
     }
   }
+  rasterHistory.add(charaster.raster);
 }
 
 function pasteCell(cells) {
@@ -468,6 +472,7 @@ function pasteCell(cells) {
       charaster.setCell(cell);
     }
   }
+  rasterHistory.add(charaster.raster);
 }
 
 /**
@@ -653,4 +658,13 @@ function applyCoordinates(raster) {
     }
   }
   return raster;
+}
+
+function clearSelectedCells() {
+  var startStop = getStartStop(charaster.selectBegin, charaster.selectClose);
+  for (var y = startStop[0].y; y < startStop[1].y; y++) {
+    for (var x = startStop[0].x; x < startStop[1].x; x++) {
+      charaster.clearCell(new Point(x, y));
+    }
+  }
 }
