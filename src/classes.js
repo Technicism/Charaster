@@ -26,6 +26,7 @@ class Charaster {
     this.backgroundId = "background";
     this.foregroundEnabled = true;
     this.backgroundEnabled = true;
+    this.gridEnabled = true;
     this.bold = false;
     this.italic = false;
     this.fontHeight;

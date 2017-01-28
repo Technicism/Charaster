@@ -66,6 +66,9 @@ function buttonCell(id, activate) {
     } else if (id == "characterCell") {
       charaster.characterEnabled = !charaster.characterEnabled;
       buttonStyle(id, charaster.characterEnabled);
+    } else if (id == "gridToggleIcon") {
+      charaster.gridEnabled = !charaster.gridEnabled;
+      buttonStyle(id, charaster.gridEnabled);
     }
   }, false);
 
@@ -137,6 +140,8 @@ window.addEventListener("load", function(e) {
   buttonCell("characterCell", charaster.characterEnabled);
   buttonCell("foregroundCell", charaster.foregroundEnabled);
   buttonCell("backgroundCell", charaster.backgroundEnabled);
+
+  buttonCell("gridToggleIcon", true);
 }, false);
 
 // Left click to reset foreground.
@@ -190,6 +195,9 @@ charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
 }, false);
 
 window.addEventListener("click", function(e) {
+  if (e.target.tagName != "CANVAS") {
+    return; // Do not interfere with clicking buttons.
+  }
   charaster.tool.click(e);
 }, false);
 
@@ -328,14 +336,16 @@ document.getElementById("zoomOut").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("gridToggle").addEventListener("click", function(e) {
-  if (document.getElementById("grid").style.visibility == "hidden") {
-    document.getElementById("grid").style.visibility = "visible";
+  var grid = document.getElementById("grid");
+  var gridToggle = document.getElementById("gridToggle");
+  if (grid.style.visibility == "hidden") {
+    grid.style.visibility = "visible";
   } else {
-    document.getElementById("grid").style.visibility = "hidden";
+    grid.style.visibility = "hidden";
   }
 }, false);
 
-document.getElementById("gridSize").addEventListener("click", function(e) {
+document.getElementById("gridSizeButton").addEventListener("click", function(e) {
   var list = document.getElementById("gridList");
   var gridWidth = document.getElementById("gridWidth");
   var gridHeight = document.getElementById("gridHeight");

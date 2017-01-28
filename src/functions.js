@@ -281,6 +281,23 @@ function buttonStyle(id, active) {
       iconStrokes[i].classList.remove("activeStroke");
     }
   }
+
+  // Apply title, if button is a SVG then give title to span parent.
+  if (active) {
+    var title = button.getAttribute("name") + " is on";
+    if (button.title == null) {
+      button.parentNode.title = title;
+    } else {
+      button.title = title;
+    }
+  } else {
+    var title = button.getAttribute("name") + " is off";
+    if (button.title == null) {
+      button.parentNode.title = title;
+    } else {
+      button.title = title;
+    }
+  }
 }
 
 /**

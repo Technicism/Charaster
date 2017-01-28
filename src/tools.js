@@ -71,6 +71,7 @@ class Select extends Tool {
           charaster.clearCell(new Point(x, y));
         }
       }
+      rasterHistory.add(charaster.raster);
     }
   }
 

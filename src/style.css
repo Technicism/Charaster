@@ -10,7 +10,6 @@
 
 canvas {
   position: absolute;
-  /*cursor: crosshair;*/
   margin-top: -32px;
   display: inline-block;
   padding-top: 2px;
@@ -41,7 +40,6 @@ canvas {
 }
 
 header {
-  /*padding: 4px;*/
   top: 0;
   position: fixed;
   background-color: white;
@@ -58,13 +56,13 @@ header input {
 }
 
 footer {
-  /*padding: 4px;*/
   background-color: white;
   line-height: 18pt;
   display: block;
   border-top: solid 1px #777;
   height: 27px;
   padding-left: 4px;
+  cursor: default;
 }
 
 footer span {
@@ -90,10 +88,6 @@ footer a {
   display: inline-block;
 }
 
-#foreground {
-  /*background-color: black;*/
-}
-
 #foreground, #background   {
   -webkit-appearance:none;
   width: 24px;
@@ -101,7 +95,6 @@ footer a {
 }
 
 #inputType, #options{
-  /*border-right: solid 1px #777;*/
   display: inline-block;
   padding: 4px 16px 4px 4px;
 }
@@ -124,7 +117,6 @@ footer a {
 
 #textOptions, .cellOptions {
   line-height: 20px;
-  /*letter-spacing: 0px;*/
 }
 
 .cellOptions span, .cellOptions svg {
@@ -176,12 +168,18 @@ footer svg {
 }
 
 .bar span {
-  /*background-color: red;*/
   width: 24px;
   height: 24px;
   display: inline-block;
   font-size: 16pt;
   text-align: center;
+  border: none;
+  margin-right: 2px;
+}
+
+#textMode, #characterCell, #boldCell, #italicCell  {
+  border: inherit;
+  margin-right: 0;
 }
 
 html, body {
@@ -245,6 +243,12 @@ body {
 
 .colorGroup:last-child {
   padding-top: 1px;
+}
+
+.colorGroup span {
+  height: inherit;
+  width: inherit;
+  margin-right: inherit;
 }
 
 #textMode, .cellOptions span {
