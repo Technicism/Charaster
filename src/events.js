@@ -1,6 +1,13 @@
 "use strict";
 
-// When a button is clicked change the tool and visual style of it.
+
+/**
+ * When a button is clicked change the tool and visual style of it.
+ *
+ * @param   {String}  id
+ * @param   {Tool}    tool - the is represented by this button.
+ * @return  {Boolean} activate - By default.
+ */
 function buttonMode(id, tool, activate) {
   var button = document.getElementById(id);
   button.addEventListener("click", function(e) {
@@ -36,6 +43,12 @@ function buttonMode(id, tool, activate) {
   }
 }
 
+/**
+ * When a button is clicked change the cell property and visual style of it.
+ *
+ * @param   {String}  id
+ * @return  {Boolean} activate - By default.
+ */
 function buttonCell(id, activate) {
   var button = document.getElementById(id);
   button.addEventListener("click", function(e) {
@@ -141,6 +154,7 @@ window.addEventListener("load", function(e) {
   buttonCell("foregroundCell", charaster.foregroundEnabled);
   buttonCell("backgroundCell", charaster.backgroundEnabled);
 
+  // Other buttons.
   buttonCell("gridToggleIcon", true);
 }, false);
 

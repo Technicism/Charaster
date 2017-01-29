@@ -12,18 +12,22 @@ var isBlink = (isChrome || isOpera) && !!window.CSS;
 // Warning.
 if (isChrome) {
   // Supported.
-} else if (isOpera)  {
-  document.getElementById("details").innerHTML += " (OPERA IS UNSUPPORTED)";
-} else if (isFirefox)  {
-  document.getElementById("details").innerHTML += " (FIREFOX IS UNSUPPORTED)";
-} else if (isSafari)  {
-  document.getElementById("details").innerHTML += " (SAFARI IS UNSUPPORTED)";
-} else if (isIE)  {
-  document.getElementById("details").innerHTML += " (IE IS UNSUPPORTED)";
-} else if (isEdge)  {
-  document.getElementById("details").innerHTML += " (EDGE IS UNSUPPORTED)";
-} else if (isBlink)  {
-  document.getElementById("details").innerHTML += " (BLINK IS UNSUPPORTED)";
+} else {
+  var details = document.getElementById("details");
+  if (isOpera)  {
+    details.innerHTML += " (OPERA IS UNSUPPORTED)";
+  } else if (isFirefox)  {
+    details.innerHTML += " (FIREFOX IS UNSUPPORTED)";
+  } else if (isSafari)  {
+    details.innerHTML += " (SAFARI IS UNSUPPORTED)";
+  } else if (isIE)  {
+    details.innerHTML += " (IE IS UNSUPPORTED)";
+  } else if (isEdge)  {
+    details.innerHTML += " (EDGE IS UNSUPPORTED)";
+  } else if (isBlink)  {
+    details.innerHTML += " (BLINK IS UNSUPPORTED)";
+  }
+  details.title += " The latest version of Google Chrome is currently the only browser supported."
 }
 
 // Globals.

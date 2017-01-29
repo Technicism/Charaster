@@ -59,7 +59,7 @@ themes["Solarized Light"] = new Theme(
   "Solarized Light",
   "#536870",
   "#fcf4dc",
-  "#073642",
+  "#ffffff",
   "#586e75",
   [
     "#073642",
@@ -86,7 +86,7 @@ themes["Ubuntu"] = new Theme(
   "Ubuntu",
   "#eeeeec",
   "#300a24",
-  "#1e0617",
+  "#333333",
   "#bbbbbb",
   [
     "#2e3436",
@@ -111,10 +111,10 @@ themes["Ubuntu"] = new Theme(
 // Tango theme sourced from https://blogs.n1zyy.com/andrew/2009/02/02/tango-color-scheme-for-xfce-terminal/
 themes["Tango"] = new Theme(
   "Tango",
-  "#ffffff",
   "#323232",
-  "#1e0617",
-  "#4e9a06",
+  "#ffffff",
+  "#eeeeee",
+  "#555555",
   [
     "#2e3436",
     "#cc0000",
@@ -138,10 +138,10 @@ themes["Tango"] = new Theme(
 // Obsidian theme sourced from https://github.com/mbadolato/iTerm2-Color-Schemes
 themes["Obsidian"] = new Theme(
   "Obsidian",
-  "#ffffff",
-  "#323232",
-  "#1e0617",
-  "#4e9a06",
+  "#cdcdcd",
+  "#283033",
+  "#3d4447",
+  "#c0cad0",
   [
     "#000000",
     "#a60001",

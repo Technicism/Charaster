@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO http://usejsdoc.org/howto-es2015-classes.html documentation
+
 class Charaster {
   constructor() {
     this.tools = {
