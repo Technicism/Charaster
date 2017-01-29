@@ -10,7 +10,9 @@ var isChrome = !!window.chrome && !!window.chrome.webstore;
 var isBlink = (isChrome || isOpera) && !!window.CSS;
 
 // Warning.
-if (isOpera)  {
+if (isChrome) {
+  // Supported.
+} else if (isOpera)  {
   document.getElementById("details").innerHTML += " (OPERA IS UNSUPPORTED)";
 } else if (isFirefox)  {
   document.getElementById("details").innerHTML += " (FIREFOX IS UNSUPPORTED)";

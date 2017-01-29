@@ -644,8 +644,8 @@ function autoCrop() {
   }
 
   // New smaller raster.
-  charaster.gridWidth = right - left;
-  charaster.gridHeight = bottom - top;
+  charaster.gridWidth = Math.max(1, right - left);
+  charaster.gridHeight = Math.max(1, bottom - top);
   charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
   for (var i = 0; i < cells.length; i++) {
     cells[i].point.x -= left;
@@ -724,6 +724,19 @@ function clearSelectedCells() {
   for (var y = startStop[0].y; y < startStop[1].y; y++) {
     for (var x = startStop[0].x; x < startStop[1].x; x++) {
       charaster.clearCell(new Point(x, y));
+    }
+  }
+}
+
+/**
+ * Hides lists in view.
+ * @param   {String} notId - Do not effect this ID.
+ */
+function hideLists(notId) {
+  var lists = document.getElementsByClassName("list");
+  for (var i = 0; i < lists.length; i++) {
+    if (lists[i].id != notId || notId == null) {
+      lists[i].style.visibility = "hidden";
     }
   }
 }

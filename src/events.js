@@ -195,8 +195,8 @@ charaster.cursorCanvas.addEventListener("mouseleave", function(e) {
 }, false);
 
 window.addEventListener("click", function(e) {
-  if (e.target.tagName == "LI") {
-    e.target.parentNode.style.visibility = "hidden";  // Hide lists when chosen from.
+  if (e.target.tagName != "LI" && e.target.tagName != "INPUT" ) {
+    hideLists();
   }
   if (e.target.tagName != "CANVAS") {
     return; // Do not interfere with clicking buttons.
@@ -220,7 +220,9 @@ charaster.cursorCanvas.addEventListener("contextmenu", function(e) {
 }, false);
 
 document.getElementById("saveButton").addEventListener("click", function(e) {
+  e.stopPropagation();
   var list = document.getElementById("saveList");
+  hideLists(list.id);
   if (list.style.visibility != "visible") {
     var rect = e.target.getBoundingClientRect();
     list.style.visibility = "visible";
@@ -236,38 +238,46 @@ document.getElementById("saveBash").addEventListener("click", function(e) {
   var lines = saveShell(charaster.raster);
   var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.sh");
+  hideLists();
 }, false);
 
 document.getElementById("savePlain").addEventListener("click", function(e) {
   var lines = savePlain(charaster.raster);
   var blob = new Blob([lines], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.txt");
+  hideLists();
 }, false);
 
 document.getElementById("saveImage").addEventListener("click", function(e) {
   charaster.rasterCanvas.toBlob(function(blob) {
-      saveAs(blob, "charaster.png");
+    saveAs(blob, "charaster.png");
   });
+  hideLists();
 }, false);
 
 document.getElementById("saveJson").addEventListener("click", function(e) {
   var string = JSON.stringify(charaster.raster);
   var blob = new Blob([string], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "charaster.json");
+  hideLists();
 }, false);
 
 document.getElementById("openJson").addEventListener("click", function(e) {
   openMode = "json";
   document.getElementById("upload").click(e);
+  hideLists();
 }, false);
 
 document.getElementById("openPlain").addEventListener("click", function(e) {
   openMode = "plain";
   document.getElementById("upload").click(e);
+  hideLists();
 }, false);
 
 document.getElementById("openButton").addEventListener("click", function(e) {
+  e.stopPropagation();
   var list = document.getElementById("openList");
+  hideLists(list.id);
   if (list.style.visibility != "visible") {
     var rect = e.target.getBoundingClientRect();
     list.style.visibility = "visible";
@@ -353,7 +363,9 @@ document.getElementById("gridToggle").addEventListener("click", function(e) {
 }, false);
 
 document.getElementById("gridSizeButton").addEventListener("click", function(e) {
+  e.stopPropagation();
   var list = document.getElementById("gridList");
+  hideLists(list.id);
   var gridWidth = document.getElementById("gridWidth");
   var gridHeight = document.getElementById("gridHeight");
   if (list.style.visibility != "visible") {
@@ -362,7 +374,7 @@ document.getElementById("gridSizeButton").addEventListener("click", function(e) 
     gridHeight.value = charaster.gridHeight;
     list.style.visibility = "visible";
     list.style.left = rect.left + "px";
-    list.style.top = rect.top - 212 + "px";
+    list.style.top = rect.top - list.offsetHeight - 8 + "px";
     list.style.visibility = "visible";
   } else {
     list.style.visibility = "hidden";
@@ -370,19 +382,23 @@ document.getElementById("gridSizeButton").addEventListener("click", function(e) 
 }, false);
 
 document.getElementById("resizeGrid").addEventListener("click", function(e) {
-  charaster.gridWidth = gridWidth.value;
-  charaster.gridHeight = gridHeight.value;
+  hideLists();
+  charaster.gridWidth = Math.max(1, gridWidth.value);
+  charaster.gridHeight = Math.max(1, gridHeight.value);
   applyRasterSize();
   document.getElementById("themeList").style.visibility = "hidden";
 }, false);
 
 document.getElementById("autoCrop").addEventListener("click", function(e) {
+  hideLists();
   autoCrop();
   document.getElementById("themeList").style.visibility = "hidden";
 }, false);
 
 charaster.themeSelect.addEventListener("click", function(e) {
+  e.stopPropagation();
   var list = document.getElementById("themeList");
+  hideLists(list.id);
   if (list.style.visibility != "visible") {
     var rect = charaster.themeSelect.getBoundingClientRect();
     list.style.visibility = "visible";
@@ -393,7 +409,6 @@ charaster.themeSelect.addEventListener("click", function(e) {
     list.style.visibility = "hidden";
   }
 }, false);
-
 
 window.addEventListener("mousewheel", function(e) {
 

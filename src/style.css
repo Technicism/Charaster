@@ -286,6 +286,7 @@ body {
   margin-bottom: 0;
 }
 
+/* Triangles generated from http://www.cssarrowplease.com/ */
 .list:after, .list:before {
   border: solid transparent;
   bottom: 100%;
@@ -306,6 +307,30 @@ body {
 .list:before {
   border-color: transparent;
   border-bottom-color: #ddd;
+  border-width: 5px;
+  margin-left: -5px;
+}
+
+.list-bottom:after, .list-bottom:before {
+  border: solid transparent;
+  top: 100%;
+  content: " ";
+  height: 0;
+  left: 6px;
+  position: absolute;
+  width: 0;
+}
+
+.list-bottom:after {
+  border-color: transparent;
+  border-top-color: white;
+  border-width: 4px;
+  margin-left: -4px;
+}
+
+.list-bottom:before {
+  border-color: transparent;
+  border-top-color: #ddd;
   border-width: 5px;
   margin-left: -5px;
 }
