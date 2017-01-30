@@ -325,7 +325,7 @@ function savePlain(raster) {
         line += raster[col][row].character;
       }
     }
-    lines += line + "\n"; // TODO Address different OS line endings
+    lines += line + "\r\n"; // TODO Address different OS line endings
   }
   return lines;
 }
