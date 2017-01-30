@@ -1,3 +1,7 @@
+/**
+ * Draw a line.
+ * @extends Tool
+ */
 class Line extends Tool {
   mouseMove(e) {
     super.mouseMove(e);
@@ -30,6 +34,10 @@ class Line extends Tool {
   }
 }
 
+/**
+ * Draw a rectangle.
+ * @extends Tool
+ */
 class Rectangle extends Tool {
   mouseMove(e) {
     super.mouseMove(e);
@@ -62,6 +70,10 @@ class Rectangle extends Tool {
   }
 }
 
+/**
+ * Selection tool used for copy, cut and paste as well as deleting multiple cells.
+ * @extends Tool
+ */
 class Select extends Tool {
   keyDown(e) {
     if (e.keyCode == 46) {  // Delete.
@@ -127,6 +139,10 @@ class Select extends Tool {
   }
 }
 
+/**
+ * Write text.
+ * @extends Tool
+ */
 class Text extends Tool {
   keyDown(e) {
     super.keyDown(e);
@@ -188,6 +204,10 @@ class Text extends Tool {
 
 }
 
+/**
+ * Draw freehand.
+ * @extends Tool
+ */
 class Pencil extends Tool {
   mouseMove(e) {
     super.mouseMove(e)
@@ -211,6 +231,10 @@ class Pencil extends Tool {
   }
 }
 
+/**
+ * Erase freehand.
+ * @extends Tool
+ */
 class Eraser extends Tool {
   mouseDown(e) {
     super.mouseDown(e);
@@ -236,6 +260,10 @@ class Eraser extends Tool {
   }
 }
 
+/**
+ * Bucked flood fill.
+ * @extends Tool
+ */
 class Flood extends Tool {
   click(e) {
     super.click(e);
@@ -250,6 +278,10 @@ class Flood extends Tool {
   }
 }
 
+/**
+ * Change the current cell to that picked from the raster.
+ * @extends Tool
+ */
 class Picker extends Tool {
   click(e) {
     super.click(e);
