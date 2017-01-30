@@ -99,7 +99,7 @@ window.addEventListener("load", function(e) {
   for (var i = 0; i < currentTheme.colors.length; i++) {
     charaster.colors.push(document.getElementById("color" + (i + 1)));
   }
-  charaster.resetRaster(charaster.gridWidth, charaster.gridHeight);
+  charaster.resetRaster();
   zoom(charaster.defaultFontSize);
 
   // Apply events to color buttons.

@@ -1,8 +1,11 @@
 "use strict";
 
-// TODO http://usejsdoc.org/howto-es2015-classes.html documentation
-
+/** Main class that represents all of the rasters. */
 class Charaster {
+
+  /**
+   * Constructor that defines all of the tools to be used, font and HTML elements needed.
+   */
   constructor() {
     this.tools = {
       pencil: new Pencil("Pencil"),
@@ -74,10 +77,14 @@ class Charaster {
     this.themeList;
   }
 
+
+  /**
+   * Draw a grid by creating long vertical and horizontal lines.
+   */
   drawGrid() {
     var canvas = this.gridCanvas;
     var context = this.gridContext;
-    this.fitToContainer(canvas, context);
+    this.fitCanvas(canvas, context);
     context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.strokeStyle = currentTheme.grid;
@@ -98,6 +105,10 @@ class Charaster {
     this.gridSizeText.innerHTML = "[" + this.gridWidth + ", " + this.gridHeight + "]";
   }
 
+  /**
+   * Draw the whole cell raster.
+   * @param   {String}   temp - If provided draw to the temporary raster instead.
+   */
   drawRaster(temp) {
     var canvas = this.rasterCanvas;
     var context = this.rasterContext;
@@ -105,7 +116,7 @@ class Charaster {
       canvas = this.rasterTempCanvas;
       context = this.rasterTempContext;
     }
-    this.fitToContainer(canvas, context);
+    this.fitCanvas(canvas, context);
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (canvas != this.rasterCanvas) {
       return;
@@ -142,14 +153,19 @@ class Charaster {
     }
   }
 
+  /**
+   * Draw a rectangle that represents the cursor.
+   */
   drawCursor() {
     var canvas = this.cursorCanvas;
     var context = this.cursorContext;
-    this.fitToContainer(canvas, context);
+    this.fitCanvas(canvas, context);
     context.translate(0.5, 0.5);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.beginPath();
     context.strokeStyle = currentTheme.cursor;
+
+    // Problem where the cursor on the top and left most rows don't get shown fully.
     var offsetX = -1;
     if (this.cursor.x == 0) {
       offsetX = 0;
@@ -167,10 +183,13 @@ class Charaster {
     this.cursorPos.innerHTML = "(" + this.cursor.x + ", " + this.cursor.y + ")";
   }
 
+  /**
+   * Draw a dashed rectangle that represents the selected cells.
+   */
   drawSelect() {
     var canvas = this.selectCanvas;
     var context = this.selectContext;
-    this.fitToContainer(canvas, context);
+    this.fitCanvas(canvas, context);
     context.translate(0.5, 0.5);
     if (this.tool.name != this.tools.select.name) {
       return;
@@ -206,6 +225,9 @@ class Charaster {
     this.selectClose = selectClose;
   }
 
+  /**
+   * Helper method that draws everything.
+   */
   drawAll() {
     this.drawGrid();
     this.drawRaster();
@@ -214,6 +236,12 @@ class Charaster {
     this.drawSelect();
   }
 
+  /**
+   * Moves cursor by adding the point to the current location.
+   *
+   * @param   {Number}   x
+   * @param   {Number}   y
+   */
   moveCursorRelative(x, y) {
     var cursor = this.cursor.copy();
     cursor.x += x;
@@ -222,6 +250,12 @@ class Charaster {
     this.drawCursor();
   }
 
+  /**
+   * Moves cursor by jumping to the point.
+   *
+   * @param   {Number}   x
+   * @param   {Number}   y
+   */
   moveCursor(x, y) {
     var cursor = this.cursor.copy();
     cursor.x = x;
@@ -230,6 +264,13 @@ class Charaster {
     this.drawCursor();
   }
 
+  /**
+   * Create a 2D array of Cells.
+   *
+   * @param   {Number}    cols - Amount of columns.
+   * @param   {Number}    rows - Amount of rows.
+   * @return  {Cell[][]}  raster
+   */
   createRaster(cols, rows) {
     var array = [];
     for (var row = 0; row < rows; row++) {
@@ -241,14 +282,20 @@ class Charaster {
     return array;
   }
 
-  resetRaster(cols, rows) {
-    for (var row = 0; row < rows; row++) {
-      for (var col = 0; col < cols; col++) {
+  /**
+   * Clear all of the cells in the raster.
+   */
+  resetRaster() {
+    for (var row = 0; row < this.gridHeight; row++) {
+      for (var col = 0; col < this.gridWidth; col++) {
         this.setCell(new Cell(new Point(col, row), " "));
       }
     }
   }
 
+  /**
+   * Reset all the cell properties.
+   */
   resetProperties() {
     this.character = "*";
     this.preview.value = this.character;
@@ -264,12 +311,24 @@ class Charaster {
     this.preview.style.fontStyle = "normal";
   }
 
-  fitToContainer(canvas, context) {
+  /**
+   * Adjusts the size of a canvas to fit the raster size.
+   *
+   * @param   {HTMLCanvasElement}         canvas
+   * @param   {CanvasRenderingContext2D}  context
+   */
+  fitCanvas(canvas, context) {
     canvas.width  = this.gridWidth * this.fontWidth + 1;
     canvas.height = this.gridHeight * this.fontHeight + 1;
     canvas.style.top = controls.clientHeight + 1 + "px";
   }
 
+  /**
+   * Applies a new cell to the raster, the cell properties are automatically filled if they are not made explicit beforehand.
+   *
+   * @param   {Cell}                      cell
+   * @param   {CanvasRenderingContext2D}  context
+   */
   setCell(cell, context) {
     if (cell == null || !isInsideGrid(cell.point.x, cell.point.y)) {
       return;
@@ -362,6 +421,12 @@ class Charaster {
     }
   }
 
+  /**
+   * Get a cell in the raster.
+   *
+   * @param   {Point} point
+   * @return  {Cell}
+   */
   getCell(point) {
     if (point.x < 0 || point.x >= this.gridWidth || point.y < 0 || point.y >= this.gridHeight) {
       return null;
@@ -369,6 +434,11 @@ class Charaster {
     return this.raster[point.y][point.x];
   }
 
+  /**
+   * Clears a single cell in the raster.
+   *
+   * @param   {Point} point
+   */
   clearCell(point) {
 
     // TODO take into account properties instead.
@@ -376,6 +446,9 @@ class Charaster {
     this.setCell(cell);
   }
 
+  /**
+   * Applies the current theme to the HTML/CSS properties and the raster cells.
+   */
   applyTheme() {
 
     // Set the colors of the page.
@@ -434,6 +507,12 @@ class Charaster {
     this.drawAll();
   }
 
+  /**
+   * Given a screen coordinate, return the grid location.
+   *
+   * @param   {Point} point
+   * @return  {Point}
+   */
   coordToGrid(point) {
     var grid = new Point(
       Math.floor(point.x / this.fontWidth) - 1,
@@ -452,11 +531,22 @@ class Charaster {
     return grid;
   }
 
+  /**
+   * Setter for font size.
+   *
+   * @param   {Number}  size
+   */
   setFontSize(size) {
     this.fontSize = size;
     this.font = this.fontSize + "pt " + this.fontName;
   }
 
+  /**
+   * Duplicates a whole raster.
+   *
+   * @param   {Cell[][]}  raster
+   * @return  {Cell[][]}
+   */
   copyRaster(raster) {
     var rasterCopy = [];
     for (var i = 0; i < raster.length; i++) {
@@ -468,6 +558,12 @@ class Charaster {
     return rasterCopy;
   }
 
+  /**
+   * When a theme has changed throughout history saves, it need to be reapplied with this.
+   *
+   * @param   {Cell[][]}  raster
+   * @return  {Cell[][]}
+   */
   applyNewTheme(raster) {
     for (var i = 0; i < raster.length; i++) {
       for (var j = 0; j < raster[i].length; j++) {
@@ -488,16 +584,34 @@ class Charaster {
   }
 }
 
+/** 2D point. */
 class Point {
+
+  /**
+   * Create a point.
+   * @param {Number} x
+   * @param {Number} y
+   */
   constructor(x, y) {
     this.x = x;
     this.y = y;
   }
 
+  /**
+   * Duplicates the point.
+   *
+   * @return  {Point}
+   */
   copy() {
     return new Point(this.x, this.y);
   }
 
+  /**
+   * Check if point is equal to another.
+   *
+   * @param   {Point}   other
+   * @return  {Boolean}
+   */
   equals(other) {
     if (this.x == other.x && this.y == other.y) {
       return true;
@@ -506,7 +620,19 @@ class Point {
   }
 }
 
+/** Cell objects are used to represent characters and more properties supported by shells. */
 class Cell {
+
+  /**
+   * Create a new Cell.
+   *
+   * @param   {Point}   point
+   * @param   {String}  character
+   * @param   {Number}  foregroundId
+   * @param   {Number}  backgroundId
+   * @param   {Boolean} bold
+   * @param   {Boolean} italic
+   */
   constructor(point, character, foregroundId, backgroundId, bold, italic) {
     this.point = point;
     this.character = character;
@@ -524,6 +650,12 @@ class Cell {
     this.background = null;
   }
 
+  /**
+   * Check if equal enough when drawing cells.
+   *
+   * @param   {Cell}   other
+   * @return  {Boolean}
+   */
   equalForDraw(other) {
     if (this.point.equals(other.point) && this.equalForFill(other)) {
       return true;
@@ -531,6 +663,12 @@ class Cell {
     return false;
   }
 
+  /**
+   * Check if equal enough when flooding cells.
+   *
+   * @param   {Cell}   other
+   * @return  {Boolean}
+   */
   equalForFill(other) {
     if ((this.character == other.character || (!charaster.characterEnabled && other.character != " "))
      && this.bold == other.bold
@@ -543,16 +681,35 @@ class Cell {
     return false;
   }
 
+  /**
+   * Duplicate the cell.
+   *
+   * @return  {Cell}
+   */
   copy() {
     return new Cell(this.point, this.character, this.foregroundId, this.backgroundId, this.bold, this.italic);
   }
 }
 
+/** 16 colour shell themes, with other colour options for the user chrome */
 class Theme {
+
+  /**
+   * Create a new Theme, colours are in the #rrggbb format
+   *
+   * @param   {String}    name
+   * @param   {String}    foreground
+   * @param   {String}    background
+   * @param   {String}    grid
+   * @param   {String}    cursor
+   * @param   {String[]}  colors
+   */
   constructor(name, foreground, background, grid, cursor, colors) {
     this.name = name;
     this.foreground = foreground;
     this.background = background;
+
+    // Make grid a bit transparent.
     var rgb = hexToRgb(grid);
     this.grid = "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0.75)";
     this.cursor = cursor;
@@ -560,30 +717,54 @@ class Theme {
   }
 }
 
+/** User tools that work be sending mouse and/or keyboard events, to be extended */
 class Tool {
+
+  /**
+   * Create a new Tool.
+   */
   constructor(name) {
     this.name = name;
   }
 
+  /**
+   * Start using this Tool.
+   */
   apply() {
 
   }
 
+  /**
+   * Key down event.
+   * @param   {KeyboardEvent}  e
+   */
   keyDown(e) {
     if (e.keyCode == 46) {  // Delete.
       charaster.clearCell(charaster.cursor);
     }
   }
 
+  /**
+   * Key press event.
+   * @param   {KeyboardEvent}  e
+   */
   keyPress(e) {
     charaster.character = String.fromCharCode(e.charCode);
     charaster.preview.value = charaster.character;
   }
 
+  /**
+   * Mouse move event, cursor follows mouse.
+   * @param   {MouseEvent}  e
+   */
   mouseMove(e) {
     mouseToCursor(e);
   }
 
+  /**
+   * Mouse leave event, stops drawing when leaving the raster area.
+   * @param   {MouseEvent}  e
+   */
   mouseLeave(e) {
 
     // Reset drawing to avoid unwanted lines from enter and exit points.
@@ -594,34 +775,63 @@ class Tool {
     }
   }
 
+  /**
+   * Mouse down event, start drawing.
+   * @param   {MouseEvent}  e
+   */
   mouseDown(e) {
     mouseDown = true;
     draw = true;
   }
 
+  /**
+   * Mouse up event, stop drawing.
+   * @param   {MouseEvent}  e
+   */
   mouseUp(e) {
     mouseDown = false;
   }
 
+  /**
+   * Click event, move cursor to location clicked.
+   * @param   {MouseEvent}  e
+   */
   click(e) {
     mouseToCursor(e);
   }
 
+  /**
+   * Copy event.
+   * @param   {ClipboardEvent}  e
+   */
   copy(e) {
 
   }
 
+  /**
+   * Cut event.
+   * @param   {ClipboardEvent}  e
+   */
   cut(e) {
 
   }
 
+  /**
+   * Finished using the tool.
+   */
   finish() {
 
   }
 }
 
-// TODO add history to more tools and copy, paste.
+/** Support undo and redo by saving rasters that can be loaded as the current raster */
 class History {
+
+  /**
+   * Create a new History manager, indicate the state using SVG icons that change colours.
+   * @param   {SVGPathElement}  undoElement
+   * @param   {SVGPathElement}  redoElement
+   */
   constructor(undoElement, redoElement) {
     this.rasters = [];
     this.index = -1;
@@ -630,6 +840,10 @@ class History {
     this.redoElement = redoElement;
   }
 
+  /**
+   * Add a new raster.
+   * @param   {Cell[][]}  raster
+   */
   add(raster) {
     var raster = charaster.copyRaster(raster);
     var length = this.rasters.length;
@@ -646,6 +860,9 @@ class History {
     }
   }
 
+  /**
+   * Undo the raster.
+   */
   undo() {
     this.index = Math.max(this.index - 1, 0);
     if (this.index == 0) {
@@ -658,6 +875,9 @@ class History {
     return applyCoordinates(raster);
   }
 
+  /**
+   * Redo the raster.
+   */
   redo() {
     if (this.index == this.rasters.length - 2) {
       this.redoElement.classList.add("inactive");
@@ -670,6 +890,9 @@ class History {
     return applyCoordinates(raster);
   }
 
+  /**
+   * Clear all rasters stored.
+   */
   clearAll() {
     this.rasters = [];
     this.index = -1;

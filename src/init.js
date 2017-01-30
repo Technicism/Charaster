@@ -10,23 +10,9 @@ var isChrome = !!window.chrome && !!window.chrome.webstore;
 var isBlink = (isChrome || isOpera) && !!window.CSS;
 
 // Warning.
-if (isChrome) {
-  // Supported.
-} else {
+if (!isChrome) {
   var details = document.getElementById("details");
-  if (isOpera)  {
-    details.innerHTML += " (OPERA IS UNSUPPORTED)";
-  } else if (isFirefox)  {
-    details.innerHTML += " (FIREFOX IS UNSUPPORTED)";
-  } else if (isSafari)  {
-    details.innerHTML += " (SAFARI IS UNSUPPORTED)";
-  } else if (isIE)  {
-    details.innerHTML += " (IE IS UNSUPPORTED)";
-  } else if (isEdge)  {
-    details.innerHTML += " (EDGE IS UNSUPPORTED)";
-  } else if (isBlink)  {
-    details.innerHTML += " (BLINK IS UNSUPPORTED)";
-  }
+  details.innerHTML += " (UNSUPPORTED BROWSER)";
   details.title += " The latest version of Google Chrome is currently the only browser supported."
 }
 
