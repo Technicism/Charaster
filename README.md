@@ -1,5 +1,5 @@
 # Charaster
-A browser based drawing program that rasters characters instead of single pixels, to support the creation of text based diagrams and artwork (e.g. ANSI and ASCII art). Charaster can be used online at [from GitHub pages](https://technicism.github.io/Charaster/) or offline by downloading the source and opening ``index.html``.
+A browser based drawing program that rasters characters instead of single pixels, to support the creation of text based diagrams and artwork (e.g. ANSI and ASCII art). Charaster can be used online from [GitHub pages](https://technicism.github.io/Charaster/) or offline by downloading the source and opening ``index.html``.
 For more information about the development progress of this application and how to use it visit the [wiki](https://github.com/Technicism/Charaster/wiki).
 
 >THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
