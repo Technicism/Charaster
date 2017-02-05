@@ -180,7 +180,13 @@ class Text extends Tool {
     super.keyPress(e);
     var cursor = charaster.cursor.copy();
     charaster.setCell(new Cell(cursor));
-    charaster.moveCursorRelative(1, 0);
+
+    // Make sure within raster.
+    if (charaster.cursor.x < charaster.gridWidth - 1) {
+      charaster.moveCursorRelative(1, 0);
+    } else if (charaster.cursor.y < charaster.gridHeight - 1) {
+      // charaster.moveCursor(0, charaster.cursor.y + 1);
+    }
     rasterHistory.add(charaster.raster);
     autoScroll();
   }

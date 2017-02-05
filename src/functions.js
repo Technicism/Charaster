@@ -574,6 +574,15 @@ function isInsideGrid(x, y) {
 function applyRasterSize() {
   var prevRaster = charaster.copyRaster(charaster.raster);
   charaster.raster = charaster.createRaster(charaster.gridWidth, charaster.gridHeight);
+
+  // Clear new.
+  for (var col = 0; col < charaster.gridWidth; col++) {
+    for (var row = 0; row < charaster.gridHeight; row++) {
+      charaster.clearCell(new Point(col, row));
+    }
+  }
+
+  // Copy old.
   for (var col = 0; col < prevRaster.length; col++) {
     for (var row = 0; row < prevRaster[col].length; row++) {
       if (prevRaster[col][row].character != null) {
@@ -678,6 +687,7 @@ function redo() {
 
 /**
  * Scroll so that the cursor is in view.
+ * TODO fix infinte loop when at edge.
  */
 function autoScroll() {
   var main =  document.getElementById("main");

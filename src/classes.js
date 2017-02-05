@@ -351,13 +351,17 @@ class Charaster {
 
     // Bold and italic font.
     context.font = this.font;
-    if ((cell.bold == false && this.bold) || cell.bold) {
+    if ((cell.bold == null && this.bold) || cell.bold) {
       context.font = "bold " + context.font
       cell.bold = true;
+    } else {
+      cell.bold = false;
     }
-    if ((cell.italic == false && this.italic) || cell.italic) {
+    if ((cell.italic == null && this.italic) || cell.italic) {
       context.font = "italic " + context.font
       cell.italic = true;
+    } else {
+      cell.italic = false;
     }
 
     // Background.
@@ -637,13 +641,7 @@ class Cell {
     this.point = point;
     this.character = character;
     this.bold = bold;
-    if (this.bold == null) {
-      this.bold = false;
-    }
     this.italic = italic;
-    if (this.italic == null) {
-      this.italic = false;
-    }
     this.foregroundId = foregroundId;
     this.backgroundId = backgroundId;
     this.foreground = null;
