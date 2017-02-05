@@ -135,7 +135,7 @@ footer a {
   text-decoration: underline;
 }
 
-#strikethroughText {
+#strikethroughCell {
   text-decoration: line-through;
 }
 
@@ -177,7 +177,7 @@ footer svg {
   margin-right: 2px;
 }
 
-#textMode, #characterCell, #boldCell, #italicCell  {
+#textMode, #characterCell, #boldCell, #italicCell, #underlineCell  {
   border: inherit;
   margin-right: 0;
 }

@@ -70,6 +70,14 @@ function buttonCell(id, activate) {
       } else {
         charaster.preview.style.fontStyle = "normal";
       }
+    } else if (id == "underlineCell") {
+      charaster.underline = !charaster.underline;
+      buttonStyle(id, charaster.underline);
+      if (charaster.underline) {
+        charaster.preview.style.textDecoration = "underline";
+      } else {
+        charaster.preview.style.textDecoration = "none";
+      }
     } else if (id == "foregroundCell") {
       charaster.foregroundEnabled = !charaster.foregroundEnabled;
       buttonStyle(id, charaster.foregroundEnabled);
@@ -150,6 +158,7 @@ window.addEventListener("load", function(e) {
   // Setup property buttons (multiple properties allowed at a time).
   buttonCell("boldCell", charaster.bold);
   buttonCell("italicCell", charaster.italic);
+  buttonCell("underlineCell", charaster.underline);
   buttonCell("characterCell", charaster.characterEnabled);
   buttonCell("foregroundCell", charaster.foregroundEnabled);
   buttonCell("backgroundCell", charaster.backgroundEnabled);

@@ -185,7 +185,7 @@ class Text extends Tool {
     if (charaster.cursor.x < charaster.gridWidth - 1) {
       charaster.moveCursorRelative(1, 0);
     } else if (charaster.cursor.y < charaster.gridHeight - 1) {
-      // charaster.moveCursor(0, charaster.cursor.y + 1);
+      charaster.moveCursor(0, charaster.cursor.y + 1);
     }
     rasterHistory.add(charaster.raster);
     autoScroll();

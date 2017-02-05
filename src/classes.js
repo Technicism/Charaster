@@ -34,6 +34,7 @@ class Charaster {
     this.gridEnabled = true;
     this.bold = false;
     this.italic = false;
+    this.underline = false;
     this.fontHeight;
     this.fontWidth;
     this.fontOffset;
@@ -422,6 +423,16 @@ class Charaster {
         cell.character,
         cell.point.x * this.fontWidth, (cell.point.y + 1) * this.fontHeight - this.fontOffset
       );
+    }
+
+    // Underline
+    if (this.underline) {
+      context.strokeStyle = cell.foreground;
+      context.beginPath();
+      context.moveTo(cell.point.x * this.fontWidth, cell.point.y * this.fontHeight + this.fontHeight - this.fontOffset);
+      context.lineTo(cell.point.x * this.fontWidth + this.fontWidth, cell.point.y * this.fontHeight + this.fontHeight - this.fontOffset);
+      context.stroke();
+      context.closePath();
     }
   }
 
