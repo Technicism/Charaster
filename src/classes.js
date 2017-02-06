@@ -149,6 +149,11 @@ class Charaster {
             cell.character,
             row * this.fontWidth, (col + 1) * this.fontHeight - this.fontOffset
           );
+
+          // Underline.
+          if (cell.underline) {
+            this.drawCellLine(this.rasterContext, cell, this.fontOffset);
+          }
         }
       }
     }
@@ -235,6 +240,29 @@ class Charaster {
     this.drawRaster("temp");
     this.drawCursor();
     this.drawSelect();
+  }
+
+  /**
+   * Draws a horizontal line on a cell.
+   *
+   * @param   {CanvasRenderingContext2D}  context
+   * @param   {Cell}                      cell
+   * @param   {Number}                    offset - Vertical.
+   */
+  drawCellLine(context, cell, offset) {
+    context.strokeStyle = cell.foreground;
+    context.lineWidth = 0.5 * this.fontSize / this.defaultFontSize;
+    context.beginPath();
+    context.moveTo(
+      cell.point.x * this.fontWidth,
+      cell.point.y * this.fontHeight + this.fontHeight - offset + 0.5
+    );
+    context.lineTo(
+      cell.point.x * this.fontWidth + this.fontWidth,
+      cell.point.y * this.fontHeight + this.fontHeight - offset + 0.5
+    );
+    context.stroke();
+    context.closePath();
   }
 
   /**
@@ -425,14 +453,12 @@ class Charaster {
       );
     }
 
-    // Underline
-    if (this.underline) {
-      context.strokeStyle = cell.foreground;
-      context.beginPath();
-      context.moveTo(cell.point.x * this.fontWidth, cell.point.y * this.fontHeight + this.fontHeight - this.fontOffset);
-      context.lineTo(cell.point.x * this.fontWidth + this.fontWidth, cell.point.y * this.fontHeight + this.fontHeight - this.fontOffset);
-      context.stroke();
-      context.closePath();
+    // Underline.
+    if ((cell.underline == null && this.underline) || cell.underline) {
+      cell.underline = true;
+      this.drawCellLine(this.rasterContext, cell, this.fontOffset);
+    } else {
+      cell.underline = false;
     }
   }
 
@@ -457,7 +483,7 @@ class Charaster {
   clearCell(point) {
 
     // TODO take into account properties instead.
-    var cell = new Cell(point, " ", "foreground", "background", false, false);
+    var cell = new Cell(point, " ", "foreground", "background", false, false, false);
     this.setCell(cell);
   }
 
@@ -648,11 +674,12 @@ class Cell {
    * @param   {Boolean} bold
    * @param   {Boolean} italic
    */
-  constructor(point, character, foregroundId, backgroundId, bold, italic) {
+  constructor(point, character, foregroundId, backgroundId, bold, italic, underline) {
     this.point = point;
     this.character = character;
     this.bold = bold;
     this.italic = italic;
+    this.underline = underline;
     this.foregroundId = foregroundId;
     this.backgroundId = backgroundId;
     this.foreground = null;
@@ -682,6 +709,7 @@ class Cell {
     if ((this.character == other.character || (!charaster.characterEnabled && other.character != " "))
      && this.bold == other.bold
      && this.italic == other.italic
+     && this.underline == other.underline
      && (this.backgroundId == other.backgroundId || !charaster.backgroundEnabled)
      && (this.foregroundId == other.foregroundId || !charaster.foregroundEnabled)
     ) {
@@ -696,7 +724,7 @@ class Cell {
    * @return  {Cell}
    */
   copy() {
-    return new Cell(this.point, this.character, this.foregroundId, this.backgroundId, this.bold, this.italic);
+    return new Cell(this.point, this.character, this.foregroundId, this.backgroundId, this.bold, this.italic, this.underline);
   }
 }
 

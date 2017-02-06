@@ -424,6 +424,9 @@ function saveShell(raster) {
         if (cell.italic) {
           string += "\\e[3m";
         }
+        if (cell.underline) {
+          string += "\\e[4m";
+        }
 
         // Character.
         if (cell.character == null) {
