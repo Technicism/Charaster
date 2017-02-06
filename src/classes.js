@@ -456,7 +456,7 @@ class Charaster {
     // Underline.
     if ((cell.underline == null && this.underline) || cell.underline) {
       cell.underline = true;
-      this.drawCellLine(this.rasterContext, cell, this.fontOffset);
+      this.drawCellLine(context, cell, this.fontOffset);
     } else {
       cell.underline = false;
     }
