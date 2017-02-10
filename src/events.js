@@ -406,8 +406,14 @@ document.getElementById("gridSizeButton").addEventListener("click", function(e) 
 
 document.getElementById("resizeGrid").addEventListener("click", function(e) {
   hideLists();
-  charaster.gridWidth = Math.max(1, gridWidth.value);
-  charaster.gridHeight = Math.max(1, gridHeight.value);
+  var inputWidth = Number.parseInt(gridWidth.value);
+  if (inputWidth > 0 && inputWidth != "NaN") {
+    charaster.gridWidth = inputWidth;
+  }
+  var inputHeight = Number.parseInt(gridHeight.value);
+  if (inputHeight > 0 && inputHeight != "NaN") {
+    charaster.gridHeight = inputHeight;
+  }
   applyRasterSize();
   document.getElementById("themeList").style.visibility = "hidden";
 }, false);
