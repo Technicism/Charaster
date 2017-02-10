@@ -275,7 +275,7 @@ class Flood extends Tool {
     super.click(e);
     var cell = charaster.getCell(charaster.cursor);
     var targetCell = cell.copy();
-    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foregroundId, charaster.backgroundId));
+    rasterFlood(cell, targetCell, new Cell(charaster.cursor, charaster.character, charaster.foregroundId, charaster.backgroundId, charaster.bold, charaster.italic, charaster.underline));
     charaster.drawAll();
   }
 

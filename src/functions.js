@@ -129,7 +129,15 @@ function floodProperties(cell, replacement) {
   if (charaster.backgroundEnabled) {
     flooded.backgroundId = replacement.backgroundId;
   }
-  // TODO handle bold and italic.
+  if (charaster.bold) {
+    flooded.bold = replacement.bold;
+  }
+  if (charaster.italic) {
+    flooded.italic = replacement.italic;
+  }
+  if (charaster.underline) {
+    flooded.underline = replacement.underline;
+  }
   return flooded;
 }
 

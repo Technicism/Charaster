@@ -8,6 +8,14 @@
   -webkit-user-select: none;
 }
 
+html, body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
 canvas {
   position: absolute;
   margin-top: -32px;
@@ -18,32 +26,11 @@ canvas {
   outline: none;
 }
 
-#grid {
-  z-index: 3;
-}
-
-#raster {
-  z-index: 1;
-}
-
-#rasterTemp {
-  z-index: 2;
-}
-
-#cursor {
-  z-index: 4;
-  border: solid 1px black;
-}
-
-#select {
-  z-index: 3;
-}
-
 header {
   top: 0;
   position: fixed;
   background-color: white;
-  z-index: 100000;
+  z-index: 6;
   width: 100%;
   border-bottom: solid 1px #777;
   cursor: default;
@@ -68,7 +55,7 @@ footer {
 footer span {
   display: inline-block;
   min-width: 14ch;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 footer span span {
@@ -78,6 +65,46 @@ footer span span {
 footer a {
   text-decoration: none;
   color: inherit;
+}
+
+footer svg {
+  max-height: 16px;
+  max-width: 16px;
+  vertical-align: middle;
+}
+
+input {
+  border: solid 1px #ddd;
+  border-radius: 2px;
+  user-select: text;
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+}
+
+noscript p {
+  padding: 4px;
+}
+
+#grid {
+  z-index: 3;
+}
+
+#raster {
+  z-index: 1;
+}
+
+#rasterTemp {
+  z-index: 2;
+}
+
+#cursor {
+  z-index: 4;
+  border: solid 1px black;
+}
+
+#select {
+  z-index: 3;
 }
 
 #char {
@@ -99,30 +126,6 @@ footer a {
   padding: 4px 16px 4px 4px;
 }
 
-.tools {
-  border-radius: 2px;
-}
-
-.bar {
-  margin: 2px;
-  border-radius: 2px;
-  display: inline-block;
-  padding: 2px;
-  letter-spacing: -4px;
-  line-height: 0px;
-  border: solid 1px #ddd;
-  vertical-align: top;
-  height: 26px;
-}
-
-#textOptions, .cellOptions {
-  line-height: 20px;
-}
-
-.cellOptions span, .cellOptions svg {
-  border-radius: 2px;
-}
-
 #boldCell {
   font-weight: bolder;
 }
@@ -139,6 +142,94 @@ footer a {
   text-decoration: line-through;
 }
 
+#textOptions, .cellOptions {
+  line-height: 20px;
+}
+
+#main {
+  margin-top: 34px;
+  overflow: scroll;
+  height: calc(100% - 61px);
+  width: 100%;
+  position: relative;
+}
+
+#preview {
+  height: 24px;
+  width: 10px;
+  border: solid 1px #ddd;
+  border-radius: 2px;
+}
+
+#colors {
+  padding: 1px;
+  height: 28px;
+}
+
+#textMode, .cellOptions span {
+  line-height: 24px;
+  vertical-align: top;
+  letter-spacing: 0px;
+  font-size: 14pt;
+
+}
+
+#clipboard, #clipboardPaste {
+  top: 0;
+  position: absolute;
+  float: left;
+  opacity: 0;
+}
+
+#resizeGrid, #autoCrop {
+  text-align: center;
+  border-radius: 2px;
+  border: solid 1px #ddd;
+}
+
+#gridList input {
+  text-align: right;
+  padding: 2px;
+}
+
+#details {
+  float: right;
+  text-align: right;
+  margin-right: 4px;
+  font-weight: bold;
+  font-size: 8pt;
+}
+
+#gridToggle {
+  min-width: 0 !important;
+  vertical-align: top;
+}
+
+.tools {
+  border-radius: 2px;
+}
+
+.textIcon {
+  border: inherit !important;
+  margin-right: 0 !important;
+}
+
+.bar {
+  margin: 2px;
+  border-radius: 2px;
+  display: inline-block;
+  padding: 2px;
+  letter-spacing: -4px;
+  line-height: 0px;
+  border: solid 1px #ddd;
+  vertical-align: top;
+  height: 26px;
+}
+
+.cellOptions span, .cellOptions svg {
+  border-radius: 2px;
+}
+
 .bar svg {
   max-height: 20px;
   max-width: 20px;
@@ -148,12 +239,6 @@ footer a {
 .bar svg, .bar span {
   border: solid 1px #ddd;
   border-radius: 2px;
-}
-
-footer svg {
-  max-height: 16px;
-  max-width: 16px;
-  vertical-align: middle;
 }
 
 .bar img:hover, .bar svg:hover, .bar span:hover, #themeList li:hover, .list li:hover {
@@ -177,46 +262,11 @@ footer svg {
   margin-right: 2px;
 }
 
-#textMode, #characterCell, #boldCell, #italicCell, #underlineCell  {
-  border: inherit;
-  margin-right: 0;
-}
-
-html, body {
-  height: 100%;
-}
-
-body {
-  overflow: hidden;
-}
-
-#main {
-  margin-top: 34px;
-  overflow: scroll;
-  height: calc(100% - 61px);
-  width: 100%;
-  position: relative;
-}
-
 .colorGroup {
   display: block;
-  /*line-height: -22px;*/
   vertical-align: middle;
   height: 13px !important;
   letter-spacing: -6px;
-}
-
-#preview {
-  height: 24px;
-  width: 10px;
-  border: solid 1px #ddd;
-  border-radius: 2px;
-}
-
-#colors {
-  /*line-height: -10px;*/
-  padding: 1px;
-  height: 28px;
 }
 
 .colorGroup svg {
@@ -249,19 +299,6 @@ body {
   height: inherit;
   width: inherit;
   margin-right: inherit;
-}
-
-#textMode, .cellOptions span {
-  line-height: 24px;
-  vertical-align: top;
-  letter-spacing: 0px;
-}
-
-#clipboard, #clipboardPaste {
-  top: 0;
-  position: absolute;
-  float: left;
-  opacity: 0;
 }
 
 .list {
@@ -373,22 +410,6 @@ body {
   text-align: right;
 }
 
-#resizeGrid, #autoCrop {
-  text-align: center;
-  border-radius: 2px;
-  border: solid 1px #ddd;
-}
-
-input {
-  border: solid 1px #ddd;
-  border-radius: 2px;
-}
-
-#gridList input {
-  text-align: right;
-  padding: 2px;
-}
-
 .barButton {
   border: solid 1px #ddd;
   border-radius: 2px;
@@ -397,21 +418,4 @@ input {
 
 .barButton:hover {
   background-color: #ddd !important;
-}
-
-#details {
-  float: right;
-  text-align: right;
-  margin-right: 4px;
-  font-weight: bold;
-  font-size: 8pt;
-}
-
-#gridToggle {
-  min-width: 0 !important;
-  vertical-align: top;
-}
-
-noscript p {
-  padding: 4px;
 }
