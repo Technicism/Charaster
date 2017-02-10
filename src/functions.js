@@ -698,28 +698,20 @@ function redo() {
 
 /**
  * Scroll so that the cursor is in view.
- * TODO fix infinte loop when at edge.
+ * TODO give more room.
  */
 function autoScroll() {
   var main =  document.getElementById("main");
 
   // Horizontal.
   var pixelX = charaster.cursor.x * charaster.fontWidth;
-  while (pixelX > (main.scrollLeft + window.innerWidth - charaster.fontWidth * 4)) {
-    main.scrollLeft += charaster.fontWidth;
-  }
-  while (pixelX < main.scrollLeft ) {
-    main.scrollLeft -= charaster.fontWidth;
-  }
+  var maxX = (main.scrollLeft + window.innerWidth / 2) ;
+  main.scrollLeft += pixelX - maxX;
 
   // Vertical.
   var pixelY = charaster.cursor.y * charaster.fontHeight;
-  while (pixelY > (main.scrollTop + window.innerHeight - charaster.fontHeight * 6)) {
-    main.scrollTop += charaster.fontHeight;
-  }
-  while (pixelY < main.scrollTop ) {
-    main.scrollTop -= charaster.fontHeight;
-  }
+  var maxY = (main.scrollTop + window.innerHeight / 2) ;
+  main.scrollTop += pixelY - maxY;
 }
 
 /**
