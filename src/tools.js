@@ -71,6 +71,71 @@ class Rectangle extends Tool {
 }
 
 /**
+ * Draw a rectangle with ASCII characters.
+ * @extends Tool
+ * 
+ * +-+ ┌─┐
+ * | | │ │
+ * +-+ └─┘
+ */
+class RectangleAscii extends Tool {
+  mouseMove(e) {
+    super.mouseMove(e);
+    if (draw) {
+      charaster.drawRaster("temp");
+      this.drawCorneredRectangle();
+    }
+  }
+
+  mouseDown(e) {
+    super.mouseDown(e);
+    lineStart = charaster.cursor;
+    charaster.setCell(new Cell(charaster.cursor));
+  }
+
+  mouseUp(e) {
+    super.mouseUp(e);
+    if (draw) {
+      var points = rasterRectangle(lineStart, charaster.cursor);
+      charaster.drawRaster("temp");
+      for (var i = 0; i < points.length; i++) {
+        charaster.setCell(new Cell(points[i]));
+      }
+      endDraw();
+      rasterHistory.add(charaster.raster);
+    }
+  }
+
+  drawCorneredRectangle() {
+    var p = lineStart;
+    var q = charaster.cursor;
+    var points = [];
+
+    // Horizontal.
+    points = [];
+    points = points.concat(rasterLine(p, new Point(q.x, p.y)));  // Top.
+    points = points.concat(rasterLine(new Point(p.x, q.y), q));  // Bottom.
+    for (var i = 0; i < points.length; i++) {
+      charaster.setCell(new Cell(points[i], "-"), charaster.rasterTempContext);
+    }
+
+    // Vertical.
+    points = [];
+    points = points.concat(rasterLine(new Point(q.x, p.y), q));  // Right.
+    points = points.concat(rasterLine(p, new Point(p.x, q.y)));  // Left.
+    for (var i = 0; i < points.length; i++) {
+      charaster.setCell(new Cell(points[i], "|"), charaster.rasterTempContext);
+    }
+
+    // Corners.
+    charaster.setCell(new Cell(new Point(q.x, p.y), "+"), charaster.rasterTempContext); // Top right.
+    charaster.setCell(new Cell(new Point(p.x, q.y), "+"), charaster.rasterTempContext); // Bottom left.
+    charaster.setCell(new Cell(p, "+"), charaster.rasterTempContext); // Top left.
+    charaster.setCell(new Cell(q, "+"), charaster.rasterTempContext); // Bottom right.
+  }
+}
+
+/**
  * Selection tool used for copy, cut and paste as well as deleting multiple cells.
  * @extends Tool
  */
