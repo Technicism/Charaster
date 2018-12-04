@@ -439,6 +439,8 @@ function saveShell(raster) {
         // Character.
         if (cell.character == null) {
           string += " ";
+        } else if (cell.character == "\\") {
+          string += "\\\\";
         } else {
           string += cell.character;
         }

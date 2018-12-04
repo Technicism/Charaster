@@ -319,7 +319,7 @@ window.addEventListener("keyup", function(e) {
     if (e.keyCode == 86 && e.shiftKey) {
       pasteCell(charaster.clipboard);
     } else if (e.keyCode == 86) {
-      pasteText(document.getElementById("clipboardPaste").innerHTML);
+      pasteText(document.getElementById("clipboardPaste").textContent);
     }
 
     // Reset zoom: Ctrl + 0.
