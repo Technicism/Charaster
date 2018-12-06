@@ -6,7 +6,7 @@ var isFirefox = typeof InstallTrigger !== 'undefined';
 var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0 || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
 var isIE = /*@cc_on!@*/false || !!document.documentMode;
 var isEdge = !isIE && !!window.StyleMedia;
-var isChrome = !!window.chrome && !!window.chrome.webstore;
+var isChrome = !!window.chrome && !isOpera && !isEdge;
 var isBlink = (isChrome || isOpera) && !!window.CSS;
 
 // Warning.

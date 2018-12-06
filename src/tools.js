@@ -73,7 +73,7 @@ class Rectangle extends Tool {
 /**
  * Draw a rectangle with ASCII characters.
  * @extends Tool
- * 
+ *
  * +-+ ┌─┐
  * | | │ │
  * +-+ └─┘

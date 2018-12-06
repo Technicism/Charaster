@@ -144,7 +144,7 @@ function floodProperties(cell, replacement) {
 /**
  * Get the pixel position of the mouse on the canvas.
  *
- * @param   {HTMLCanvasElement} canavas
+ * @param   {HTMLCanvasElement} canvas
  * @param   {MouseEvent}        e
  * @return  {Point}
  */
@@ -214,7 +214,7 @@ function measureCharacter(font) {
 /**
  * Achieves the effect of zooming in the raster by increasing or decreasing the font size.
  *
- * @param {Number} font Size in points.
+ * @param {Number} size - In points.
  */
 function zoom(size) {
   if (size < 4 || size > 512) {
@@ -544,7 +544,6 @@ function hexToRgb(hex) {
  * Interpolate by drawing lines between points.
  *
  * @param   {Cell}    cell - Interpolation cell.
- * @return  {Cell[]}  Cells that form the interpolation.
  */
 function interpolate(cell) {
   if (drawList.length >= 1 && !drawList[drawList.length - 1].equalForDraw(cell)) {

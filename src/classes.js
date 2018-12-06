@@ -78,7 +78,6 @@ class Charaster {
     this.themeList;
   }
 
-
   /**
    * Draw a grid by creating long vertical and horizontal lines.
    */
@@ -673,6 +672,7 @@ class Cell {
    * @param   {Number}  backgroundId
    * @param   {Boolean} bold
    * @param   {Boolean} italic
+   * @param   {Boolean} underline
    */
   constructor(point, character, foregroundId, backgroundId, bold, italic, underline) {
     this.point = point;
@@ -759,6 +759,7 @@ class Tool {
 
   /**
    * Create a new Tool.
+   * @param   {String}    name
    */
   constructor(name) {
     this.name = name;
@@ -899,6 +900,7 @@ class History {
 
   /**
    * Undo the raster.
+   * @return  {Cell[][]}
    */
   undo() {
     this.index = Math.max(this.index - 1, 0);
@@ -914,6 +916,7 @@ class History {
 
   /**
    * Redo the raster.
+   * @return  {Cell[][]}
    */
   redo() {
     if (this.index == this.rasters.length - 2) {

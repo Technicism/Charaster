@@ -1,12 +1,11 @@
 "use strict";
 
-
 /**
  * When a button is clicked change the tool and visual style of it.
  *
  * @param   {String}  id
  * @param   {Tool}    tool - the is represented by this button.
- * @return  {Boolean} activate - By default.
+ * @param   {Boolean} activate
  */
 function buttonMode(id, tool, activate) {
   var button = document.getElementById(id);
@@ -47,7 +46,7 @@ function buttonMode(id, tool, activate) {
  * When a button is clicked change the cell property and visual style of it.
  *
  * @param   {String}  id
- * @return  {Boolean} activate - By default.
+ * @param   {Boolean} activate
  */
 function buttonCell(id, activate) {
   var button = document.getElementById(id);
@@ -460,7 +459,6 @@ document.getElementById("upload").addEventListener("change", function(e) {
     openJson(document.getElementById("upload").files[0]);
   }
 }, false);
-
 
 document.getElementById("undo").addEventListener("click", function(e) {
   undo();
