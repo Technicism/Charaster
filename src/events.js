@@ -144,6 +144,20 @@ window.addEventListener("load", function(e) {
   }
   charaster.applyTheme();
 
+  // Character palette.
+  var characterPalette = document.getElementById("characterPalette");
+  var characterBase = characterPalette.children[0];
+  console.log(characterPalettes);
+  var characterPaletteName = "Single Line";
+  for (var i = 0; i < characterPalettes[characterPaletteName].length; i++) {
+    var characterButton = characterPalette.appendChild(characterBase.cloneNode(true));
+    characterButton.innerText = characterPalettes[characterPaletteName][i];
+    characterButton.addEventListener("click", function(e) {
+      charaster.character = e.target.innerText;
+    }, false);
+  }
+  characterBase.style.display = "none";
+
   // Setup mode buttons (one mode at a time).
   buttonMode("textMode", charaster.tools.text, false);
   buttonMode("eraserMode", charaster.tools.eraser, false);

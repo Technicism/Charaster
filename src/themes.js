@@ -161,3 +161,42 @@ themes["Obsidian"] = new Theme(
     "#ffffff"
   ]
 );
+
+
+var characterPalettes = [];
+
+characterPalettes["Single Line"] = [
+  "─",
+  "│",
+  "┌",
+  "┐",
+  "└",
+  "┘",
+  "├",
+  "┤",
+  "┬",
+  "┴",
+  "┼",
+  "╴",
+  "╵",
+  "╶",
+  "╷"
+];
+
+characterPalettes["Single Line"] = [
+  "═",
+  "║",
+  "╔",
+  "╗",
+  "╚",
+  "╝",
+  "╟",
+  "╠",
+  "╢",
+  "╣",
+  "╤",
+  "╦",
+  "╧",
+  "╩",
+  "╬"
+
