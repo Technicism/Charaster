@@ -76,6 +76,8 @@ class Charaster {
     this.noColor;
     this.themeSelect;
     this.themeList;
+    this.characterPaleteSelect;
+    this.characterPaleteList;
   }
 
   /**

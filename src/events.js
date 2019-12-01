@@ -154,6 +154,7 @@ window.addEventListener("load", function(e) {
     characterButton.innerText = characterPalettes[characterPaletteName][i];
     characterButton.addEventListener("click", function(e) {
       charaster.character = e.target.innerText;
+      charaster.preview.value = charaster.character;
     }, false);
   }
   characterBase.style.display = "none";
@@ -450,6 +451,11 @@ charaster.themeSelect.addEventListener("click", function(e) {
   } else {
     list.style.visibility = "hidden";
   }
+}, false);
+
+charaster.characterPaleteSelect.addEventListener("click", function(e) {
+  e.stopPropagation();
+
 }, false);
 
 window.addEventListener("mousewheel", function(e) {

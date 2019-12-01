@@ -48,6 +48,7 @@ charaster.preview = document.getElementById("preview");
 charaster.noColor = document.getElementById("noColor");
 charaster.themeSelect = document.getElementById("themeSelect");
 charaster.themeList = document.getElementById("themeList");
+charaster.characterPaleteSelect = document.getElementById("characterPaleteSelect");
 
 // More globals.
 var mouseDown = false;
