@@ -272,8 +272,9 @@ function mouseToCursor(e) {
  *
  * @param   {String}  id
  * @param   {Boolean} active
+ * @param   {Boolean} toggles
  */
-function buttonStyle(id, active) {
+function buttonStyle(id, active, toggles) {
   var button = document.getElementById(id);
   if (active) {
     button.classList.add("active");
@@ -298,6 +299,9 @@ function buttonStyle(id, active) {
   }
 
   // Apply title, if button is a SVG then give title to span parent.
+  if (!toggles) {
+    return;
+  }
   if (active) {
     var title = button.getAttribute("name") + " is on";
     if (button.title == null) {

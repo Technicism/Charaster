@@ -4,7 +4,7 @@
  * When a button is clicked change the tool and visual style of it.
  *
  * @param   {String}  id
- * @param   {Tool}    tool - the is represented by this button.
+ * @param   {Tool}    tool - that is represented by this button.
  * @param   {Boolean} activate
  */
 function buttonMode(id, tool, activate) {
@@ -14,11 +14,15 @@ function buttonMode(id, tool, activate) {
     // Reset other button styles.
     var reset = document.getElementsByClassName("tools");
     for (var i = 0; i < reset.length; i++) {
-      buttonStyle(reset[i].id, false);
+      buttonStyle(reset[i].id, false, false);
     }
 
     // Apply style to current button to indicate it is selected.
-    buttonStyle(id, true);
+    var toggles = true;
+    if (button.classList.contains("tools")) {
+      toggles = false;
+    }
+    buttonStyle(id, true, toggles);
 
     // Text tool has independent cursor.
     if (charaster.tool.name == charaster.tools.text.name && tool.name != charaster.tools.text.name) {
@@ -38,7 +42,7 @@ function buttonMode(id, tool, activate) {
 
   // Buttons may start off styled activated.
   if (activate) {
-    buttonStyle(id, true);
+    buttonStyle(id, true, false);
   }
 }
 
@@ -55,7 +59,7 @@ function buttonCell(id, activate) {
     // Apply new property and style to current button to indicate it is selected or not.
     if (id == "boldCell") {
       charaster.bold = !charaster.bold;
-      buttonStyle(id, charaster.bold);
+      buttonStyle(id, charaster.bold, true);
       if (charaster.bold) {
         charaster.preview.style.fontWeight = "bold";
       } else {
@@ -63,7 +67,7 @@ function buttonCell(id, activate) {
       }
     } else if (id == "italicCell") {
       charaster.italic = !charaster.italic;
-      buttonStyle(id, charaster.italic);
+      buttonStyle(id, charaster.italic, true);
       if (charaster.italic) {
         charaster.preview.style.fontStyle = "italic";
       } else {
@@ -71,7 +75,7 @@ function buttonCell(id, activate) {
       }
     } else if (id == "underlineCell") {
       charaster.underline = !charaster.underline;
-      buttonStyle(id, charaster.underline);
+      buttonStyle(id, charaster.underline, true);
       if (charaster.underline) {
         charaster.preview.style.textDecoration = "underline";
       } else {
@@ -79,22 +83,22 @@ function buttonCell(id, activate) {
       }
     } else if (id == "foregroundCell") {
       charaster.foregroundEnabled = !charaster.foregroundEnabled;
-      buttonStyle(id, charaster.foregroundEnabled);
+      buttonStyle(id, charaster.foregroundEnabled, true);
     } else if (id == "backgroundCell") {
       charaster.backgroundEnabled = !charaster.backgroundEnabled;
-      buttonStyle(id, charaster.backgroundEnabled);
+      buttonStyle(id, charaster.backgroundEnabled, true);
     } else if (id == "characterCell") {
       charaster.characterEnabled = !charaster.characterEnabled;
-      buttonStyle(id, charaster.characterEnabled);
+      buttonStyle(id, charaster.characterEnabled, true);
     } else if (id == "gridToggleIcon") {
       charaster.gridEnabled = !charaster.gridEnabled;
-      buttonStyle(id, charaster.gridEnabled);
+      buttonStyle(id, charaster.gridEnabled, true);
     }
   }, false);
 
   // Buttons may start off styled activated.
   if (activate) {
-    buttonStyle(id, true);
+    buttonStyle(id, true, true);
   }
 }
 
