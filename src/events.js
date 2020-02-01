@@ -454,7 +454,7 @@ window.addEventListener("mousewheel", function(e) {
       zoom(parseInt(charaster.fontSize) + 1);
     }
   }
-}, false);
+}, { passive: false });
 
 document.getElementById("upload").addEventListener("change", function(e) {
   if (openMode == "plain") {
